@@ -1,0 +1,14 @@
+contains in this order:
+
+dldi driver
+mk2/mk3 driver
+
+gbamp driver
+m3cf driver
+sccf driver
+scsd driver
+
+fixes
+=====
+fix for short filenames not creating lfn entry
+fix for dir listing grabbing wrong lfn entry name
