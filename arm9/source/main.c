@@ -123,6 +123,7 @@ USA
 #include "drawing/irc.h"
 #include "drawing/webbrowser.h"
 
+#include "keypadTGDS.h"
 
 // internals
 int yThreshold = 0;
@@ -552,7 +553,7 @@ bool checkSleepState()
 {
 	if(getLCDState() == LCD_OFF)
 	{
-		if(!(keysHeld() & KEY_LID))
+		if(!(keysPressed() & KEY_LID))
 		{		
 			setLCDState(LCD_ON);
 			return true;
@@ -560,7 +561,7 @@ bool checkSleepState()
 	}
 	else
 	{
-		if(keysHeld() & KEY_LID)
+		if(keysPressed() & KEY_LID)
 		{
 			setLCDState(LCD_OFF);
 			return true;
@@ -573,31 +574,32 @@ bool checkSleepState()
 void checkKeys()
 {
 	checkKeyboards();
-	struct touchScr touch = touchReadXYNew();
+	struct touchScr touch;
+	touchScrRead(&touch);
 	
 	if(checkSleepState())
 	{
 		return;
 	}
 	
-	if(((keysHeld() | keysDown()) & KEY_TOUCH) && !hasTouched)
+	if(((keysPressed() | keysPressed()) & KEY_TOUCH) && !hasTouched)
 	{
-		yThreshold = touch.py; // to stop shaking on some DS units.
+		yThreshold = touch.touchYpx; // to stop shaking on some DS units.
 		
-		if(!touch.px || !touch.py)
+		if(!touch.touchXpx || !touch.touchYpx)
 		{
 			return;
 		}
 		
 		hasTouched = true;
 		
-		if(isButtons(touch.px, touch.py) && getMode() != HOME && getMode() != HOMEMORE && getMode() != HOMESHORTCUTS && getMode() != CALCULATOR && getMode() != EDITSCRIBBLE && getMode() != CHOOSECOLOR && getMode() != VIEWER && getMode() != SOUNDPLAYER && getMode() != SOUNDRECORDER && getMode() != BROWSER && getMode() != WEBBROWSER)
+		if(isButtons(touch.touchXpx, touch.touchYpx) && getMode() != HOME && getMode() != HOMEMORE && getMode() != HOMESHORTCUTS && getMode() != CALCULATOR && getMode() != EDITSCRIBBLE && getMode() != CHOOSECOLOR && getMode() != VIEWER && getMode() != SOUNDPLAYER && getMode() != SOUNDRECORDER && getMode() != BROWSER && getMode() != WEBBROWSER)
 		{
-			if(isForwardButton(touch.px, touch.py))
+			if(isForwardButton(touch.touchXpx, touch.touchYpx))
 			{
 				goForward();
 			}
-			else if(isBackButton(touch.px, touch.py))
+			else if(isBackButton(touch.touchXpx, touch.touchYpx))
 			{
 				goBack();
 			}
@@ -608,7 +610,7 @@ void checkKeys()
 			{
 				case ABOUT:
 				{
-					if(touch.px >= 32 && touch.px <= 244 && touch.py >= 70 && touch.py <= 79)
+					if(touch.touchXpx >= 32 && touch.touchXpx <= 244 && touch.touchYpx >= 70 && touch.touchYpx <= 79)
 					{
 						// clicked on url to my site
 						
@@ -625,7 +627,7 @@ void checkKeys()
 				case HOMEMORE:
 				case HOMESHORTCUTS:
 				{
-					int tmpCur = cursorHomeScreen(touch.px, touch.py);
+					int tmpCur = cursorHomeScreen(touch.touchXpx, touch.touchYpx);
 					
 					if(tmpCur != -1)
 					{
@@ -640,12 +642,12 @@ void checkKeys()
 					break;
 				}
 				case CALENDAR:
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						destroyReminder();
 						returnHome();
 					}
-					else if(isLButton(touch.px, touch.py))
+					else if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						--curMonth;
 						if(curMonth < 1)
@@ -654,7 +656,7 @@ void checkKeys()
 							--curYear;
 						}
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						++curMonth;
 						if(curMonth > 12)
@@ -665,7 +667,7 @@ void checkKeys()
 					} 
 					else
 					{
-						int z = getDayFromTouch(touch.px,touch.py);
+						int z = getDayFromTouch(touch.touchXpx,touch.touchYpx);
 						if(z != -1)
 						{
 							if(curDay == z && secondClickAction()) // second click
@@ -675,12 +677,12 @@ void checkKeys()
 					}
 					break;
 				case DAYVIEW:		
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						resetDayView();
 						returnHome();
 					}
-					else if(isLButton(touch.px, touch.py))
+					else if(isLButton(touch.touchXpx, touch.touchYpx))
 					{	
 						int cd = curDay;
 						int cm = curMonth-1;
@@ -693,7 +695,7 @@ void checkKeys()
 						curMonth = cm+1;
 						curYear = cy;
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						int cd = curDay;
 						int cm = curMonth-1;
@@ -708,7 +710,7 @@ void checkKeys()
 					}	
 					else
 					{
-						int tmpCursor = getCursorFromTouch(touch.px, touch.py);
+						int tmpCursor = getCursorFromTouch(touch.touchXpx, touch.touchYpx);
 						if(tmpCursor != -1)
 						{
 							if(curTime == tmpCursor && secondClickAction()) // double click
@@ -718,43 +720,43 @@ void checkKeys()
 							curTime = tmpCursor;
 						}
 						
-						if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+						if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 						{
-							if(touch.py >= DEFAULT_SCROLL_TOP && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
+							if(touch.touchYpx >= DEFAULT_SCROLL_TOP && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
 							{
 								if(curTime > 0)
 								{
 									--curTime;
 								}
 							}
-							else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
+							else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
 							{
 								if(curTime < 47)
 								{
 									++curTime;
 								}
 							}
-							else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
+							else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
 							{
 								held = true;
-								curTime = getScroll(touch.py, 48);
+								curTime = getScroll(touch.touchYpx, 48);
 							}
 						}
 					}
 					break;
 				case EDITDAYVIEW:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						decreaseDuration();
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						increaseDuration();
 					}
 					break;
 				case ADDRESS:
 				case BROWSER:
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						if(getMode() == BROWSER)
 						{
@@ -772,13 +774,13 @@ void checkKeys()
 						break;
 					}
 					
-					if(isTopArea(touch.px, touch.py))
+					if(isTopArea(touch.touchXpx, touch.touchYpx))
 					{
 						if(getMode() == BROWSER)
 						{
 							if(!isPullUp())
 							{
-								if(isLButton(touch.px, touch.py))
+								if(isLButton(touch.touchXpx, touch.touchYpx))
 								{
 									if(!browserMode)
 									{
@@ -787,7 +789,7 @@ void checkKeys()
 									
 									--browserMode;
 								}
-								else if(isRButton(touch.px, touch.py))
+								else if(isRButton(touch.touchXpx, touch.touchYpx))
 								{
 									++browserMode;
 									
@@ -805,7 +807,7 @@ void checkKeys()
 					}
 					else
 					{		
-						if(!testPullUp(touch.px, touch.py))
+						if(!testPullUp(touch.touchXpx, touch.touchYpx))
 						{
 							int tmpCursor = -1;
 							int numEntries = 0;
@@ -819,7 +821,7 @@ void checkKeys()
 								numEntries = getAddressEntries();
 							}
 							
-							tmpCursor = getCursorFromTouch(touch.px, touch.py);
+							tmpCursor = getCursorFromTouch(touch.touchXpx, touch.touchYpx);
 							
 							if(tmpCursor != -1)
 							{
@@ -852,26 +854,26 @@ void checkKeys()
 							
 							if(numEntries > 9)
 							{
-								if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+								if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 								{
-									if(touch.py >= DEFAULT_SCROLL_TOP && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
+									if(touch.touchYpx >= DEFAULT_SCROLL_TOP && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
 									{
 										if(getCursor() > 0)
 										{
 											moveCursorRelative(CURSOR_BACKWARD);
 										}
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
 									{
 										if(getCursor() < numEntries-1)
 										{
 											moveCursorRelative(CURSOR_FORWARD);
 										}
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
 									{
 										held = true;									
-										moveCursorAbsolute(getScroll(touch.py, numEntries));
+										moveCursorAbsolute(getScroll(touch.touchYpx, numEntries));
 									}
 								}
 							}						
@@ -879,7 +881,7 @@ void checkKeys()
 					}
 					break;
 				case EDITADDRESS:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						if(editField > 0)
 						{
@@ -889,7 +891,7 @@ void checkKeys()
 							clearSelect();
 						}
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						if(editField < 10)
 						{
@@ -899,21 +901,21 @@ void checkKeys()
 							clearSelect();
 						}
 					}
-					else if(touch.px >= DELETE_LEFT && touch.px <= DELETE_RIGHT && touch.py >= DELETE_TOP && touch.py <= DELETE_BOTTOM)
+					else if(touch.touchXpx >= DELETE_LEFT && touch.touchXpx <= DELETE_RIGHT && touch.touchYpx >= DELETE_TOP && touch.touchYpx <= DELETE_BOTTOM)
 					{
 						deleteAddress();
 					}
 					break;
 				case CONFIGURATION:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						configDecCursor();
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						configIncCursor();
 					}
-					else if(isHome(touch.px, touch.py) && !configFlipped())
+					else if(isHome(touch.touchXpx, touch.touchYpx) && !configFlipped())
 					{
 						configurationSwitchPages();
 					}
@@ -924,7 +926,7 @@ void checkKeys()
 							int tmpCursor = -1;
 							int numap = Wifi_GetNumAP();
 							
-							tmpCursor = getCursorFromTouch(touch.px, touch.py);
+							tmpCursor = getCursorFromTouch(touch.touchXpx, touch.touchYpx);
 							
 							if(tmpCursor != -1)
 							{
@@ -940,84 +942,84 @@ void checkKeys()
 							
 							if(numap > 9)
 							{
-								if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+								if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 								{
-									if(touch.py >= DEFAULT_SCROLL_TOP && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
+									if(touch.touchYpx >= DEFAULT_SCROLL_TOP && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
 									{
 										if(getCursor() > 0)
 										{
 											moveCursorRelative(CURSOR_BACKWARD);
 										}
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
 									{
 										if(getCursor() < numap-1)
 										{
 											moveCursorRelative(CURSOR_FORWARD);
 										}
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
 									{
 										held = true;									
-										moveCursorAbsolute(getScroll(touch.py, numap));
+										moveCursorAbsolute(getScroll(touch.touchYpx, numap));
 									}
 								}
 							}
 						}
 						else
 						{
-							configureAction(touch.px, touch.py);
+							configureAction(touch.touchXpx, touch.touchYpx);
 						}
 					}
 					break;
 				case CALCULATOR:
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						closeScreen();
 						returnHome();
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						toggleDeg();
 					}
-					else if(isLButton(touch.px, touch.py))
+					else if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						toggleMore();
 					}
 					break;
 				case TEXTEDITOR:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						moveTextCursor(CURSOR_PAGEUP);
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						moveTextCursor(CURSOR_PAGEDOWN);
 					}
 					break;
 				case PICTUREVIEWER:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						getPrevPicture();
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						getNextPicture();
 					} 
 					else
 					{
-						movePicture(touch.px, touch.py);
+						movePicture(touch.touchXpx, touch.touchYpx);
 					}
 					break;
 				case TODOLIST:
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						freeTodo();
 						returnHome();
 					}
 					else
 					{
-						int tmpCursor = getCursorFromTouch(touch.px, touch.py);
+						int tmpCursor = getCursorFromTouch(touch.touchXpx, touch.touchYpx);
 						
 						if(tmpCursor != -1)
 						{
@@ -1030,33 +1032,33 @@ void checkKeys()
 						
 						if(getTodoEntries() > 9)
 						{
-							if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+							if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 							{
-								if(touch.py >= DEFAULT_SCROLL_TOP && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
+								if(touch.touchYpx >= DEFAULT_SCROLL_TOP && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
 								{
 									if(getCursor() > 0)
 									{
 										moveCursorRelative(CURSOR_BACKWARD);
 									}
 								}
-								else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
+								else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
 								{
 									if(getCursor() < getTodoEntries() - 1)
 									{
 										moveCursorRelative(CURSOR_FORWARD);
 									}
 								}
-								else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
+								else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
 								{
 									held = true;									
-									moveCursorAbsolute(getScroll(touch.py, getTodoEntries()));
+									moveCursorAbsolute(getScroll(touch.touchYpx, getTodoEntries()));
 								}
 							}
 						}
 					}
 					break;
 				case EDITTODOLIST:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						if(editField > 0)
 						{
@@ -1065,7 +1067,7 @@ void checkKeys()
 							clearSelect();
 						}
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						if(editField < 1)
 						{
@@ -1074,20 +1076,20 @@ void checkKeys()
 							clearSelect();
 						}
 					}
-					else if(touch.px >= DELETE_LEFT && touch.px <= DELETE_RIGHT && touch.py >= DELETE_TOP && touch.py <= DELETE_BOTTOM)
+					else if(touch.touchXpx >= DELETE_LEFT && touch.touchXpx <= DELETE_RIGHT && touch.touchYpx >= DELETE_TOP && touch.touchYpx <= DELETE_BOTTOM)
 					{
 						deleteTodo();
 					}
 					break;
 				case SCRIBBLEPAD:
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						freeScribbleList();
 						returnHome();
 					}
 					else
 					{
-						int tmpCursor = getCursorFromTouch(touch.px, touch.py);
+						int tmpCursor = getCursorFromTouch(touch.touchXpx, touch.touchYpx);
 						
 						if(tmpCursor != -1)
 						{
@@ -1098,66 +1100,66 @@ void checkKeys()
 						
 						if(getScribbleEntries() > 9)
 						{
-							if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+							if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 							{
-								if(touch.py >= DEFAULT_SCROLL_TOP && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
+								if(touch.touchYpx >= DEFAULT_SCROLL_TOP && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
 								{
 									if(getCursor() > 0)
 									{
 										moveCursorRelative(CURSOR_BACKWARD);
 									}
 								}
-								else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
+								else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT))
 								{
 									if(getCursor() < getScribbleEntries() - 1)
 									{
 										moveCursorRelative(CURSOR_FORWARD);
 									}
 								}
-								else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
+								else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)))
 								{
 									held = true;									
-									moveCursorAbsolute(getScroll(touch.py, getScribbleEntries()));
+									moveCursorAbsolute(getScroll(touch.touchYpx, getScribbleEntries()));
 								}
 							}
 						}
 					}
 					break;
 				case EDITSCRIBBLE:
-					scribbleDown(touch.px, touch.py);
+					scribbleDown(touch.touchXpx, touch.touchYpx);
 					break;
 				case CHOOSECOLOR:
-					colorPickerDown(touch.px, touch.py);
+					colorPickerDown(touch.touchXpx, touch.touchYpx);
 					break;
 				case HOMEBREWDATABASE:
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						lButtonDatabase();
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						rButtonDatabase();
 					}	
-					else if(isHome(touch.px, touch.py))
+					else if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						dbStartPressed();
 					}
 					else
 					{
-						if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 13 && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) + 2)
+						if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 13 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) + 2)
 						{
-							if(touch.px >= 3 && touch.px <= 13)
+							if(touch.touchXpx >= 3 && touch.touchXpx <= 13)
 							{
 								prevCategory();
 							}
-							else if(touch.px >= 242 && touch.px <= 252)
+							else if(touch.touchXpx >= 242 && touch.touchXpx <= 252)
 							{
 								nextCategory();
 							}
 						}
 						else
 						{
-							int tmpCursor = getCursorFromTouch(touch.px, touch.py);
+							int tmpCursor = getCursorFromTouch(touch.touchXpx, touch.touchYpx);
 							
 							if(tmpCursor != -1)
 							{
@@ -1170,26 +1172,26 @@ void checkKeys()
 							
 							if(getHBDBEntries() > 8)
 							{
-								if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+								if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 								{
-									if(touch.py >= DEFAULT_SCROLL_TOP && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
+									if(touch.touchYpx >= DEFAULT_SCROLL_TOP && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT))
 									{
 										if(getCursor() > 0)
 										{
 											moveCursorRelative(CURSOR_BACKWARD);
 										}
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) - 15 && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 15)
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) - 15 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 15)
 									{
 										if(getCursor() < getHBDBEntries()-1)
 										{
 											moveCursorRelative(CURSOR_FORWARD);
 										}
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)) - 15)
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)) - 15)
 									{
 										held = true;									
-										moveCursorAbsolute(getScroll(touch.py, getHBDBEntries()));
+										moveCursorAbsolute(getScroll(touch.touchYpx, getHBDBEntries()));
 									}
 								}
 							}
@@ -1197,61 +1199,61 @@ void checkKeys()
 					}
 					break;
 				case VIEWER:
-					if(touch.py > 176)
+					if(touch.touchYpx > 176)
 					{
 						goBack();
 					}
 					
-					if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+					if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 					{
-						if(touch.py >= 3 && touch.py <= (3 + SCROLL_ARROW_HEIGHT))								
+						if(touch.touchYpx >= 3 && touch.touchYpx <= (3 + SCROLL_ARROW_HEIGHT))								
 						{
 							moveViewerCursor(CURSOR_UP);
 						}
-						else if(touch.py >= (176 - SCROLL_ARROW_HEIGHT) && touch.py <= 176)
+						else if(touch.touchYpx >= (176 - SCROLL_ARROW_HEIGHT) && touch.touchYpx <= 176)
 						{
 							moveViewerCursor(CURSOR_DOWN);
 						}
-						else if(touch.py >= (3 + SCROLL_ARROW_HEIGHT + 2) && touch.py <= (176 - SCROLL_ARROW_HEIGHT - 2))
+						else if(touch.touchYpx >= (3 + SCROLL_ARROW_HEIGHT + 2) && touch.touchYpx <= (176 - SCROLL_ARROW_HEIGHT - 2))
 						{
 							held = true;			
-							setViewerPos(getScroll(touch.py, getViewerMax()));
+							setViewerPos(getScroll(touch.touchYpx, getViewerMax()));
 						}
 					}
 					
 					break;
 				case IRC:
-					if(isTopArea(touch.px, touch.py))
+					if(isTopArea(touch.touchXpx, touch.touchYpx))
 					{
-						if(touch.px < 24)
+						if(touch.touchXpx < 24)
 						{
 							ircLButton();
 						}
-						else if(touch.px > 24 && touch.px < 231)
+						else if(touch.touchXpx > 24 && touch.touchXpx < 231)
 						{
-							ircActivateTab(touch.px);
+							ircActivateTab(touch.touchXpx);
 						}
-						else if(touch.px > 231)
+						else if(touch.touchXpx > 231)
 						{
 							ircRButton();
 						}
 					}
 					else if(isNicks() && getIRCNickCount() > 7)
 					{
-						if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+						if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 						{
-							if(touch.py >= DEFAULT_SCROLL_TOP + 32 - 9 && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT) + 32 - 9)								
+							if(touch.touchYpx >= DEFAULT_SCROLL_TOP + 32 - 9 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT) + 32 - 9)								
 							{
 								ircUp();
 							}
-							else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) - 9 && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 9)
+							else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) - 9 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 9)
 							{
 								ircDown();
 							}
-							else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) + 32 - 9 && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)) - 9)
+							else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) + 32 - 9 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)) - 9)
 							{
 								held = true;			
-								setScrollIRC(getScroll(touch.py, getIRCNickCount()));
+								setScrollIRC(getScroll(touch.touchYpx, getIRCNickCount()));
 							}
 						}
 					}
@@ -1260,35 +1262,35 @@ void checkKeys()
 				case WEBBROWSER:
 					if(isShowingKeyboard() || (!isShowingKeyboard() && (isShowingImage() || isDownloadingFile())))
 					{
-						if(isLButton(touch.px, touch.py))
+						if(isLButton(touch.touchXpx, touch.touchYpx))
 						{
 							webBrowserLButton();
 						}
-						else if(isRButton(touch.px, touch.py))
+						else if(isRButton(touch.touchXpx, touch.touchYpx))
 						{
 							webBrowserRButton();
 						}	
-						else if(isHome(touch.px, touch.py))
+						else if(isHome(touch.touchXpx, touch.touchYpx))
 						{
 							freeWebBrowser();
 							returnHome();
 						}
 						else
 						{
-							if(touch.px >= 229 && touch.py >= 19 && touch.px < 241 && touch.py < 33)
+							if(touch.touchXpx >= 229 && touch.touchYpx >= 19 && touch.touchXpx < 241 && touch.touchYpx < 33)
 							{
 								if(!isShowingImage())
 								{
 									webBrowserStop();
 								}
 							}
-							else if(touch.py >= 162 && touch.py <= 182)
+							else if(touch.touchYpx >= 162 && touch.touchYpx <= 182)
 							{
-								if(touch.px >= 23 && touch.px <= 126)
+								if(touch.touchXpx >= 23 && touch.touchXpx <= 126)
 								{
 									goForward();
 								}
-								else if(touch.px >= 130 && touch.px <= 233)
+								else if(touch.touchXpx >= 130 && touch.touchXpx <= 233)
 								{
 									goBack();
 								}
@@ -1296,20 +1298,20 @@ void checkKeys()
 							
 							if(isFav() && getWebBrowserEntries() > 7)
 							{
-								if(touch.px >= getScrollLeft() && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
+								if(touch.touchXpx >= getScrollLeft() && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH))
 								{
-									if(touch.py >= DEFAULT_SCROLL_TOP + 32 - 9 && touch.py <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT) + 32 - 9)
+									if(touch.touchYpx >= DEFAULT_SCROLL_TOP + 32 - 9 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT) + 32 - 9)
 									{
 										moveWebBrowserCursor(CURSOR_UP);
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) - 9 && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 9)
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - SCROLL_ARROW_HEIGHT) - 9 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT) - 9)
 									{
 										moveWebBrowserCursor(CURSOR_DOWN);
 									}
-									else if(touch.py >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) + 32 - 9 && touch.py <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)) - 9)
+									else if(touch.touchYpx >= (DEFAULT_SCROLL_TOP + SCROLL_ARROW_HEIGHT + 2) + 32 - 9 && touch.touchYpx <= (DEFAULT_SCROLL_TOP + DEFAULT_SCROLL_HEIGHT - (SCROLL_ARROW_HEIGHT + 2)) - 9)
 									{
 										held = true;									
-										setScrollWeb(getScroll(touch.py, getWebBrowserEntries()));
+										setScrollWeb(getScroll(touch.touchYpx, getWebBrowserEntries()));
 									}
 								}
 							}
@@ -1317,7 +1319,7 @@ void checkKeys()
 					}
 					else
 					{
-						webBrowserClick(touch.px, touch.py);
+						webBrowserClick(touch.touchXpx, touch.touchYpx);
 					}
 					
 					break;
@@ -1327,41 +1329,41 @@ void checkKeys()
 		return;
 	}
 	
-	if((keysHeld() & KEY_TOUCH) && hasTouched)
+	if((keysPressed() & KEY_TOUCH) && hasTouched)
 	{
-		if(abs(yThreshold - touch.py) > 1)
+		if(abs(yThreshold - touch.touchYpx) > 1)
 		{
-			yThreshold = touch.py;
+			yThreshold = touch.touchYpx;
 			
 			if(held)
 			{
-				if(touch.px >= (getScrollLeft() - 40) && touch.px <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH + 40))
+				if(touch.touchXpx >= (getScrollLeft() - 40) && touch.touchXpx <= (getScrollLeft() + DEFAULT_SCROLL_WIDTH + 40))
 				{
 					switch(getMode())
 					{
 						case DAYVIEW:
-							curTime = getScroll(touch.py, 48);
+							curTime = getScroll(touch.touchYpx, 48);
 							break;
 						case ADDRESS:
-							moveCursorAbsolute(getScroll(touch.py, getAddressEntries()));
+							moveCursorAbsolute(getScroll(touch.touchYpx, getAddressEntries()));
 							break;
 						case BROWSER:
-							moveCursorAbsolute(getScroll(touch.py, getBrowserEntries()));
+							moveCursorAbsolute(getScroll(touch.touchYpx, getBrowserEntries()));
 							break;
 						case TODOLIST:
-							moveCursorAbsolute(getScroll(touch.py, getTodoEntries()));
+							moveCursorAbsolute(getScroll(touch.touchYpx, getTodoEntries()));
 							break;
 						case SCRIBBLEPAD:
-							moveCursorAbsolute(getScroll(touch.py, getScribbleEntries()));
+							moveCursorAbsolute(getScroll(touch.touchYpx, getScribbleEntries()));
 							break;
 						case HOMEBREWDATABASE:
-							moveCursorAbsolute(getScroll(touch.py, getHBDBEntries()));
+							moveCursorAbsolute(getScroll(touch.touchYpx, getHBDBEntries()));
 							break;
 						case VIEWER:
-							setViewerPos(getScroll(touch.py, getViewerMax()));
+							setViewerPos(getScroll(touch.touchYpx, getViewerMax()));
 							break;
 						case CONFIGURATION:
-							moveCursorAbsolute(getScroll(touch.py, Wifi_GetNumAP()));
+							moveCursorAbsolute(getScroll(touch.touchYpx, Wifi_GetNumAP()));
 							break;
 					}
 				}
@@ -1371,20 +1373,20 @@ void checkKeys()
 		switch(getMode())
 		{
 			case PICTUREVIEWER:
-				movePicture(touch.px, touch.py);
+				movePicture(touch.touchXpx, touch.touchYpx);
 				break;
 			case EDITSCRIBBLE:
-				scribbleMove(touch.px, touch.py);
+				scribbleMove(touch.touchXpx, touch.touchYpx);
 				break;
 			case CHOOSECOLOR:
-				colorPickerMove(touch.px, touch.py);
+				colorPickerMove(touch.touchXpx, touch.touchYpx);
 				break;
 			case CONFIGURATION:
-				if(!configurationDrag(touch.px, touch.py))
+				if(!configurationDrag(touch.touchXpx, touch.touchYpx))
 				{
 					if(getRepCount() >= 4 && lChar != 0)
 					{
-						touchDown(touch.px, touch.py);
+						touchDown(touch.touchXpx, touch.touchYpx);
 						if(kChar != lChar)
 						{
 							kChar = 0;
@@ -1398,7 +1400,7 @@ void checkKeys()
 				
 				break;
 			case BROWSER:
-				trackPullUp(touch.px, touch.py);
+				trackPullUp(touch.touchXpx, touch.touchYpx);
 				break;
 			case SOUNDPLAYER:
 			case SOUNDRECORDER:
@@ -1409,7 +1411,7 @@ void checkKeys()
 				{
 					if(getRepCount() >= 4 && lChar != 0)
 					{
-						touchDown(touch.px, touch.py);
+						touchDown(touch.touchXpx, touch.touchYpx);
 						if(kChar != lChar)
 						{
 							kChar = 0;
@@ -1424,14 +1426,14 @@ void checkKeys()
 				{
 					if(held)
 					{
-						setScrollIRC(getScroll(touch.py, getIRCNickCount()));
+						setScrollIRC(getScroll(touch.touchYpx, getIRCNickCount()));
 					}
 				}
 				break;				
 			case WEBBROWSER:
 				if(!isShowingKeyboard())
 				{
-					webBrowserDrag(touch.px, touch.py);
+					webBrowserDrag(touch.touchXpx, touch.touchYpx);
 				}
 				else
 				{
@@ -1439,7 +1441,7 @@ void checkKeys()
 					{
 						if(getRepCount() >= 4 && lChar != 0)
 						{
-							touchDown(touch.px, touch.py);
+							touchDown(touch.touchXpx, touch.touchYpx);
 							if(kChar != lChar)
 							{
 								kChar = 0;
@@ -1454,7 +1456,7 @@ void checkKeys()
 					{
 						if(held)
 						{
-							setScrollWeb(getScroll(touch.py, getWebBrowserEntries()));
+							setScrollWeb(getScroll(touch.touchYpx, getWebBrowserEntries()));
 						}
 					}
 				}
@@ -1462,7 +1464,7 @@ void checkKeys()
 			default:
 				if(getRepCount() >= 4 && lChar != 0)
 				{
-					touchDown(touch.px, touch.py);
+					touchDown(touch.touchXpx, touch.touchYpx);
 					if(kChar != lChar)
 					{
 						kChar = 0;
@@ -1478,7 +1480,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysUp() & KEY_TOUCH)
+	if(keysReleased() & KEY_TOUCH)
 	{			
 		hasTouched = false;
 		
@@ -1515,13 +1517,13 @@ void checkKeys()
 		return;
 	}
 	
-	if(!(keysDown() | keysHeld()))
+	if(!(keysPressed() | keysPressed()))
 	{
 		// lets get out of here if nothing is being held
 		return;
 	}
 	
-	if(keysDown() & KEY_UP)
+	if(keysPressed() & KEY_UP)
 	{
 		switch(getMode())
 		{
@@ -1614,7 +1616,7 @@ void checkKeys()
 	}
 
 	// repeat code
-	if((keysHeld() & KEY_UP) && (getRepCount() >= 4))
+	if((keysPressed() & KEY_UP) && (getRepCount() >= 4))
 	{	
 		switch(getMode())
 		{
@@ -1685,7 +1687,7 @@ void checkKeys()
 		return;
 	}	
 	
-	if(keysDown() & KEY_DOWN)
+	if(keysPressed() & KEY_DOWN)
 	{
 		switch(getMode())
 		{
@@ -1803,7 +1805,7 @@ void checkKeys()
 	}
 	
 	// repeat code
-	if((keysHeld() & KEY_DOWN) && (getRepCount() >= 4))
+	if((keysPressed() & KEY_DOWN) && (getRepCount() >= 4))
 	{
 		switch(getMode())
 		{
@@ -1897,7 +1899,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_LEFT)
+	if(keysPressed() & KEY_LEFT)
 	{
 		switch(getMode())
 		{
@@ -1993,7 +1995,7 @@ void checkKeys()
 	}
 	
 	// repeat code
-	if((keysHeld() & KEY_LEFT) && (getRepCount() >= 4))
+	if((keysPressed() & KEY_LEFT) && (getRepCount() >= 4))
 	{
 		switch(getMode())
 		{
@@ -2062,7 +2064,7 @@ void checkKeys()
 		return;
 	}		
 	
-	if(keysDown() & KEY_RIGHT)
+	if(keysPressed() & KEY_RIGHT)
 	{
 		switch(getMode())
 		{
@@ -2189,7 +2191,7 @@ void checkKeys()
 	}
 	
 	// repeat code
-	if((keysHeld() & KEY_RIGHT) && (getRepCount() >= 4))
+	if((keysPressed() & KEY_RIGHT) && (getRepCount() >= 4))
 	{
 		switch(getMode())
 		{
@@ -2280,7 +2282,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_L)
+	if(keysPressed() & KEY_L)
 	{	
 		switch(getMode())
 		{
@@ -2383,7 +2385,7 @@ void checkKeys()
 	}
 	
 	// repeat code
-	if((keysHeld() & KEY_L) && (getRepCount() >= 4))
+	if((keysPressed() & KEY_L) && (getRepCount() >= 4))
 	{
 		switch(getMode())
 		{
@@ -2448,7 +2450,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_R)
+	if(keysPressed() & KEY_R)
 	{
 		switch(getMode())
 		{
@@ -2553,7 +2555,7 @@ void checkKeys()
 	}
 	
 	// repeat code
-	if((keysHeld() & KEY_R) && (getRepCount() >= 4))
+	if((keysPressed() & KEY_R) && (getRepCount() >= 4))
 	{
 		switch(getMode())
 		{
@@ -2618,7 +2620,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_START)
+	if(keysPressed() & KEY_START)
 	{
 		switch(getMode())
 		{
@@ -2698,7 +2700,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_X)
+	if(keysPressed() & KEY_X)
 	{
 		switch(getMode())
 		{
@@ -2740,7 +2742,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_Y)
+	if(keysPressed() & KEY_Y)
 	{
 		switch(getMode())
 		{
@@ -2758,7 +2760,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_A)
+	if(keysPressed() & KEY_A)
 	{
 		switch(getMode())
 		{
@@ -2780,7 +2782,7 @@ void checkKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_B)
+	if(keysPressed() & KEY_B)
 	{
 		switch(getMode())
 		{
@@ -2817,69 +2819,68 @@ void checkJustKeys()
 	}
 	
 	struct touchScr touch = touchReadXYNew();
-	scanKeys();	
 	
-	if(keysDown() & KEY_TOUCH)
+	if(keysPressed() & KEY_TOUCH)
 	{
-		yThreshold = touch.py; // to stop shaking on some DS units.
+		yThreshold = touch.touchYpx; // to stop shaking on some DS units.
 		
 		switch(getMode())
 		{
 			case SOUNDPLAYER:
-				if(touch.py >= 162 && touch.py <= 182)
+				if(touch.touchYpx >= 162 && touch.touchYpx <= 182)
 				{
-					if(touch.px >= 23 && touch.px <= 126)
+					if(touch.touchXpx >= 23 && touch.touchXpx <= 126)
 					{
 						queueUpCommand(SND_GOFORWARD,0);
 					}
-					else if(touch.px >= 130 && touch.px <= 233)
+					else if(touch.touchXpx >= 130 && touch.touchXpx <= 233)
 					{
 						queueUpCommand(SND_GOBACK,0);
 					}
 				}		
 				else
 				{	
-					if(isLButton(touch.px, touch.py))
+					if(isLButton(touch.touchXpx, touch.touchYpx))
 					{
 						queueUpCommand(SND_GETPREV,1);
 					}
-					else if(isRButton(touch.px, touch.py))
+					else if(isRButton(touch.touchXpx, touch.touchYpx))
 					{
 						queueUpCommand(SND_GETNEXT,1);
 					}	
-					else if(isHome(touch.px, touch.py))
+					else if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						queueUpCommand(SND_TOGGLEHOLD,0);
 					}
-					else if(touch.py >=20 && touch.py <= 40)
+					else if(touch.touchYpx >=20 && touch.touchYpx <= 40)
 					{
-						queueUpCommand(SND_SEEK, touch.px);
+						queueUpCommand(SND_SEEK, touch.touchXpx);
 						
 						return;
 					}
 				}
 				break;
 			case SOUNDRECORDER:
-				if(touch.py >= 162 && touch.py <= 182)
+				if(touch.touchYpx >= 162 && touch.touchYpx <= 182)
 				{
-					if(touch.px >= 23 && touch.px <= 126)
+					if(touch.touchXpx >= 23 && touch.touchXpx <= 126)
 					{
 						queueUpCommand(SND_GOFORWARD,0);
 					}
-					else if(touch.px >= 130 && touch.px <= 233)
+					else if(touch.touchXpx >= 130 && touch.touchXpx <= 233)
 					{
 						queueUpCommand(SND_GOBACK,0);
 					}
 				}		
 				else
 				{	
-					if(isHome(touch.px, touch.py))
+					if(isHome(touch.touchXpx, touch.touchYpx))
 					{
 						queueUpCommand(SND_TOGGLEHOLD,0);
 					}
-					else if(touch.py >=20 && touch.py <= 40)
+					else if(touch.touchYpx >=20 && touch.touchYpx <= 40)
 					{
-						queueUpCommand(SND_SEEK, touch.px);
+						queueUpCommand(SND_SEEK, touch.touchXpx);
 						
 						return;
 					}
@@ -2890,47 +2891,47 @@ void checkJustKeys()
 		return;
 	}
 	
-	if(keysDown() & KEY_L)
+	if(keysPressed() & KEY_L)
 	{
 		queueUpCommand(SND_GETPREV,0);
 	}
 	
-	if(keysDown() & KEY_R)
+	if(keysPressed() & KEY_R)
 	{
 		queueUpCommand(SND_GETNEXT,0);
 	}
 	
-	if(keysDown() & KEY_START)
+	if(keysPressed() & KEY_START)
 	{
 		queueUpCommand(SND_TOGGLEHOLD,0);
 	}
 	
-	if(keysDown() & KEY_X)
+	if(keysPressed() & KEY_X)
 	{
 		queueUpCommand(SND_MODE,0);
 	}
 		
-	if(keysDown() & KEY_UP)
+	if(keysPressed() & KEY_UP)
 	{
 		queueUpCommand(SND_VOLUMEUP,0);
 	}
 	
-	if(keysDown() & KEY_DOWN)
+	if(keysPressed() & KEY_DOWN)
 	{
 		queueUpCommand(SND_VOLUMEDN,0);
 	}
 	
-	if(keysDown() & KEY_LEFT)
+	if(keysPressed() & KEY_LEFT)
 	{
 		queueUpCommand(SND_PREVINTERNAL,0);
 	}
 	
-	if(keysDown() & KEY_RIGHT)
+	if(keysPressed() & KEY_RIGHT)
 	{
 		queueUpCommand(SND_NEXTINTERNAL,0);
 	}
 	
-	if(keysDown() & KEY_A)
+	if(keysPressed() & KEY_A)
 	{
 		if(isABSwapped())
 		{
@@ -2942,7 +2943,7 @@ void checkJustKeys()
 		}
 	}
 	
-	if(keysDown() & KEY_B)
+	if(keysPressed() & KEY_B)
 	{
 		if(isABSwapped())
 		{
@@ -3051,10 +3052,10 @@ void executeKeys()
 void initProgram()
 {
 	//------------------------
-	// start initializing crap
+	// start initializing code
 	//------------------------
 	
-    powerON(POWER_ALL_2D); // turn on everything
+	powerON(POWER_2D_A | POWER_2D_B | POWER_SWAP_LCDS);	// turn on everything
 	
 	#ifndef DEBUG_MODE
 	fb_init(); // initialize top screen video
@@ -3066,12 +3067,21 @@ void initProgram()
 	setNewOrientation(ORIENTATION_0);
 	
 	// set up extra vram banks to be scratch memory	
-	vramSetBankE(VRAM_E_LCD);
-	vramSetBankF(VRAM_F_LCD);
-	vramSetBankG(VRAM_G_LCD);
-	vramSetBankH(VRAM_H_LCD);
-	vramSetBankI(VRAM_I_LCD);
-
+	//vramSetBankE(VRAM_E_LCD);
+	VRAMBLOCK_SETBANK_E(VRAM_E_LCDC_MODE);
+	
+	//vramSetBankF(VRAM_F_LCD);
+	VRAMBLOCK_SETBANK_F(VRAM_F_LCDC_MODE);
+	
+	//vramSetBankG(VRAM_G_LCD);
+	VRAMBLOCK_SETBANK_G(VRAM_G_LCDC_MODE);
+	
+	//vramSetBankH(VRAM_H_LCD);
+	VRAMBLOCK_SETBANK_H(VRAM_H_LCDC_MODE);
+	
+	//vramSetBankI(VRAM_I_LCD);
+	VRAMBLOCK_SETBANK_I(VRAM_I_LCDC_MODE);
+	
 	fb_setBGColor(30653);	
 	bg_setBGColor(0);
 	drawStartSplash();
@@ -3172,9 +3182,8 @@ void initProgram()
 		bg_dispString(0,0, l_createdir);
 		bg_swapBuffers();
 		
-		while(!keysDown())
+		while(!keysPressed())
 		{
-			scanKeys();	
 		}
 	}
 	

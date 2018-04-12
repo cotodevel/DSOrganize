@@ -465,8 +465,9 @@ void launchNDSMethod0(char *file)
 		case 0x4643504D: // gbamp
 		{
 			freeDirList();
-			vramSetBankD(VRAM_D_LCD);
-			
+			//vramSetBankD(VRAM_D_LCD);
+			VRAMBLOCK_SETBANK_D(VRAM_D_LCDC_MODE);
+	
 			u32 fCluster;
 			
 			DRAGON_FILE *fFile = DRAGON_fopen(file, "r");
@@ -494,7 +495,9 @@ void launchNDSMethod0(char *file)
 		case 0x44534353: // supercard sd
 		{		
 			freeDirList();	
-			vramSetBankD(VRAM_D_LCD);
+			//vramSetBankD(VRAM_D_LCD);
+			VRAMBLOCK_SETBANK_D(VRAM_D_LCDC_MODE);
+			
 			REG_IME = IME_DISABLE;
 			
 			boot_SCCF(file);
@@ -521,7 +524,8 @@ void launchNDSMethod0(char *file)
 
 void launchNDSMethod1(char *file)
 {	
-	vramSetBankD(VRAM_D_LCD);
+	//vramSetBankD(VRAM_D_LCD);
+	VRAMBLOCK_SETBANK_D(VRAM_D_LCDC_MODE);
 	REG_IE = 0;
 	REG_IME = 0;
 	REG_IF = 0xFFFF;	// Acknowledge interrupt
@@ -553,7 +557,9 @@ void launchNDSMethod1(char *file)
 
 void launchNDSMethod2(char *file)
 {	
-	vramSetBankD(VRAM_D_LCD);
+	//vramSetBankD(VRAM_D_LCD);
+	VRAMBLOCK_SETBANK_D(VRAM_D_LCDC_MODE);
+	
 	REG_IE = 0;
 	REG_IME = 0;
 	REG_IF = 0xFFFF;	// Acknowledge interrupt
@@ -725,19 +731,17 @@ void disableVBlank()
 
 bool checkHelp()
 {
-	scanKeys();	
-	
 	#ifndef MALLOC_TRACK
 	#ifndef SCREENSHOT_MODE
 	
 	#ifdef DUMP_ARM7
-	if(keysDown() & KEY_SELECT)
+	if(keysPressed() & KEY_SELECT)
 	{
 		soundIPC->interlaced = (s16 *)trackMalloc(64*1024, "dump");
 		SendArm7Command(ARM7COMMAND_DUMP, 0);
 	}
 	#else
-	if(((keysDown() & KEY_SELECT) || (keysHeld() & KEY_SELECT)) && getMode() != ABOUT && !isQueued())
+	if(((keysPressed() & KEY_SELECT) || (keysPressed() & KEY_SELECT)) && getMode() != ABOUT && !isQueued())
 	{
 		drawHelpScreen();
 		
@@ -754,7 +758,7 @@ bool checkHelp()
 	#endif
 	#endif
 	#else
-	if(keysDown() & KEY_SELECT)
+	if(keysPressed() & KEY_SELECT)
 	{
 		printMallocList();
 	}
@@ -788,12 +792,11 @@ void debugPrintHalt(char *str)
 	while(1)
 	{
 		swiWaitForVBlank();
-		scanKeys();
 		
-		if(keysDown() & KEY_SELECT)
+		if(keysPressed() & KEY_SELECT)
 		{
-			while(keysHeld() & KEY_SELECT)
-				scanKeys();
+			while(keysPressed() & KEY_SELECT){
+			}
 			
 			enableVBlank();
 			
@@ -927,8 +930,8 @@ void printMallocList()
 	swiWaitForVBlank();
 	fb_swapBuffers();
 	
-	while(keysHeld())
-		scanKeys();	
+	while(keysPressed()){
+	}
 }
 #endif
 
@@ -1161,6 +1164,7 @@ void writeDebug(const char *s, ...)
 		free(temp);
 }
 
+//todo
 #ifdef DEBUG_MODE
 void debugInit()
 {
@@ -1473,7 +1477,7 @@ void osprintf(char *out, const char* fmt, ...)
 
 int cursorPosCall(int pos, u32 c, int pass, int xPos, int yPos)
 {
-	if(!(keysHeld() & KEY_TOUCH))
+	if(!(keysPressed() & KEY_TOUCH))
 		return 0;
 	
 	if(pass == 1)
@@ -1549,7 +1553,7 @@ char *cistrstr(char *haystack, char *needle)
 
 void takeScreenshot()
 {
-	if(keysDown() & KEY_SELECT)
+	if(keysPressed() & KEY_SELECT)
 	{
 		static PICTURE_DATA ssPicture;
 		

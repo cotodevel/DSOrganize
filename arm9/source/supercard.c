@@ -16,7 +16,10 @@
  *  along with DSOrganize.  If not, see <http://www.gnu.org/licenses/>.    *
  *                                                                         *
  ***************************************************************************/
- 
+
+//todo
+
+/* 
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
@@ -139,3 +142,4 @@ void boot_SCCF(char *file)
   while(1);
 }
 
+*/

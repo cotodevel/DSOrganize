@@ -4677,7 +4677,7 @@ void drawBottomIRCScreen()
 	
 	bool noBlink = false;
 	
-	if(keysHeld() & KEY_TOUCH)
+	if(keysPressed() & KEY_TOUCH)
 	{
 		struct touchScr t = touchReadXYNew();
 		
@@ -5008,7 +5008,7 @@ void ircUp()
 		case IRC_TAB_KEYBOARD:
 		case IRC_TAB_COLORS:
 		{
-			if(keysHeld() & KEY_X) // page up/down
+			if(keysPressed() & KEY_X) // page up/down
 			{
 				if(tabs[activeTab].screen->curPt > 0)
 				{
@@ -5022,7 +5022,7 @@ void ircUp()
 				return;
 			}
 			
-			if(keysHeld() & KEY_Y) // back buffer
+			if(keysPressed() & KEY_Y) // back buffer
 			{
 				scrollUpBuffer();
 				return;
@@ -5050,7 +5050,7 @@ void ircDown()
 		case IRC_TAB_KEYBOARD:
 		case IRC_TAB_COLORS:
 		{
-			if(keysHeld() & KEY_X) // page up/down
+			if(keysPressed() & KEY_X) // page up/down
 			{	
 				tabs[activeTab].screen->curPt+=(ircLines - 1);
 				if(tabs[activeTab].screen->curPt >= tabs[activeTab].screen->maxPt)
@@ -5061,7 +5061,7 @@ void ircDown()
 				return;
 			}
 			
-			if(keysHeld() & KEY_Y) // back buffer
+			if(keysPressed() & KEY_Y) // back buffer
 			{
 				scrollDownBuffer();
 				return;

@@ -757,7 +757,8 @@ void initComplexSound()
 	MikMod_RegisterAllDrivers();
 	MikMod_RegisterAllLoaders();
 	
-	vramSetBankD(VRAM_D_ARM7); // give arm7 vram bank d to play with
+	//vramSetBankD(VRAM_D_ARM7); // give arm7 vram bank d to play with
+	VRAMBLOCK_SETBANK_D(VRAM_D_0x06020000_ARM7);
 }
 
 void setSoundFrequency(u32 freq)

@@ -22,6 +22,7 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "videoTGDS.h"
 #include <sys/stat.h>
 #include <libfb/libcommon.h>
 #include "colors.h"
@@ -218,7 +219,9 @@ bool runNds (const void* loader, u32 loaderSize, u32 cluster, bool initDisc)
 	}
 	
 	// Give the VRAM to the ARM7
-	vramSetBankD(VRAM_D_ARM7);
+	//vramSetBankD(VRAM_D_ARM7);
+	VRAMBLOCK_SETBANK_D(VRAM_D_0x06020000_ARM7);
+	
 	// Reset into a passme loop
 	
 	WAIT_CR |= 0xFFFF;  // ARM7 has access to GBA cart

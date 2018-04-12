@@ -650,7 +650,7 @@ void drawTopConfiguration()
 		
 		bool noBlink = false;
 		
-		if(keysHeld() & KEY_TOUCH)
+		if(keysPressed() & KEY_TOUCH)
 		{
 			struct touchScr t = touchReadXYNew();
 			
@@ -1199,7 +1199,7 @@ void drawConfiguration()
 				
 				bool noBlink = false;
 				
-				if(keysHeld() & KEY_TOUCH)
+				if(keysPressed() & KEY_TOUCH)
 				{
 					struct touchScr t = touchReadXYNew();
 					

@@ -1773,7 +1773,7 @@ void drawTextBox()
 		
 		bool noBlink = false;
 		
-		if(keysHeld() & KEY_TOUCH && !ignoreUntilUp)
+		if(keysPressed() & KEY_TOUCH && !ignoreUntilUp)
 		{
 			struct touchScr t = touchReadXYNew();
 			
@@ -1796,7 +1796,7 @@ void drawTextBox()
 			setCallBack(cursorPosCall);
 		}
 		
-		if(!(keysHeld() & KEY_TOUCH))
+		if(!(keysPressed() & KEY_TOUCH))
 			ignoreUntilUp = false;
 		
 		if(blinkOn() || noBlink)

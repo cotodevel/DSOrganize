@@ -16,13 +16,23 @@
  *  along with DSOrganize.  If not, see <http://www.gnu.org/licenses/>.    *
  *                                                                         *
  ***************************************************************************/
- 
+/* 
 static inline void dmaFillWords(const void* src, void* dest, uint32 size) {
 	DMA_SRC(3)  = (uint32)src;
 	DMA_DEST(3) = (uint32)dest;
 	DMA_CR(3)   = DMA_COPY_WORDS | DMA_SRC_FIX | (size>>2);
 	while(DMA_CR(3) & DMA_BUSY);
 }
+*/
+
+
+#include "videoTGDS.h"
+#include "consoleTGDS.h"
+#include "dmaTGDS.h"
+#include "timerTGDS.h"
+
+#define VRAM          ((uint16*)0x6800000)
+
 
 /*-------------------------------------------------------------------------
 resetMemory1_ARM9
@@ -130,25 +140,26 @@ static void __attribute__ ((long_call)) resetMemory2_ARM9 (void)
   
 	//clear out ARM9 DMA channels
 	for (i=0; i<4; i++) {
-		DMA_CR(i) = 0;
-		DMA_SRC(i) = 0;
-		DMA_DEST(i) = 0;
-		TIMER_CR(i) = 0;
-		TIMER_DATA(i) = 0;
+		DMAXCNT(i) = 0;
+		DMAXSAD(i) = 0;
+		DMAXDAD(i) = 0;
+		TIMERXCNT(i) = 0;
+		TIMERXDATA(i) = 0;
 	}
 
 	VRAM_CR = 0x80808080;
 	(*(vu32*)0x027FFE04) = 0;   // temporary variable
-	PALETTE[0] = 0xFFFF;
-	dmaFillWords((void*)0x027FFE04, PALETTE+1, (2*1024)-2);
-	dmaFillWords((void*)0x027FFE04, OAM,     2*1024);
-	dmaFillWords((void*)0x027FFE04, (void*)0x04000000, 0x56);  //clear main display registers
-	dmaFillWords((void*)0x027FFE04, (void*)0x04001000, 0x56);  //clear sub  display registers
-	dmaFillWords((void*)0x027FFE04, VRAM,  656*1024);
+	//PALETTE[0] = 0xFFFF;
 	
-	DISP_SR = 0;
-	videoSetMode(0);
-	videoSetModeSub(0);
+	//dmaFillWord(3,0x027FFE04, PALETTE+1, (2*1024)-2);	//dmaFillWords((void*)0x027FFE04, PALETTE+1, (2*1024)-2);
+	dmaFillWord(3,0x027FFE04, OAM, 2*1024);	//dmaFillWords((void*)0x027FFE04, OAM,     2*1024);
+	dmaFillWord(3,0x027FFE04, 0x04000000, 0x56);	//dmaFillWords((void*)0x027FFE04, (void*)0x04000000, 0x56);  //clear main display registers
+	dmaFillWord(3,0x027FFE04, 0x04001000, 0x56);	//dmaFillWords((void*)0x027FFE04, (void*)0x04001000, 0x56);  //clear sub  display registers
+	dmaFillWord(3,0x027FFE04, VRAM, 656*1024);	//dmaFillWords((void*)0x027FFE04, VRAM,  656*1024);
+	
+	REG_DISPSTAT = 0;
+	SETDISPCNT_MAIN(0);	//videoSetMode(0);
+	SETDISPCNT_SUB(0);	//videoSetModeSub(0);
 	VRAM_A_CR = 0;
 	VRAM_B_CR = 0;
 	VRAM_C_CR = 0;
