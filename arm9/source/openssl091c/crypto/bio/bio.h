@@ -684,7 +684,7 @@ long BIO_ghbn_ctrl();
 
 #endif
 
-extern int BIO_printf(int Index, ...);
+extern int BIO_printf(struct bio_st * bioInst , ...);
 
 /* BEGIN ERROR CODES */
 /* Error codes for the BIO functions. */

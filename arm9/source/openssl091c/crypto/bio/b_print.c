@@ -96,9 +96,9 @@
 #include "global_settings.h"
 
 //coto: fix for the DS console 
-int BIO_printf(int Index, ...){
+int BIO_printf(struct bio_st * bioInst , ...){
 	sint8 *fmt[512] = {0};
-	sprintf(fmt,"%d",Index);
+	sprintf(fmt,"%d","");
 	va_list args;
 	va_start (args, fmt);
 	vsnprintf ((sint8*)g_printfbuf, 64, fmt, args);

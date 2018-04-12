@@ -147,15 +147,13 @@ extern "C" {
 
 #define strncasecmp(a,b,c)	strnicmp((a),(b),(c))
 
-#  ifdef WINDOWS
-#    include <windows.h>
+#ifdef WINDOWS
 #    include <stddef.h>
 #    include <errno.h>
 #    include <string.h>
 #    include <malloc.h>
-#  endif
-#  include <io.h>
-#  include <fcntl.h>
+#endif
+#include <fcntl.h>
 
 #if defined(WIN16) && !defined(MONOLITH) && defined(SSLEAY) && defined(_WINEXITNOPERSIST)
 #  define EXIT(n) { if (n == 0) _wsetexit(_WINEXITNOPERSIST); return(n); }

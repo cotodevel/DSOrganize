@@ -299,38 +299,6 @@ err:
 	return(ret);
 	}
 
-#ifdef MAIN
-main()
-	{
-	BIGNUM *a,*b,*r;
-	int i;
-
-	if ((a=LBN_new()) == NULL) goto err;
-	if ((b=LBN_new()) == NULL) goto err;
-	if ((r=LBN_new()) == NULL) goto err;
-
-	if (!BN_rand(a,1024*2,0,0)) goto err;
-	if (!BN_rand(b,1024*2,0,0)) goto err;
-
-	for (i=0; i<10; i++)
-		{
-		if (!BN_mul_knuth(r,a,b)) goto err; /**/
-		/*if (!BN_mul(r,a,b)) goto err; /**/
-		}
-BN_print(stdout,a); printf(" * ");
-BN_print(stdout,b); printf(" =\n");
-BN_print(stdout,r); printf("\n");
-
-printf("BN_new() =%d\nBN_free()=%d max=%d\n",new_total,Free_total,max);
-
-
-	exit(0);
-err:
-	ERR_load_crypto_strings();
-	ERR_print_errors(stderr);
-	exit(1);
-	}
-#endif
 
 int BN_mask_bits(a,n)
 BIGNUM *a;

@@ -76,6 +76,7 @@ extern "C" {
 #endif
 
 #include <errno.h>
+#include "bio.h"
 
 #define ERR_TXT_MALLOCED	0x01
 #define ERR_TXT_STRING		0x02
@@ -226,8 +227,8 @@ char *ERR_reason_error_string(unsigned long e);
 void ERR_print_errors_fp(FILE *fp);
 #endif
 #ifdef HEADER_BIO_H
-void ERR_print_errors(BIO *bp);
-void ERR_add_error_data( VAR_PLIST( int, num ) );
+void ERR_print_errors(struct bio_st *bp);
+//void ERR_add_error_data( VAR_PLIST( int, num ) );
 #endif
 void ERR_load_strings(int lib,ERR_STRING_DATA str[]);
 void ERR_load_ERR_strings(void );
