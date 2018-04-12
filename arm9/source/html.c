@@ -39,8 +39,13 @@
 #include "font_profont_9.h"
 #include "drawing\database.h"
 
+#include "specific_shared.h"
+
 // special tags
-#include "tags_bin.h"
+//#include "tags_bin.h"
+
+extern int tags_bin;
+
 
 #define NOELEMENT -2
 #define NONE -1
@@ -345,19 +350,19 @@ void pushTableStack(uint16 spacing, uint16 padding)
 	tablePos++;
 }
 
-void popTableStack(uint16 &spacing, uint16 &padding)
+void popTableStack(uint16 *spacing, uint16 *padding)
 {
 	if(tablePos == 0)
 	{
-		spacing = DEFAULT_TABLE_SPACING;
-		padding = DEFAULT_TABLE_PADDING;
+		*spacing = DEFAULT_TABLE_SPACING;
+		*padding = DEFAULT_TABLE_PADDING;
 		return;
 	}
 	
 	tablePos--;
 	
-	padding = tableStack[tablePos] & 0xFFFF;
-	spacing = (tableStack[tablePos] >> 16) & 0xFFFF;
+	*padding = tableStack[tablePos] & 0xFFFF;
+	*spacing = (tableStack[tablePos] >> 16) & 0xFFFF;
 }
 
 // end table stack
@@ -1912,7 +1917,7 @@ int callbackHTMLURLS(int pos, u32 c, int pass, int xPos, int yPos)
 												tPage->formCodes[ci].maxLength = (int)tPage->formCodes[ci].resetState;
 												
 												break;
-											case FORM_SELECT:
+											case FORM_SELECT:{
 												FORM_SELECT_ITEM *fsi = (FORM_SELECT_ITEM *)tPage->formCodes[ci].state;
 												
 												switch(fsi->type)
@@ -1925,7 +1930,7 @@ int callbackHTMLURLS(int pos, u32 c, int pass, int xPos, int yPos)
 															fsi->items[ri].highlighted = ((char *)tPage->formCodes[ci].resetState)[ri];
 														break;
 												}
-												
+											}
 												break;
 										}
 									}
@@ -2476,36 +2481,36 @@ uint16 hexToU16(char *color)
 	return RGB15(r,g,b);
 }
 
-void getTagLocations(char *str, u32 &start, u32 &end)
+void getTagLocations(char *str, u32 * start, u32 * end)
 {
 	while(*str != '=')
 	{
 		str++;
-		start++;
-		end++;
+		(*start)++;
+		(*end)++;
 		
 		if(*str == 0)
 		{
-			start = 0;
-			end = 0;
+			(*start) = 0;
+			(*end) = 0;
 			return;
 		}
 	}
 	
 	str++;
-	start++;
-	end++;
+	(*start)++;
+	(*end)++;
 	
 	while(*str == ' ')
 	{
 		str++;
-		start++;
-		end++;
+		(*start)++;
+		(*end)++;
 		
 		if(*str == 0)
 		{
-			start = 0;
-			end = 0;
+			(*start) = 0;
+			(*end) = 0;
 			return;
 		}
 	}
@@ -2516,16 +2521,16 @@ void getTagLocations(char *str, u32 &start, u32 &end)
 	if(*str == 34) // quote
 	{
 		str++;
-		start++;
-		end++;
+		(*start)++;
+		(*end)++;
 		
 		isQuoted = 1;
 	}
 	else if(*str == 39)
 	{
 		str++;
-		start++;
-		end++;
+		(*start)++;
+		(*end)++;
 		
 		isQuoted = 2;
 	}
@@ -2533,7 +2538,7 @@ void getTagLocations(char *str, u32 &start, u32 &end)
 	while(!(*str == 34 && isQuoted == 1) && !(*str == 39 && isQuoted == 2) && *str != 0 && !(*str == ' ' && !isQuoted))
 	{
 		str++;
-		end++;
+		(*end)++;
 	}
 }
 
@@ -2775,7 +2780,7 @@ uint16 getColorIndex(uint16 color, HTML_RENDERED *htmlPage)
 void fixAndTags()
 {
 	// Grab the actual data
-	int whichTag = 0;	
+	int whichTag = 0;
 	TAG_TYPE *tags = (TAG_TYPE *)tags_bin;
 	
 	// loop until end line
@@ -3805,7 +3810,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 									
 									placeIn += lastTagStart; // now it points absolutely to the string start where it can be found
 									
-									getTagLocations(cistrstr(element, "action") + 6, htmlPage->formData[whichForm-1].url.startPos, htmlPage->formData[whichForm-1].url.endPos);
+									getTagLocations(cistrstr(element, "action") + 6, &htmlPage->formData[whichForm-1].url.startPos, &htmlPage->formData[whichForm-1].url.endPos);
 									
 									htmlPage->formData[whichForm-1].url.startPos += placeIn;
 									htmlPage->formData[whichForm-1].url.endPos += placeIn;
@@ -5320,7 +5325,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 									
 									placeIn += lastTagStart; // now it points absolutely to the string start where it can be found
 									
-									getTagLocations(cistrstr(element, "src") + 3, tmpImage.url.startPos, tmpImage.url.endPos);
+									getTagLocations(cistrstr(element, "src") + 3, &tmpImage.url.startPos, &tmpImage.url.endPos);
 									
 									tmpImage.url.startPos += placeIn;
 									tmpImage.url.endPos += placeIn;
@@ -5692,7 +5697,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 										
 										placeIn += lastTagStart; // now it points absolutely to the string start where it can be found
 										
-										getTagLocations(cistrstr(element, "href") + 4, htmlPage->urlCodes[htmlPage->maxURLs-1].url.startPos, htmlPage->urlCodes[htmlPage->maxURLs-1].url.endPos);
+										getTagLocations(cistrstr(element, "href") + 4, &htmlPage->urlCodes[htmlPage->maxURLs-1].url.startPos, &htmlPage->urlCodes[htmlPage->maxURLs-1].url.endPos);
 										
 										htmlPage->urlCodes[htmlPage->maxURLs-1].url.startPos += placeIn;
 										htmlPage->urlCodes[htmlPage->maxURLs-1].url.endPos += placeIn;
@@ -7008,7 +7013,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 						else if(strcmp(tag, "/table") == 0)				
 						{
 							popItemStackUntilType(TABLE, NOELEMENT);
-							popTableStack(cellSpacing, cellPadding);
+							popTableStack(&cellSpacing, &cellPadding);
 						}
 						
 						else if(strcmp(tag, "/div") == 0)

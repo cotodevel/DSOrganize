@@ -72,6 +72,7 @@
 #include "dsregs_asm.h"
 
 #include "keypadTGDS.h"
+#include "videoTGDS.h"
 
 
 bool copying = false;
@@ -388,17 +389,17 @@ struct touchScr touchReadXYNew()
 	{
 		case ORIENTATION_90:
 			// reverse coordinates
-			touchPos.py = touchPos.touchXpx;
-			touchPos.px = 191 - touchPos.touchYpx;
+			touchPos.touchYpx = touchPos.touchXpx;
+			touchPos.touchXpx = 191 - touchPos.touchYpx;
 			break;
 		case ORIENTATION_270:
 			// reverse coordinates
-			touchPos.py = 255 - touchPos.touchXpx;
-			touchPos.px = touchPos.touchYpx;
+			touchPos.touchYpx = 255 - touchPos.touchXpx;
+			touchPos.touchXpx = touchPos.touchYpx;
 			break;
 		default:
-			touchPos.px = touchPos.touchXpx;
-			touchPos.py = touchPos.touchYpx;
+			touchPos.touchXpx = touchPos.touchXpx;
+			touchPos.touchYpx = touchPos.touchYpx;
 			break;
 	}
 	
@@ -720,14 +721,16 @@ void separateExtension(char *str, char *ext)
 
 void enableVBlank()
 {
-    irqSet(IRQ_VBLANK, vBlank);
-	irqEnable(IRQ_VBLANK);	
+    //irqSet(IRQ_VBLANK, vBlank);
+	//irqEnable(IRQ_VBLANK);	
+	REG_IE|=IRQ_VBLANK;
 }
 
 void disableVBlank()
 {
-	irqSet(IRQ_VBLANK, 0);
-	irqDisable(IRQ_VBLANK);	
+	//irqSet(IRQ_VBLANK, 0);
+	//irqDisable(IRQ_VBLANK);	
+	REG_IE&=~IRQ_VBLANK;
 }
 
 bool checkHelp()
@@ -768,6 +771,7 @@ bool checkHelp()
 	return false;
 }
 
+#ifdef DEBUG_MODE
 void debugPrint(char *str)
 {
 	// To ensure it comes out on any debugging screens i have up
@@ -779,10 +783,11 @@ void debugPrint(char *str)
 	IRQVBlankWait();	
 	fb_swapBuffers();
 }
+#endif
 
 void debugPrintHalt(char *str)
 {
-	irqSet(IRQ_VBLANK, 0);
+	//irqSet(IRQ_VBLANK, 0);
 	fb_swapBuffers();
 	
 	fb_setBGColor(0xFFFF);
@@ -1495,7 +1500,7 @@ int cursorPosCall(int pos, u32 c, int pass, int xPos, int yPos)
 	struct touchScr t = touchReadXYNew();	
 	int tWidth = (getCharWidth(c) >> 1)+1;
 	
-	if((t.px >= (xPos - tWidth)) && (t.px <= (xPos + tWidth)))
+	if((t.touchXpx >= (xPos - tWidth)) && (t.touchXpx <= (xPos + tWidth)))
 	{
 		tCursor = pos;
 		foundCursor = true;

@@ -27,6 +27,7 @@
 #include "globals.h"
 #include "general.h"
 #include "nds_loader_arm9.h"
+#include "videoTGDS.h"
 
 #define LF_LOADARM9				0x00000001
 #define LF_LOADARM7				0x00000002
@@ -44,17 +45,24 @@ void exec(char *command, bool gbaBoot, bool memBoot)
 	// Set up VRAM, to put the binary in. 
 	//  Bank A might be used for text out (will be used by the stub)
 	//  Bank B,D to carry over param&binary
-    vramSetMainBanks(   VRAM_A_MAIN_BG_0x6000000,       
+    /*
+	vramSetMainBanks(   VRAM_A_MAIN_BG_0x6000000,       
                         VRAM_B_MAIN_BG_0x6020000,      
                         VRAM_C_LCD,  
                         VRAM_D_MAIN_BG_0x6040000   
                         );    
-						
+	*/
+	VRAMBLOCK_SETBANK_A(VRAM_A_0x06000000_ENGINE_A_BG);
+	VRAMBLOCK_SETBANK_B(VRAM_B_0x06020000_ENGINE_A_BG);
+	VRAMBLOCK_SETBANK_C(VRAM_C_LCDC_MODE);
+	VRAMBLOCK_SETBANK_D(VRAM_D_0x06040000_ENGINE_A_BG);
+	
+	
 	//set the video mode
-    videoSetMode(  MODE_0_2D | DISPLAY_BG0_ACTIVE );
+    SETDISPCNT_MAIN(  MODE_0_2D | DISPLAY_BG0_ACTIVE );
 	// black backdrop
 	BG_PALETTE[0]=RGB15(0,0,0);
-	BG0_CR = BG_MAP_BASE(31);
+	REG_BG0CNT = BG_MAP_BASE(31);
 	BG_PALETTE[255] = RGB15(31,31,31);
 	// set up debug output 
 	

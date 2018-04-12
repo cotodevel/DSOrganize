@@ -696,7 +696,7 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 					memcpy(file->iconData, diretorylarge, 1026*2);
 					
 					break;
-				case FE_FILE:
+				case FE_FILE:{
 					int tFileType = getFileType(sc.path);
 					
 					if(tFileType == NDSFILE)
@@ -764,7 +764,7 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 						
 						memcpy(file->iconData, tIcons[tFileType], 1026*2);
 					}
-					
+				}
 					break;
 				default:
 					memcpy(file->iconData, cantlaunchlarge, 1026*2);
