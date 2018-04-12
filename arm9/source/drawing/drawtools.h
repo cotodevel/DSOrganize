@@ -16,7 +16,7 @@
  *  along with DSOrganize.  If not, see <http://www.gnu.org/licenses/>.    *
  *                                                                         *
  ***************************************************************************/
- 
+
 #ifndef _DRAWTOOLS_INCLUDED
 #define _DRAWTOOLS_INCLUDED
 

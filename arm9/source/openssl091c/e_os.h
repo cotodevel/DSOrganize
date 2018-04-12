@@ -199,25 +199,6 @@ extern "C" {
 /*************/
 
 #ifdef USE_SOCKETS
-#  if defined(WINDOWS) || defined(MSDOS)
-      /* windows world */
-
-#    ifdef NO_SOCK
-#      define SSLeay_Write(a,b,c)	(-1)
-#      define SSLeay_Read(a,b,c)	(-1)
-#      define SHUTDOWN(fd)		close(fd)
-#      define SHUTDOWN2(fd)		close(fd)
-#    else
-#      include <winsock.h>
-extern HINSTANCE _hInstance;
-#      define SSLeay_Write(a,b,c)	send((a),(b),(c),0)
-#      define SSLeay_Read(a,b,c)	recv((a),(b),(c),0)
-#      define SHUTDOWN(fd)		{ shutdown((fd),0); closesocket(fd); }
-#      define SHUTDOWN2(fd)		{ shutdown((fd),2); closesocket(fd); }
-#    endif
-
-
-#  else
 
 #    ifndef VMS
       /* unix world */
@@ -256,7 +237,6 @@ extern HINSTANCE _hInstance;
 #    define SHUTDOWN(fd)    { shutdown((fd),0); close((fd)); }
 #    define SHUTDOWN2(fd)   { shutdown((fd),2); close((fd)); }
 #    define INVALID_SOCKET	(-1)
-#  endif
 #endif
 
 #if defined(THREADS) || defined(sun)

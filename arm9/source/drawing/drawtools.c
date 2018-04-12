@@ -25,6 +25,7 @@
 #include <libfb/libcommon.h>
 #include "../general.h"
 #include "drawtools.h"
+#include "specific_shared.h"
 
 bool drawCheckered = false;
 extern uint16 *drawBuffer;
