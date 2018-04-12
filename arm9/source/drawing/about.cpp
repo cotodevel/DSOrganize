@@ -39,7 +39,7 @@
 #include "../general.h"
 
 // About source
-#include "about_html.h"
+//#include "about_html.h"
 
 static bool aboutLoaded = false;
 static HTML_RENDERED aboutData;

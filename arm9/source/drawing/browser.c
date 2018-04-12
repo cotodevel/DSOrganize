@@ -1610,7 +1610,7 @@ void browserForward()
 			if(dirList[getCursor()].fileType == BINFILE)
 				loadFile(getCursor());				
 			break;
-		case CONFIRMDELETE: // confirm delete
+		case CONFIRMDELETE: { // confirm delete
 			char str[256];
 			
 			strcpy(str, curDir);
@@ -1629,7 +1629,7 @@ void browserForward()
 			
 			browserMode = 0;
 			isPopulated = 0;
-			
+		}
 			break;			
 	}
 }

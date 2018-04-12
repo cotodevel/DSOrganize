@@ -43,7 +43,7 @@
 #include "../controls.h"
 #include "../tabs.h"
 #include "../wifi.h"
-#include "../wifi_shared.h"
+#include "wifi_shared.h"
 #include "../sound.h"
 #include "../soundipc.h"
 #include "scribble.h"

@@ -148,7 +148,7 @@ void drawCalendar()
 		if(reminders[z] == 1)
 			setColor(calencarHasReminderColor);		
 		
-		if(curMonth == getMonth() && curYear == getYear() and z == getDay())
+		if(curMonth == getMonth() && curYear == getYear() && (z == getDay()))
 			setColor(calendarCurrentDateColor);
 		
 		char str[512];	
