@@ -64,33 +64,46 @@
 #include "cryptlib.h"
 #include "bio.h"
 
-/*
-int BIO_printf ( VAR_PLIST( BIO *, bio ) )
-VAR_ALIST
-	{
-	VAR_BDEFN(args, BIO *, bio);
-	char *format;
-	int ret;
-	MS_STATIC char hugebuf[1024*2]; // 10k in one chunk is the limit
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <ctype.h>
+#include <stdlib.h>
 
-	VAR_INIT(args, BIO *, bio);
-	VAR_ARG(args, char *, format);
+#include <_ansi.h>
+#include <reent.h>
 
-	hugebuf[0]='\0';
 
-// no-one uses _doprnt anymore and it appears to be broken under SunOS 4.1.4 
-#if 0 && defined(sun) && !defined(VAR_ANSI)
-	_doprnt(hugebuf,format,args);
-#else // !sun 
-	vsprintf(hugebuf,format,args);
-#endif // sun 
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <time.h>
 
-	ret=BIO_write(bio,hugebuf,strlen(hugebuf));
+#include "dsregs.h"
+#include "typedefsTGDS.h"
+#include "dmaTGDS.h"
+#include "biosTGDS.h"
 
-	VAR_END( args );
-	return(ret);
-	}
+#include "dsregs.h"
+#include "dsregs_asm.h"
+#include "exceptionTGDS.h"
+#include "ipcfifoTGDS.h"
 
-*/
+#include "InterruptsARMCores_h.h"
+#include "memoryHandleTGDS.h"
+#include "global_settings.h"
 
-//int BIO_printf todo
+//coto: fix for the DS console 
+int BIO_printf(int Index, ...){
+	sint8 *fmt[512] = {0};
+	sprintf(fmt,"%d",Index);
+	va_list args;
+	va_start (args, fmt);
+	vsnprintf ((sint8*)g_printfbuf, 64, fmt, args);
+	va_end (args);
+	printf("%s",g_printfbuf);
+	return strlen((char*)&g_printfbuf[0]);
+}
+

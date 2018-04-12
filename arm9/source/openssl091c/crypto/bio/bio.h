@@ -63,7 +63,34 @@
 extern "C" {
 #endif
 
-#include "crypto.h"
+
+#include "cryptlib.h"
+#include "bio.h"
+
+#include <ctype.h>
+#include <_ansi.h>
+#include <reent.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <time.h>
+
+#include "dsregs.h"
+#include "typedefsTGDS.h"
+#include "dmaTGDS.h"
+#include "biosTGDS.h"
+
+#include "dsregs.h"
+#include "dsregs_asm.h"
+#include "exceptionTGDS.h"
+#include "ipcfifoTGDS.h"
+
+#include "InterruptsARMCores_h.h"
+#include "memoryHandleTGDS.h"
+#include "global_settings.h"
+
 
 /* These are the 'types' of BIOs */
 #define BIO_TYPE_NONE		0
@@ -657,11 +684,7 @@ long BIO_ghbn_ctrl();
 
 #endif
 
-#ifndef NOPROTO
-int BIO_printf( VAR_PLIST( BIO *, bio ) );
-#else
-int BIO_printf();
-#endif
+extern int BIO_printf(int Index, ...);
 
 /* BEGIN ERROR CODES */
 /* Error codes for the BIO functions. */

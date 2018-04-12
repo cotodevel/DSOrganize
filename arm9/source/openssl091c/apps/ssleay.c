@@ -108,7 +108,7 @@ int i;
 	}
 #endif
 
-/* Make sure there is only one when MONOLITH is defined */
+/* Make sure there is only one when MONOLITH is defined 
 #ifdef MONOLITH
 BIO *bio_err=NULL;
 #endif
@@ -131,7 +131,7 @@ char *Argv[];
 	arg.data=NULL;
 	arg.count=0;
 
-	/* SSLeay_add_ssl_algorithms(); is called in apps_startup() */
+	// SSLeay_add_ssl_algorithms(); is called in apps_startup() 
 	apps_startup();
 
 #if defined(DEBUG) && !defined(WINDOWS) && !defined(MSDOS)
@@ -151,7 +151,7 @@ char *Argv[];
 
 	ERR_load_crypto_strings();
 
-	/* Lets load up our environment a little */
+	// Lets load up our environment a little 
 	p=getenv("SSLEAY_CONF");
 	if (p == NULL)
 		{
@@ -168,7 +168,7 @@ char *Argv[];
 
 	prog=prog_init();
 
-	/* first check the program name */
+	// first check the program name 
 	program_name(Argv[0],pname,PROG_NAME_SIZE);
 
 	f.name=pname;
@@ -180,8 +180,7 @@ char *Argv[];
 		goto end;
 		}
 
-	/* ok, now check that there are not arguments, if there are,
-	 * run with them, shifting the ssleay off the front */
+	// ok, now check that there are not arguments, if there are, run with them, shifting the ssleay off the front 
 	if (Argc != 1)
 		{
 		Argc--;
@@ -191,7 +190,7 @@ char *Argv[];
 		goto end;
 		}
 
-	/* ok, lets enter the old 'SSLeay>' mode */
+	// ok, lets enter the old 'SSLeay>' mode 
 	
 	for (;;)
 		{
@@ -341,3 +340,4 @@ FUNCTION *a;
 	}
 
 #undef SSLEAY
+*/
