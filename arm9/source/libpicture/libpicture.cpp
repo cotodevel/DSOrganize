@@ -2300,8 +2300,8 @@ bool getPictureSize(char *fName, int *max_X, int *max_Y)
 		}
 		
 		DRAGON_fseek(fp, 18, 0);
-		DRAGON_fread(*max_X, 4, 1, fp);
-		DRAGON_fread(*max_Y, 4, 1, fp);
+		DRAGON_fread(*&max_X, 4, 1, fp);	//ori: &max_X
+		DRAGON_fread(*&max_Y, 4, 1, fp);	//ori: &max_Y
 		
 		DRAGON_fclose(fp);		
 		

@@ -1606,11 +1606,12 @@ void strescapecat(char *dst, char *src)
 			case 0x3B:
 			case 0x3D:
 			case 0x3F:
-			case 0x40:
+			case 0x40:{
 				char tStr[20];
 				
 				sprintf(tStr, "%c%02x", '%', src[y]);
 				strcat(dst, tStr);
+			}
 				break;
 			default:
 				strccat(dst, src[y]);
@@ -1722,7 +1723,7 @@ void constructValidURL(char *tURL, char *finalURL)
 	free(tStr);
 }
 
-void drawTextBox()
+void drawTextBoxWEB()
 {
 	// textbox code from irc
 	if(keyboardShowing)
@@ -1777,7 +1778,7 @@ void drawTextBox()
 		{
 			struct touchScr t = touchReadXYNew();
 			
-			if(t.px > 13 & t.py > 19 & t.px < 241 & t.py < 33)
+			if(t.touchXpx > 13 & t.touchYpx > 19 & t.touchXpx < 241 & t.touchYpx < 33)
 			{
 				int tCur = getTouchCursor();
 				
@@ -1928,7 +1929,7 @@ void drawWebBrowserScreens()
 normalRender:
 		{
 			checkDLQueue(); // for downloading images
-			drawTextBox();
+			drawTextBoxWEB();
 			
 			if(isImage)
 			{

@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 void resetScreen();
-void displayPicture(int offsetX, int offsetY);
+void displayPicture(int offsetX, int offsetY, void *tmpData);
 void drawPictureScreen();
 void movePicture(int x, int y);
 void drawZoomScreen();

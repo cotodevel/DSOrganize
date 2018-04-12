@@ -24,6 +24,7 @@ USA
 #ifndef __specific_shared_h__
 #define __specific_shared_h__
 
+#include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
 #include "ipcfifoTGDS.h"
@@ -131,6 +132,8 @@ struct sIPCSharedTGDSSpecific {
 	struct soundregion sndregioninst;
 };
 
+//types used by DSOrganize
+typedef sint16 int16;
 
 #endif
 

@@ -57,16 +57,16 @@ void copyChunk()
 	
 	u8 *micData = NULL;
 	
-	switch(soundIPC->channels)
+	switch(getsIPCSharedTGDSSpecific()->sndregioninst.channels)
 	{
 		case 0:
-			micData = (u8 *)soundIPC->arm9L;
+			micData = (u8 *)getsIPCSharedTGDSSpecific()->sndregioninst.arm9L;
 			break;
 		case 1:
-			micData = (u8 *)soundIPC->arm9R;
+			micData = (u8 *)getsIPCSharedTGDSSpecific()->sndregioninst.arm9R;
 			break;
 		case 2:
-			micData = (u8 *)soundIPC->interlaced;
+			micData = (u8 *)getsIPCSharedTGDSSpecific()->sndregioninst.interlaced;
 			break;
 	}
 	
@@ -107,13 +107,13 @@ void startRecording()
 	strncpy(data, "data    ", 8);
 	DRAGON_fwrite(data, 1, 8, recFile);
 	
-	soundIPC->arm9L = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
-	soundIPC->arm9R = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
-	soundIPC->interlaced = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
+	getsIPCSharedTGDSSpecific()->sndregioninst.arm9L = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
+	getsIPCSharedTGDSSpecific()->sndregioninst.arm9R = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
+	getsIPCSharedTGDSSpecific()->sndregioninst.interlaced = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
 
-	memset(soundIPC->arm9L, 0, REC_BLOCK_SIZE);
-	memset(soundIPC->arm9R, 0, REC_BLOCK_SIZE);
-	memset(soundIPC->interlaced, 0, REC_BLOCK_SIZE);
+	memset(getsIPCSharedTGDSSpecific()->sndregioninst.arm9L, 0, REC_BLOCK_SIZE);
+	memset(getsIPCSharedTGDSSpecific()->sndregioninst.arm9R, 0, REC_BLOCK_SIZE);
+	memset(getsIPCSharedTGDSSpecific()->sndregioninst.interlaced, 0, REC_BLOCK_SIZE);
 	
 	setSoundFrequency(REC_FREQ);	
 	setSoundLength(REC_BLOCK_SIZE);
@@ -132,9 +132,9 @@ void endRecording()
 	//copyChunk();
 	isRecording = false;
 	
-	trackFree(soundIPC->arm9L);
-	trackFree(soundIPC->arm9R);
-	trackFree(soundIPC->interlaced);
+	trackFree(getsIPCSharedTGDSSpecific()->sndregioninst.arm9L);
+	trackFree(getsIPCSharedTGDSSpecific()->sndregioninst.arm9R);
+	trackFree(getsIPCSharedTGDSSpecific()->sndregioninst.interlaced);
 	
 	u32 length = DRAGON_flength(recFile) - 8;
 	DRAGON_fseek(recFile, 4, 0);

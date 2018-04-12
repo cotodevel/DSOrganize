@@ -229,6 +229,7 @@ void getNextSoundInternal(bool toAdd)
 				setMode(BROWSER);
 			break;
 		case SOUND_RANDFILE:
+		{
 			int tmpCur = 0;
 			
 			if(nextRandomList(fileName, &tmpCur)) // look in playlist first
@@ -253,8 +254,8 @@ void getNextSoundInternal(bool toAdd)
 				
 				soundLoaded = false;
 			}
-			
-			break;
+		}	
+		break;
 	}
 	
 	flagRefresh();
@@ -328,7 +329,7 @@ void getPrevSound(int sMode)
 			else
 				setMode(BROWSER);
 			break;
-		case SOUND_RANDFILE:
+		case SOUND_RANDFILE:{
 			int tmpCur = 0;
 			
 			if(prevRandomList(fileName, &tmpCur))
@@ -341,7 +342,8 @@ void getPrevSound(int sMode)
 				destroyRandomList();				
 				setMode(BROWSER);
 			}
-			break;
+		}
+		break;
 	}
 	
 	flagRefresh();

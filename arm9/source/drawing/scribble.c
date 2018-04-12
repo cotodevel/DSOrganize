@@ -587,10 +587,11 @@ void scribbleDown(int x, int y)
 			lastX = x;
 			lastY = y;
 			break;
-		case TOOL_SPRAY:
+		case TOOL_SPRAY:{
 			s_spray(x, y, 10, curColor);
+		}
 			break;
-		case TOOL_REPLACE:
+		case TOOL_REPLACE:{
 			uint16 tC = drawBuffer[x + (y * 256)] | BIT(15);
 			
 			for(int l=0;l<256*192;l++)
@@ -598,6 +599,7 @@ void scribbleDown(int x, int y)
 				if(drawBuffer[l] == tC)
 					drawBuffer[l] = curColor | BIT(15);
 			}
+		}
 			break;
 	}
 	

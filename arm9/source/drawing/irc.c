@@ -20,6 +20,7 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -4001,15 +4002,19 @@ void connectToServer(char *s)
 	
 	// format nicknames
 	
-	PERSONAL_DATA p = *PersonalData;
-	char name[20];
+	//PERSONAL_DATA p = *PersonalData;
+	char name[20] = {0};
 	
-	memset(name, 0, 20);
-	uint16 x;
+	//memset(name, 0, 20);
+	//uint16 x;
 	
-	for(x=0;x<p.nameLen;x++)
-		name[x] = (char)(p.name[x] & 0xFF);
-
+	//for(x=0;x<p.nameLen;x++)
+	//	name[x] = (char)(p.name[x] & 0xFF);
+	
+	int Size = (sizeof(getsIPCSharedTGDS()->nickname_schar8) > sizeof(name)) ? sizeof(name): sizeof(getsIPCSharedTGDS()->nickname_schar8);
+	Size = (strlen((char*)&getsIPCSharedTGDS()->nickname_schar8[0]) > Size) ? Size: strlen((char*)&getsIPCSharedTGDS()->nickname_schar8[0]);
+	snprintf (name, Size, "%s", &getsIPCSharedTGDS()->nickname_schar8[0]);
+	
 	// nick
 	if(strlen(nickName) > 0)
 		strcpy(useNickName, nickName);
@@ -4412,13 +4417,17 @@ void drawTopIRCScreen()
 					{
 						case C_STARTED:
 						{
-							PERSONAL_DATA p = *PersonalData;
-							char name[20];
+							//PERSONAL_DATA p = *PersonalData;
+							char name[20]={0};
 							
-							memset(name, 0, 20);
+							//memset(name, 0, 20);
 							
-							for(uint16 x=0;x<p.nameLen;x++)
-								name[x] = (char)(p.name[x] & 0xFF);
+							//for(uint16 x=0;x<p.nameLen;x++)
+							//	name[x] = (char)(p.name[x] & 0xFF);
+							
+							int Size = (sizeof(getsIPCSharedTGDS()->nickname_schar8) > sizeof(name)) ? sizeof(name): sizeof(getsIPCSharedTGDS()->nickname_schar8);
+							Size = (strlen((char*)&getsIPCSharedTGDS()->nickname_schar8[0]) > Size) ? Size: strlen((char*)&getsIPCSharedTGDS()->nickname_schar8[0]);
+							snprintf (name, Size, "%s", &getsIPCSharedTGDS()->nickname_schar8[0]);							
 							
 							// fix for undernet
 							char tmpNickName[NICK_LEN];							
@@ -4681,7 +4690,7 @@ void drawBottomIRCScreen()
 	{
 		struct touchScr t = touchReadXYNew();
 		
-		if(t.px > 13 & t.py > 19 & t.px < 241 & t.py < 33)
+		if(t.touchXpx > 13 & t.touchYpx > 19 & t.touchXpx < 241 & t.touchYpx < 33)
 		{
 			int tCur = getTouchCursor();
 			
