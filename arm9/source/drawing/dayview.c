@@ -475,7 +475,7 @@ void dayviewListCallback(int pos, int x, int y)
 			sprintf(str,"%d:00", format12(pos >> 1));
 	}
 		
-	if(pos == getCurTime() && curMonth == getMonth() && curYear == getYear() and curDay == getDay())
+	if(pos == getCurTime() && curMonth == getMonth() && curYear == getYear() && curDay == getDay())
 		setColor(calendarCurrentDateColor);
 	else
 	{

@@ -40,7 +40,7 @@ void drawHelpScreen()
 {
 	if(!helpLoaded)
 	{
-		irqSet(IRQ_VBLANK, 0);
+		//irqSet(IRQ_VBLANK, 0);
 		char htmlFile[32];
 		
 		switch(getMode())
@@ -193,6 +193,6 @@ void clearHelpScreen()
 		if(getMode() == SOUNDPLAYER)
 			fb_swapBuffers();
 		
-		irqSet(IRQ_VBLANK, vBlank);
+		//irqSet(IRQ_VBLANK, vBlank);
 	}
 }

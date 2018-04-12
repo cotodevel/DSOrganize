@@ -705,7 +705,7 @@ void calcAction(int action)
 	curKey = action - 1;
 	eraseChar = 2;
 	drawCalculatorButtons();
-	swiWaitForVBlank();
+	IRQVBlankWait();
 	bg_swapBuffers();
 	drawCalculatorButtons();
 	

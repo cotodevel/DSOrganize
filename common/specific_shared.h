@@ -29,6 +29,15 @@ USA
 #include "ipcfifoTGDS.h"
 #include "dswnifi.h"
 #include "memoryHandleTGDS.h"
+#include "memoryHandleTGDS.h"
+
+#define ARM9COMMAND_SUCCESS 0xFFFFFF01
+#define ARM9COMMAND_INIT 0xFFFFFF02
+#define ARM9COMMAND_UPDATE_BUFFER 0xFFFFFF03
+#define ARM9COMMAND_SAVE_DATA 0xFFFFFF04
+#define ARM9COMMAND_TOUCHDOWN 0xFFFFFF05
+#define ARM9COMMAND_TOUCHMOVE 0xFFFFFF06
+#define ARM9COMMAND_TOUCHUP 0xFFFFFF07
 
 #define ARM7STATE_IDLE 0
 #define ARM7STATE_WAITING 1
@@ -60,7 +69,7 @@ USA
 #define ARM9COMMAND_TOUCHMOVE 0xFFFFFF06
 #define ARM9COMMAND_TOUCHUP 0xFFFFFF07
 
-
+#define BIT(n) (1 << (n))
 
 typedef struct sTransferSoundData {
 //---------------------------------------------------------------------------------
@@ -82,7 +91,6 @@ u8 count;
 u8 PADDING[3];
 } TransferSound, * pTransferSound;
 
-
 struct soundregion
 {
 	s16 *arm9L;
@@ -100,7 +108,8 @@ struct soundregion
 	u32 timer;
 	
 	//snd
-	TransferSound transfersoundInst; 
+	TransferSound transfersoundInst;
+	
 	/*
 	//bugfix
 	int sendHeartbeat_arm9;
@@ -112,13 +121,12 @@ struct soundregion
 	int fullHeartbeat;
 	
 	int arbitraryCommand[17];*/
-} ;
+};
+
 
 struct sIPCSharedTGDSSpecific {
 	uint32 frameCounter7;	//VBLANK counter7
 	uint32 frameCounter9;	//VBLANK counter9
-	
-	
 	
 	struct soundregion sndregioninst;
 };

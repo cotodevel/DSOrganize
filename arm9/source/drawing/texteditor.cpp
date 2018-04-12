@@ -843,7 +843,7 @@ void saveTextFile()
 	resetCursor();
 	filePos = 0;
 	drawEditScreen();
-	swiWaitForVBlank();
+	IRQVBlankWait();
 	fb_swapBuffers();
 	
 	DRAGON_chdir("/");

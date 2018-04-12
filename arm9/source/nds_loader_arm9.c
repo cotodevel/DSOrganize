@@ -22,6 +22,7 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
 #include "videoTGDS.h"
 #include <sys/stat.h>
 #include <libfb/libcommon.h>
@@ -30,7 +31,6 @@
 #include "sound.h"
 #include "globals.h"
 #include "settings.h"
-#include "soundIPC.h"
 #include "general.h"
 #include "language.h"
 

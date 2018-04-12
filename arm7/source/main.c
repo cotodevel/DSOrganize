@@ -504,7 +504,7 @@ void micInterrupt()
 void SendMultipleWordACK(u32 command) 
 {	
 	while((REG_IPC_FIFO_CR & IPC_FIFO_SEND_FULL))
-		swiWaitForVBlank();
+		IRQVBlankWait();
 	
     REG_IPC_FIFO_TX = command;
 }
@@ -758,7 +758,7 @@ void FIFO_Receive()
 				break;
 			case 0xF0: // sgstair lib
 				while((REG_IPC_FIFO_CR & IPC_FIFO_RECV_EMPTY))
-					swiWaitForVBlank();
+					IRQVBlankWait();
 				
 				command = REG_IPC_FIFO_RX;
 				
@@ -821,7 +821,7 @@ void FIFO_Receive()
 						eloop();
 					}
 					
-					swiWaitForVBlank();
+					IRQVBlankWait();
 				}
 				break;
 			case ARM7COMMAND_BOOT_CHISHM:

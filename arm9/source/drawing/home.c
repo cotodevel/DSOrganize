@@ -234,16 +234,17 @@ void drawSplash()
 	fb_setClipping(0, 0, 255, 191);
 	fb_drawRect(0,191-16, 255, 191, homeDateFillColor);
 	
-	PERSONAL_DATA p = *PersonalData;
+	//PERSONAL_DATA p = *PersonalData;
 	char str[256];
 	char name[20];
 	
 	memset(name, 0, 20);
 	
-	for(uint16 x=0;x<p.nameLen;x++)
-		name[x] = (char)(p.name[x] & 0xFF);
+	//for(uint16 x=0;x<p.nameLen;x++)
+	//	name[x] = (char)(p.name[x] & 0xFF);
 	
-	sprintf(str, "%s, %s!", l_welcome, name);
+	//sprintf(str, "%s, %s!", l_welcome, name);
+	sprintf(str, "%s, %s!", l_welcome, "todo");
 	fb_dispString(3,191-17,str);			
 	
 	fb_drawRect(0,191-17,255,191-17,homeDateBorderColor);

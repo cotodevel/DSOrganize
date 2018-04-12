@@ -20,6 +20,8 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,7 +30,6 @@
 #include "browser.h"
 #include "../fatwrapper.h"
 #include "../colors.h"
-#include "../soundIPC.h"
 #include "../general.h"
 #include "../font_arial_9.h"
 #include "../font_gautami_10.h"

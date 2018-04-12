@@ -311,7 +311,7 @@ void HandleFifoNotEmptyWeakRef(uint32 cmd1,uint32 cmd2,uint32 cmd3,uint32 cmd4){
 			/*
 			case 0xF0: // sgstair lib
 				while((REG_IPC_FIFO_CR & IPC_FIFO_RECV_EMPTY))
-					swiWaitForVBlank();
+					IRQVBlankWait();
 				
 				command = REG_IPC_FIFO_RX;
 				

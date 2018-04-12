@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "specific_shared.h"
 #include "fatwrapper.h"
 #include ".\mikmod\include\mikmod_build.h"
 #include ".\mad\mad.h"
@@ -41,7 +42,6 @@
 #include "sound.h"
 #include "resources.h"
 #include "id3.h"
-#include "soundIPC.h"
 #include "globals.h"
 
 static bool canSend = false;
@@ -671,7 +671,7 @@ void SendArm7Command(u32 command, u32 data)
 {
 	while((REG_IPC_FIFO_CR & IPC_FIFO_SEND_FULL))
 	{
-		swiWaitForVBlank();
+		IRQVBlankWait();
 	}
 	
     REG_IPC_FIFO_TX = ((command & 0xFF) << 24) | (data & 0x00FFFFFF);
@@ -800,7 +800,7 @@ void waitForInit()
 {
 	while(!canSend)
 	{
-		swiWaitForVBlank();
+		IRQVBlankWait();
 	}
 }
 

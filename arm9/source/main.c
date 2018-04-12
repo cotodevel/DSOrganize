@@ -574,9 +574,7 @@ bool checkSleepState()
 void checkKeys()
 {
 	checkKeyboards();
-	struct touchScr touch;
-	touchScrRead(&touch);
-	
+	struct touchScr touch = touchReadXYNew();
 	if(checkSleepState())
 	{
 		return;

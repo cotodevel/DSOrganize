@@ -20,6 +20,8 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <libfb/libcommon.h>
@@ -30,7 +32,6 @@
 #include "controls.h"
 #include "clipboard.h"
 #include "sound.h"
-#include "soundipc.h"
 #include "settings.h"
 
 static int downX = 0;

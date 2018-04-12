@@ -80,7 +80,7 @@ void initWifi()
 	*((volatile u16 *)0x0400010E) = 0x00C2; // enable, irq, 1/256 clock
 	
 	while(Wifi_CheckInit()==0) 	// wait for arm7 to be initted successfully
-		swiWaitForVBlank();
+		IRQVBlankWait();
 	
 	// init ssl
 	InitCyaSSL();

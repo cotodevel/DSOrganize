@@ -20,6 +20,8 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -45,7 +47,6 @@
 #include "../wifi.h"
 #include "wifi_shared.h"
 #include "../sound.h"
-#include "../soundipc.h"
 #include "scribble.h"
 #include "irc.h"
 
@@ -346,12 +347,12 @@ void initWifiInfo()
 	wifiInfo = (WIFI_PROFILE *)safeMalloc(6 * sizeof(WIFI_PROFILE));
 	
 	// load original firmware settings
-	soundIPC->channels = 0;
+	getsIPCSharedTGDSSpecific()->sndregioninst.channels = 0;
 	SendArm7Command(ARM7COMMAND_LOAD_WIFI, 0);
 	
-	while(soundIPC->channels != 1)
+	while(getsIPCSharedTGDSSpecific()->sndregioninst.channels != 1)
 	{
-		swiWaitForVBlank();
+		IRQVBlankWait();
 	}
 	
 	loadWifiInfo();
@@ -459,7 +460,7 @@ void cursorLeaveEvent(int oldCursor)
 			}
 			
 			break;
-		case DOWNDIR:
+		case DOWNDIR:{
 			char *tDown = getDownloadDir();
 			
 			if(tDown[strlen(tDown)-1] != '/')
@@ -467,7 +468,7 @@ void cursorLeaveEvent(int oldCursor)
 				// Ensure trailing slash
 				strcat(tDown, "/");
 			}
-			
+			}
 			break;
 	}
 }
@@ -654,7 +655,7 @@ void drawTopConfiguration()
 		{
 			struct touchScr t = touchReadXYNew();
 			
-			if(t.px > 13 & t.py > 19 & t.px < 241 & t.py < 33)
+			if((t.touchXpx > 13) && (t.touchYpx > 19) && (t.touchXpx < 241) && (t.touchYpx < 33))
 			{
 				int tCur = getTouchCursor();
 				
@@ -1203,7 +1204,7 @@ void drawConfiguration()
 				{
 					struct touchScr t = touchReadXYNew();
 					
-					if(t.px > 13 & t.py > 19 & t.px < 241 & t.py < 33)
+					if((t.touchXpx > 13) && (t.touchYpx > 19) && (t.touchXpx < 241) && (t.touchYpx < 33))
 					{
 						int tCur = getTouchCursor();
 						
@@ -2722,12 +2723,12 @@ void configurationForward()
 	saveToSettings();
 	
 	// save firmware wifi
-	soundIPC->channels = 0;
+	getsIPCSharedTGDSSpecific()->sndregioninst.channels = 0;
 	SendArm7Command(ARM7COMMAND_SAVE_WIFI, 0);
 	
-	while(soundIPC->channels != 1)
+	while(getsIPCSharedTGDSSpecific()->sndregioninst.channels != 1)
 	{
-		swiWaitForVBlank();
+		IRQVBlankWait();
 	}
 	
 	// save dso wifi

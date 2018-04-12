@@ -45,6 +45,7 @@
 #include "../http.h"
 #include "../language.h"
 #include "../controls.h"
+#include "specific_shared.h"
 
 #define HEIGHT_ADJUST 10
 
@@ -963,7 +964,6 @@ void drawCurrentStatus()
 	setBold(false);
 }
 
-#include "../soundipc.h"
 
 void drawBottomSoundScreen()
 {	

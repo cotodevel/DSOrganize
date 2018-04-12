@@ -20,6 +20,7 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
 
 #include "consoleTGDS.h"
 #include <stdio.h>
@@ -43,7 +44,7 @@
 #include "graphics.h"
 #include "boot.h"
 #include "sound.h"
-#include "soundIPC.h"
+#include "specific_shared.h"
 #include "nds_loader_arm9.h"
 #include "supercard.h"
 #include "autopatch.h"
@@ -745,7 +746,7 @@ bool checkHelp()
 	{
 		drawHelpScreen();
 		
-		swiWaitForVBlank();
+		IRQVBlankWait();
 		if(allowSwapBuffer)
 			fb_swapBuffers();
 		bg_swapBuffers();
@@ -775,7 +776,7 @@ void debugPrint(char *str)
 	fb_setDefaultClipping();
 	fb_dispString(3,3,str);
 	
-	swiWaitForVBlank();	
+	IRQVBlankWait();	
 	fb_swapBuffers();
 }
 
@@ -791,7 +792,7 @@ void debugPrintHalt(char *str)
 	
 	while(1)
 	{
-		swiWaitForVBlank();
+		IRQVBlankWait();
 		
 		if(keysPressed() & KEY_SELECT)
 		{
@@ -927,7 +928,7 @@ void printMallocList()
 	else
 		fb_dispString(0,0,"Nothing in malloc list");
 	
-	swiWaitForVBlank();
+	IRQVBlankWait();
 	fb_swapBuffers();
 	
 	while(keysPressed()){

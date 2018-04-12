@@ -29,7 +29,7 @@
 #include "supercard.h"
 #include "general.h"
 #include "sound.h"
-#include "soundIPC.h"
+#include "specific_shared.h"
 
 #define SSC_Disabled (0)
 #define SSC_SDRAM (1)

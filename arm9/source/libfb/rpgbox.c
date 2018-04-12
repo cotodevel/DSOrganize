@@ -112,7 +112,7 @@ void fb_dispAnimatedBox(int x, int y, int width, int height, int tx, int ty, con
 		}
 		
 		fb_setDialogBox(x, y, a, b);
-		swiWaitForVBlank();
+		IRQVBlankWait();
 		fb_swapBuffers();
 		
 		w+=15;
@@ -191,7 +191,7 @@ void bg_dispAnimatedBox(int x, int y, int width, int height, int tx, int ty, con
 		}
 		
 		bg_setDialogBox(x, y, a, b);
-		swiWaitForVBlank();
+		IRQVBlankWait();
 		bg_swapBuffers();
 		
 		w+=15;

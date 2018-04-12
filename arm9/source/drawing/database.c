@@ -46,7 +46,7 @@
 #include "../language.h"
 #include "../controls.h"
 #include "../cookies.h"
-#include "../zlib.h"
+#include "zlib.h"
 #include "../errors.h"
 
 extern bool reverseDate;
@@ -725,7 +725,7 @@ void checkGenericURL()
 			else
 				tNegCount++;
 			
-			swiWaitForVBlank();
+			IRQVBlankWait();
 			
 			tLoop++;
 		}
@@ -1066,7 +1066,7 @@ void checkFile()
 			else
 				tNegCount++;
 			
-			swiWaitForVBlank();
+			IRQVBlankWait();
 			
 			tLoop++;
 		}

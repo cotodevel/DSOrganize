@@ -3968,7 +3968,7 @@ void closeServerConnection()
 	// wait 100ms 
 	for(int i=0;i<6;i++)
 	{
-		swiWaitForVBlank(); 
+		IRQVBlankWait(); 
 	}
 	
 	shutdown(ircSocket, 2); // request shutdown for both read/write 
@@ -3976,7 +3976,7 @@ void closeServerConnection()
 	// wait 100ms 
 	for(int i=0;i<6;i++)
 	{
-		swiWaitForVBlank(); 
+		IRQVBlankWait(); 
 	}
 	
 	wifiClose(ircSocket);
@@ -4044,8 +4044,8 @@ void connectToServer(char *s)
 	ircSocket = wifiConnectIP(site.serverIP, site.serverPort, false);
 	destroyURL(&site);
 	
-	//swiWaitForVBlank();
-	//swiWaitForVBlank();
+	//IRQVBlankWait();
+	//IRQVBlankWait();
 	
 	char cStr[1024];
 	sprintf(tStr, "\n%s %s", l_ircconnectingto, s);	
