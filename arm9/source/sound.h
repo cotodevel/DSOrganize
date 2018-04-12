@@ -180,6 +180,17 @@ char *sidMeta(int which);
 void setLoop();
 void clearLoop();
 
+extern bool canSend;
+extern sndData soundData;
+extern bool cutOff;
+extern bool sndPaused;
+extern bool playing;
+extern bool updateRequested;
+extern bool seekSpecial;
+extern int sndLen;
+extern int seekUpdate;
+extern void updateStream();
+
 #ifdef __cplusplus
 }
 #endif

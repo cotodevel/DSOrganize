@@ -48,6 +48,33 @@ extern const int click_raw_length;
 #include "main.h"
 #include "wifi_arm9.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "specific_shared.h"
+#include "fatwrapper.h"
+#include "mikmod_build.h"
+#include "mad.h"
+#include "ivorbiscodec.h"
+#include "ivorbisfile.h"
+#include "flac.h"
+#include "aacdec.h"
+#include "sid.h"
+#include "nsf.h"
+#include "spc.h"
+#include "mixer68.h"
+#include "mp4ff.h"
+#include "general.h"
+#include "wifi.h"
+#include "keyboard.h"
+#include "sound.h"
+#include "resources.h"
+#include "id3.h"
+#include "globals.h"
+#include "videoTGDS.h"
+#include "bitstreamflac.h"
+#include "sound.h"
+
 #endif
 
 #ifdef ARM9
@@ -418,12 +445,64 @@ void HandleFifoNotEmptyWeakRef(uint32 cmd1,uint32 cmd2,uint32 cmd3,uint32 cmd4){
 		}
 		
 		#endif
-		
-		//NDS9: uses NDS IPC FIFO as a layer from GBA IO @ ARM7
-		#ifdef ARM9
-		
-		#endif
 	}
+	
+	#ifdef ARM9		
+	//getsIPCSharedTGDSSpecific()->sndregioninst.recvHeartbeat_arm9++;
+	
+	switch(cmd1)
+	{
+		case ARM9COMMAND_INIT:
+			canSend = true;
+			break;
+		case ARM9COMMAND_UPDATE_BUFFER:
+			updateRequested = true;
+			
+			// check for formats that can handle not being on an interrupt (better stability)
+			// (these formats are generally decoded faster)
+			switch(soundData.sourceFmt)
+			{
+				case SRC_MP3:
+					// mono sounds are slower than stereo for some reason
+					// so we force them to update faster
+					if(soundData.channels != 1)
+						return;
+					
+					break;
+				case SRC_WAV:
+				case SRC_FLAC:
+				case SRC_STREAM_MP3:
+				case SRC_STREAM_AAC:
+				case SRC_SID:
+					// these will be played next time it hits in the main screen
+					// theres like 4938598345 of the updatestream checks in the 
+					// main code
+					return;
+			}
+			
+			// call immediately if the format needs it
+			updateStream();
+			
+			break;
+		case 0x87654321:
+			getWifiSync();
+			break;
+		case ARM9COMMAND_SAVE_DATA:
+			copyChunk();
+			break;
+		case ARM9COMMAND_TOUCHDOWN:
+			touchDown(getsIPCSharedTGDSSpecific()->sndregioninst.tX, getsIPCSharedTGDSSpecific()->sndregioninst.tY);
+			break;
+		case ARM9COMMAND_TOUCHMOVE:
+			executeMove(getsIPCSharedTGDSSpecific()->sndregioninst.tX, getsIPCSharedTGDSSpecific()->sndregioninst.tY);
+			break;
+		case ARM9COMMAND_TOUCHUP:
+			touchUp();
+			break;
+	}
+	
+	#endif
+	
 	
 }
 

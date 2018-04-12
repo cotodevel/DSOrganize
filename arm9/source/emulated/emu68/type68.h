@@ -36,17 +36,17 @@ extern "C" {
  *  @{
  */
 
-typedef TYPE_U8 u8;        /**< Must be an unsigned 8 bit integer. */
-typedef TYPE_S8 s8;        /**< Must be an   signed 8 bit integer. */
+//typedef TYPE_U8 u8;        /**< Must be an unsigned 8 bit integer. */
+//typedef TYPE_S8 s8;        /**< Must be an   signed 8 bit integer. */
 
-typedef TYPE_U16 u16;      /**< Must be an unsigned 16 bit integer. */
-typedef TYPE_S16 s16;      /**< Must be an   signed 16 bit integer. */
+//typedef TYPE_U16 u16;      /**< Must be an unsigned 16 bit integer. */
+//typedef TYPE_S16 s16;      /**< Must be an   signed 16 bit integer. */
 
-typedef TYPE_U32 u32;      /**< Must be an unsigned 32 bit integer. */
-typedef TYPE_S32 s32;      /**< Must be an   signed 32 bit integer. */
+//typedef TYPE_U32 u32;      /**< Must be an unsigned 32 bit integer. */
+//typedef TYPE_S32 s32;      /**< Must be an   signed 32 bit integer. */
 
-typedef TYPE_U64 u64;      /**< Must be an unsigned 64 bit integer. */
-typedef TYPE_S64 s64;      /**< Must be an   signed 64 bit integer. */
+//typedef TYPE_U64 u64;      /**< Must be an unsigned 64 bit integer. */
+//typedef TYPE_S64 s64;      /**< Must be an   signed 64 bit integer. */
 
 /**@}*/
 

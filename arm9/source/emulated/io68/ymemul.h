@@ -13,6 +13,7 @@
 #ifndef _YM_EMUL_H_
 #define _YM_EMUL_H_
 
+#include "typedefsTGDS.h"
 #include "emu68/type68.h"
 
 #ifdef __cplusplus

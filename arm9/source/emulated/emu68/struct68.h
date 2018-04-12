@@ -13,6 +13,7 @@
 #define _STRUCT68_H_
 
 #include "emu68/type68.h"
+#include "typedefsTGDS.h"
 
 #ifdef __cplusplus
 extern "C" {

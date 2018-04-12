@@ -2891,7 +2891,7 @@ u32 getNumber(char *str)
 	return num;
 }
 
-void takeCareOfItem(int whatVal, int override, char *&tempOut, int &tmpDst, bool &tmpBold, bool &tmpItalics, bool &tmpUnderline, bool &tmpStrikeThrough, int &tmpSize, uint16 &tmpColor, u32 &tmpA, bool &inCode, bool &oldUnderline, int &framesCount, bool &inNoFrames, bool &inScript, bool &inStyle, HTML_RENDERED *htmlPage)
+void takeCareOfItem(int whatVal, int override, char **tempOut, int * tmpDst, bool * tmpBold, bool * tmpItalics, bool * tmpUnderline, bool * tmpStrikeThrough, int * tmpSize, uint16 * tmpColor, u32 * tmpA, bool * inCode, bool * oldUnderline, int * framesCount, bool * inNoFrames, bool * inScript, bool * inStyle, HTML_RENDERED *htmlPage)
 {
 	int tVal = popItemStack();
 	
@@ -2906,216 +2906,216 @@ void takeCareOfItem(int whatVal, int override, char *&tempOut, int &tmpDst, bool
 		switch(tVal)
 		{
 			case H1:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
 				break;
 			case H2:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
 				break;
 			case H3:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
 				break;
 			case H4:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
 				break;
 			case H5:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
 				break;
 			case H6:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
 				break;
 			case SMALL:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case TT:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);								
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);								
 				break;
 			case CODE:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
-				inCode = false;
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
+				*inCode = false;
 				break;
 			case PRE:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
-				inCode = false;
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
+				*inCode = false;
 				break;
 			case SAMP:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
-				inCode = false;
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
+				*inCode = false;
 				break;
 			case KBD:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
-				inCode = false;
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
+				*inCode = false;
 				break;
 			case BIG:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case SUB:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
-				switch(tmpSize)
+				switch(*tmpSize)
 				{
 					case 0:
 					case 6:
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
 						break;
 					case 1:
 					case 4:
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
 						break;
 					case 2:
 					case 5:
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
 						break;
 					case 3:
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
-						tempOut[tmpDst] = POS_UP;
-						tmpDst++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
+						*tempOut[*tmpDst] = POS_UP;
+						(*tmpDst)++;
 						break;
 				}
 				break;
 			case SUPER:
-				tmpSize = popSizeStack();
+				*tmpSize = popSizeStack();
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				
-				tempOut[tmpDst] = POS_DOWN;
-				tmpDst++;
-				tempOut[tmpDst] = POS_DOWN;
-				tmpDst++;
+				*tempOut[*tmpDst] = POS_DOWN;
+				(*tmpDst)++;
+				*tempOut[*tmpDst] = POS_DOWN;
+				(*tmpDst)++;
 				
-				if(tmpSize == 0 || tmpSize == 6)
+				if(*tmpSize == 0 || *tmpSize == 6)
 				{
-					tempOut[tmpDst] = POS_DOWN;
-					tmpDst++;
-					tempOut[tmpDst] = POS_DOWN;
-					tmpDst++;
-					tempOut[tmpDst] = POS_DOWN;
-					tmpDst++;
+					*tempOut[*tmpDst] = POS_DOWN;
+					(*tmpDst)++;
+					*tempOut[*tmpDst] = POS_DOWN;
+					(*tmpDst)++;
+					*tempOut[*tmpDst] = POS_DOWN;
+					(*tmpDst)++;
 				}
 				break;
 			case OL:
@@ -3135,126 +3135,126 @@ void takeCareOfItem(int whatVal, int override, char *&tempOut, int &tmpDst, bool
 				
 				break;
 			case B:
-				tmpBold = false;
+				*tmpBold = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();				
+					*tmpColor = popColorStack();				
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case I:
-				tmpItalics = false;
+				*tmpItalics = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case EM:
-				tmpItalics = false;
+				*tmpItalics = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 			case STRONG:
-				tmpBold = false;
+				*tmpBold = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case CITE:
-				tmpItalics = false;
+				*tmpItalics = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case DFN:
-				tmpItalics = false;
+				*tmpItalics = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case VAR:
-				tmpItalics = false;
+				*tmpItalics = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case U:
-				tmpUnderline = false;
+				*tmpUnderline = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case STRIKE:
-				tmpStrikeThrough = false;
+				*tmpStrikeThrough = false;
 				
 				if(htmlStyle > 0)
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case FONT:
-				tmpColor = popColorStack();
+				*tmpColor = popColorStack();
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case A:
-				tmpColor = popColorStack();
-				tmpUnderline = oldUnderline;
-				tmpA = 0;
+				*tmpColor = popColorStack();
+				*tmpUnderline = *oldUnderline;
+				*tmpA = 0;
 				
-				updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case FRAMESET:
-				framesCount--;
+				*framesCount--;
 				
-				if(framesCount < 0)
-					framesCount = 0;
+				if(*framesCount < 0)
+					*framesCount = 0;
 				break;
 			case NOFRAMES:
-				if(framesCount > 0)
-					inNoFrames = false;
+				if(*framesCount > 0)
+					*inNoFrames = false;
 				break;
 			case SCRIPT:
-				inScript = false;
+				*inScript = false;
 				break;
 			case STYLE:
-				inStyle = false;
+				*inStyle = false;
 				break;
 			case DIV:
 				if(htmlStyle > 0)
 				{
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 					
-					updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+					updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				}
 				break;
 			case SPAN:
 				if(htmlStyle > 0)
 				{
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 					
-					updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+					updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				}
 				break;
 			case P:
 				if(htmlStyle > 0)
 				{
-					tmpColor = popColorStack();
+					*tmpColor = popColorStack();
 					
-					updateItem(tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpSize, tmpColor, false, tmpStrikeThrough, tmpA, 0);
+					updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				}
 				break;
 		}
@@ -3262,6 +3262,7 @@ void takeCareOfItem(int whatVal, int override, char *&tempOut, int &tmpDst, bool
 		tVal = popItemStack();
 	}
 }
+
 
 int getNextColor(HTML_RENDERED *htmlPage)
 {
@@ -6048,7 +6049,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 								if(htmlStyle == 0)
 									popItemStackUntilType(TR, TABLE);
 								else
-									takeCareOfItem(TR, TABLE, tempOut, tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpStrikeThrough, tmpSize, tmpColor, tmpA, inCode, oldUnderline, framesCount, inNoFrames, inScript, inStyle, htmlPage);
+									takeCareOfItem(TR, TABLE, &tempOut, &tmpDst, &tmpBold, &tmpItalics, &tmpUnderline, &tmpStrikeThrough, &tmpSize, &tmpColor, &tmpA, &inCode, &oldUnderline, &framesCount, &inNoFrames, &inScript, &inStyle, htmlPage);
 								
 								if(tmpDst > 0 && tempOut[tmpDst-1] != '\n')
 								{						
@@ -6973,7 +6974,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 							if(htmlStyle == 0)
 								popItemStackUntilType(TD, TR);
 							else
-								takeCareOfItem(TD, TR, tempOut, tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpStrikeThrough, tmpSize, tmpColor, tmpA, inCode, oldUnderline, framesCount, inNoFrames, inScript, inStyle, htmlPage);
+								takeCareOfItem(TD, TR, &tempOut, &tmpDst, &tmpBold, &tmpItalics, &tmpUnderline, &tmpStrikeThrough, &tmpSize, &tmpColor, &tmpA, &inCode, &oldUnderline, &framesCount, &inNoFrames, &inScript, &inStyle, htmlPage);
 							
 							if(cellPadding > 0)
 							{
@@ -6990,7 +6991,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 							if(htmlStyle == 0)
 								popItemStackUntilType(TR,TABLE);
 							else
-								takeCareOfItem(TR, TABLE, tempOut, tmpDst, tmpBold, tmpItalics, tmpUnderline, tmpStrikeThrough, tmpSize, tmpColor, tmpA, inCode, oldUnderline, framesCount, inNoFrames, inScript, inStyle, htmlPage);
+								takeCareOfItem(TR, TABLE, &tempOut, &tmpDst, &tmpBold, &tmpItalics, &tmpUnderline, &tmpStrikeThrough, &tmpSize, &tmpColor, &tmpA, &inCode, &oldUnderline, &framesCount, &inNoFrames, &inScript, &inStyle, htmlPage);
 							
 							if(tmpDst > 0 && tempOut[tmpDst-1] != '\n')
 							{						

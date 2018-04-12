@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <dswifi9.h>
 #include <stdlib.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <socket.h>
+#include <in.h>
 #include <netdb.h>
 #include "http.h"
 #include "resources.h"

@@ -49,7 +49,7 @@ void setLCDState(bool state)
 {
 	if(state == LCD_ON && !lcdOn)
 	{
-		powerON(POWER_ALL_2D); // turn on everything
+		powerON(POWER_2D_A | POWER_2D_B | POWER_SWAP_LCDS); // turn on everything
 		
 		lcdMainOnTop();	
 		
@@ -70,7 +70,7 @@ void setLCDState(bool state)
 		}
 		else
 		{
-			powerOFF(POWER_ALL_2D); // turn off everything
+			powerOFF(POWER_2D_A | POWER_2D_B | POWER_SWAP_LCDS);	//powerOFF(POWER_ALL_2D); // turn off everything
 		}
 		
 		lcdOn = false;

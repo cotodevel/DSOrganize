@@ -18,6 +18,7 @@
  *
  */
 
+#include "typedefsTGDS.h"
 #include <config68.h>
 
 #include <stdio.h>

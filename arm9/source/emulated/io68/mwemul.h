@@ -17,6 +17,7 @@
 extern "C" {
 #endif
 
+#include "typedefsTGDS.h"
 #include "emu68/type68.h"
 
 /** @defgroup  io68_mw_devel  STE sound emulator

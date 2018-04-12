@@ -13,6 +13,7 @@
 #ifndef _FILE68_H_
 #define _FILE68_H_
 
+#include "typedefsTGDS.h"
 #include "file68/istream68.h"
 
 #ifdef __cplusplus

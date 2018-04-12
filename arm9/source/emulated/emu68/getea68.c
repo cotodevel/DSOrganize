@@ -8,7 +8,7 @@
  */
 
 /* Copyright (C) 1998-2001 Ben(jamin) Gerard */
-
+#include "typedefsTGDS.h"
 #include "emu68/getea68.h"
 #include "emu68/emu_error68.h"
 #include "emu68/mem68.h"

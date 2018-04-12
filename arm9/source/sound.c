@@ -43,16 +43,18 @@
 #include "resources.h"
 #include "id3.h"
 #include "globals.h"
+#include "videoTGDS.h"
+#include "sound.h"
 
-static bool canSend = false;
-static sndData soundData;
-static bool cutOff = false;
-static bool sndPaused = false;
-static bool playing = false;
-static bool updateRequested = false;
-static bool seekSpecial = false;
-static int sndLen = 0;
-static int seekUpdate = -1;
+bool canSend = false;
+sndData soundData;
+bool cutOff = false;
+bool sndPaused = false;
+bool playing = false;
+bool updateRequested = false;
+bool seekSpecial = false;
+int sndLen = 0;
+int seekUpdate = -1;
 extern ID3V1_TYPE id3Data;
 
 // sound out
@@ -196,10 +198,10 @@ void mallocData(int size)
 	lBuffer = SIWRAM0;
 	rBuffer = SIWRAM0 + m_size;
 	
-	soundIPC->arm9L = NULL; // temporary
-	soundIPC->arm9R = NULL; // temporary
+	getsIPCSharedTGDSSpecific()->sndregioninst.arm9L = NULL; // temporary
+	getsIPCSharedTGDSSpecific()->sndregioninst.arm9R = NULL; // temporary
 	
-	soundIPC->interlaced = NULL;
+	getsIPCSharedTGDSSpecific()->sndregioninst.interlaced = NULL;
 }
 
 void freeData()
@@ -220,10 +222,10 @@ void swapData()
 			
 			REG_SIWRAMCNT = 2; // bank 0 to arm9, bank 1 to arm7
 			
-			soundIPC->arm9L = SIWRAM1;
-			soundIPC->arm9R = SIWRAM1 + m_size;
+			getsIPCSharedTGDSSpecific()->sndregioninst.arm9L = SIWRAM1;
+			getsIPCSharedTGDSSpecific()->sndregioninst.arm9R = SIWRAM1 + m_size;
 			
-			soundIPC->interlaced = SIWRAM1;
+			getsIPCSharedTGDSSpecific()->sndregioninst.interlaced = SIWRAM1;
 			break;
 		case 1:
 			lBuffer = SIWRAM1;
@@ -231,10 +233,10 @@ void swapData()
 			
 			REG_SIWRAMCNT = 1; // bank 0 to arm7, bank 1 to arm9
 			
-			soundIPC->arm9L = SIWRAM0;
-			soundIPC->arm9R = SIWRAM0 + m_size;
+			getsIPCSharedTGDSSpecific()->sndregioninst.arm9L = SIWRAM0;
+			getsIPCSharedTGDSSpecific()->sndregioninst.arm9R = SIWRAM0 + m_size;
 			
-			soundIPC->interlaced = SIWRAM0;
+			getsIPCSharedTGDSSpecific()->sndregioninst.interlaced = SIWRAM0;
 			
 			break;
 	}
@@ -318,11 +320,11 @@ void circularCopy(void *dst, void *src, int copySize, int * position, int buffer
 			((char *)dst)[*position] = ((char *)src)[count];
 			
 			count++;
-			*position++;
+			(*position)++;
 			s_metaCount++;
 			
 			if(*position == bufferSize)
-				*position = 0;
+				*(position) = 0;
 		}
 	}
 }
@@ -478,7 +480,7 @@ void updateStream()
 		case SRC_OGG:
 		case SRC_STREAM_OGG:
 		{
-			soundIPC->channels = soundData.channels;
+			getsIPCSharedTGDSSpecific()->sndregioninst.channels = soundData.channels;
 			swapAndSend(ARM7COMMAND_SOUND_DEINTERLACE);
 			
 			if(soundData.sourceFmt == SRC_STREAM_OGG)
@@ -527,9 +529,10 @@ void updateStream()
 		}
 		case SRC_AAC:
 		case SRC_STREAM_AAC:
+		{
 			bool isSeek = (seekUpdate >= 0);
 			
-			soundIPC->channels = soundData.channels;			
+			getsIPCSharedTGDSSpecific()->sndregioninst.channels = soundData.channels;			
 			swapAndSend(ARM7COMMAND_SOUND_DEINTERLACE);
 			
 			if(soundData.sourceFmt == SRC_STREAM_AAC)
@@ -592,7 +595,7 @@ void updateStream()
 					
 					break;
 			}
-			
+		}	
 			break;
 		case SRC_FLAC:
 			swapAndSend(ARM7COMMAND_SOUND_COPY);
@@ -619,7 +622,7 @@ void updateStream()
 			
 			break;
 		case SRC_SID:
-			soundIPC->channels = 1;
+			getsIPCSharedTGDSSpecific()->sndregioninst.channels = 1;
 			swapAndSend(ARM7COMMAND_SOUND_DEINTERLACE);
 			
 			checkJustKeys();
@@ -633,7 +636,7 @@ void updateStream()
 				memset(lBuffer, 0, NSF_OUT_SIZE * 4);
 			}
 			
-			soundIPC->channels = 1;
+			getsIPCSharedTGDSSpecific()->sndregioninst.channels = 1;
 			swapAndSend(ARM7COMMAND_SOUND_DEINTERLACE);
 			
 			checkJustKeys();			
@@ -650,7 +653,7 @@ void updateStream()
 			
 			break;
 		case SRC_SNDH:
-			soundIPC->channels = 2;
+			getsIPCSharedTGDSSpecific()->sndregioninst.channels = 2;
 			swapAndSend(ARM7COMMAND_SOUND_DEINTERLACE);
 			
 			checkJustKeys();			
@@ -669,6 +672,7 @@ void updateStream()
 
 void SendArm7Command(u32 command, u32 data)
 {
+	/*
 	while((REG_IPC_FIFO_CR & IPC_FIFO_SEND_FULL))
 	{
 		IRQVBlankWait();
@@ -676,16 +680,20 @@ void SendArm7Command(u32 command, u32 data)
 	
     REG_IPC_FIFO_TX = ((command & 0xFF) << 24) | (data & 0x00FFFFFF);
 
-	//soundIPC->sendHeartbeat_arm9++;
+	//getsIPCSharedTGDSSpecific()->sndregioninst.sendHeartbeat_arm9++;
+	*/
+	
+	SendMultipleWordACK(command, data, 0, NULL);
 }
 
+/*
 void FIFO_Receive() 
 {
 	while(!(REG_IPC_FIFO_CR & IPC_FIFO_RECV_EMPTY))
 	{
 		u32 command = REG_IPC_FIFO_RX;
 		
-		//soundIPC->recvHeartbeat_arm9++;
+		//getsIPCSharedTGDSSpecific()->sndregioninst.recvHeartbeat_arm9++;
 		
 		switch(command)
 		{
@@ -728,10 +736,10 @@ void FIFO_Receive()
 				copyChunk();
 				break;
 			case ARM9COMMAND_TOUCHDOWN:
-				touchDown(soundIPC->tX, soundIPC->tY);
+				touchDown(getsIPCSharedTGDSSpecific()->sndregioninst.tX, getsIPCSharedTGDSSpecific()->sndregioninst.tY);
 				break;
 			case ARM9COMMAND_TOUCHMOVE:
-				executeMove(soundIPC->tX, soundIPC->tY);
+				executeMove(getsIPCSharedTGDSSpecific()->sndregioninst.tX, getsIPCSharedTGDSSpecific()->sndregioninst.tY);
 				break;
 			case ARM9COMMAND_TOUCHUP:
 				touchUp();
@@ -739,20 +747,22 @@ void FIFO_Receive()
 		}
 	}
 }
+*/
+
 
 void setSoundInterrupt()
 {
-	irqSet(IRQ_FIFO_NOT_EMPTY, FIFO_Receive);
-	irqEnable(IRQ_FIFO_NOT_EMPTY);
+	//irqSet(IRQ_FIFO_NOT_EMPTY, FIFO_Receive);
+	//irqEnable(IRQ_FIFO_NOT_EMPTY);
 
-	REG_IPC_FIFO_CR = IPC_FIFO_ENABLE | IPC_FIFO_SEND_CLEAR | IPC_FIFO_RECV_IRQ;
+	//REG_IPC_FIFO_CR = IPC_FIFO_ENABLE | IPC_FIFO_SEND_CLEAR | IPC_FIFO_RECV_IRQ;
 }
 
 void initComplexSound()
 {	
 	soundData.sourceFmt = SRC_NONE;
 	soundData.filePointer = NULL;
-	soundIPC->volume = 4;
+	getsIPCSharedTGDSSpecific()->sndregioninst.volume = 4;
 	
 	MikMod_RegisterAllDrivers();
 	MikMod_RegisterAllLoaders();
@@ -1998,17 +2008,17 @@ int callbacks_seek_func_stream(void *datasource, ogg_int64_t offset, int whence)
 {
 	switch(whence)
 	{
-		case SEEK_SET:
+		case SEEK_SET:{
 			int addLoc = offset - oggStreamLoc;
 			
 			oggStreamLoc += addLoc;
 			lagCursor += addLoc;
-			
+		}
 			break;
-		case SEEK_CUR:
+		case SEEK_CUR:{
 			oggStreamLoc += offset;
 			lagCursor += offset;
-			
+		}
 			break;
 		case SEEK_END:
 			// unsupported
@@ -2264,7 +2274,7 @@ bool loadSound(char *fName)
 		
 		MikMod_Init("");
 		
-		soundIPC->channels = 2; // for de-interlacing
+		getsIPCSharedTGDSSpecific()->sndregioninst.channels = 2; // for de-interlacing
 		
 		soundData.sourceFmt = SRC_MIKMOD;
 		soundData.bufLoc = 0;
@@ -3549,7 +3559,7 @@ int getStreamLead()
 
 u8 getVolume()
 {
-	return soundIPC->volume;
+	return getsIPCSharedTGDSSpecific()->sndregioninst.volume;
 }
 
 u32 getSoundChannels()
@@ -3562,5 +3572,5 @@ void setVolume(u8 volume)
 	if(volume > 16)
 		volume = 16;
 	
-	soundIPC->volume = volume;
+	getsIPCSharedTGDSSpecific()->sndregioninst.volume = volume;
 }

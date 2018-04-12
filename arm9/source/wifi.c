@@ -24,10 +24,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <dswifi9.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <socket.h>
+#include <in.h>
 #include <netdb.h>
-#include <openssl/ssl.h>
+#include <ssl.h>
 #include "wifi.h"
 #include "general.h"
 #include "sound.h"
@@ -155,7 +155,7 @@ int doConnect(int sock, struct sockaddr *tcp_sain, int size, bool useSSL)
 		wifiConn[id].ssl = SSL_new(wifiConn[id].ctx);
 		SSL_set_fd(wifiConn[id].ssl, sock);
 		
-		if(SSL_connect(wifiConn[id].ssl) != SSL_SUCCESS)
+		if(SSL_connect(wifiConn[id].ssl) != SSL_ST_OK)//SSL_SUCCESS)
 		{
 			// couldn't get valid socket id
 			wifiClose(sock);

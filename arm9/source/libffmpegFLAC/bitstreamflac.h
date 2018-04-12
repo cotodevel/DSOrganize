@@ -27,7 +27,8 @@
 #endif
 
 /* Endian conversion routines for standalone compilation */
-#ifdef BUILD_STANDALONE
+
+#ifndef BUILD_STANDALONE
     #ifdef BUILD_BIGENDIAN
         #define betoh32(x) (x)
         #define letoh32(x) swap32(x)
