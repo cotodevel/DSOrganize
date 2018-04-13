@@ -3218,7 +3218,7 @@ void takeCareOfItem(int whatVal, int override, char **tempOut, int * tmpDst, boo
 				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case FRAMESET:
-				*(framesCount)--;
+				(*framesCount)--;
 				
 				if(*framesCount < 0)
 					*framesCount = 0;
