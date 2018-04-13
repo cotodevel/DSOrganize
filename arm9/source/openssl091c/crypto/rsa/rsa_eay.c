@@ -98,6 +98,7 @@ static RSA_METHOD rsa_pkcs1_eay_meth={
 	NULL,
 	};
 
+/*
 RSA_METHOD *RSA_PKCS1_SSLeay()
 	{
 	return(&rsa_pkcs1_eay_meth);
@@ -154,8 +155,7 @@ int padding;
 	if (!rsa->meth->bn_mod_exp(&ret,&f,rsa->e,rsa->n,ctx,
 		rsa->method_mod_n)) goto err;
 
-	/* put in leading 0 bytes if the number is less than the
-	 * length of the modulus */
+	// put in leading 0 bytes if the number is less than the length of the modulus 
 	j=BN_num_bytes(&ret);
 	i=BN_bn2bin(&ret,&(to[num-j]));
 	for (k=0; k<(num-i); k++)
@@ -233,8 +233,7 @@ int padding;
 	if (rsa->flags & RSA_FLAG_BLINDING)
 		if (!BN_BLINDING_invert(&ret,rsa->blinding,ctx)) goto err;
 
-	/* put in leading 0 bytes if the number is less than the
-	 * length of the modulus */
+	// put in leading 0 bytes if the number is less than the length of the modulus 
 	j=BN_num_bytes(&ret);
 	i=BN_bn2bin(&ret,&(to[num-j]));
 	for (k=0; k<(num-i); k++)
@@ -279,15 +278,14 @@ int padding;
 		goto err;
 		}
 
-	/* This check was for equallity but PGP does evil things
-	 * and chops off the top '0' bytes */
+	// This check was for equallity but PGP does evil things and chops off the top '0' bytes 
 	if (flen > num)
 		{
 		RSAerr(RSA_F_RSA_EAY_PRIVATE_DECRYPT,RSA_R_DATA_GREATER_THAN_MOD_LEN);
 		goto err;
 		}
 
-	/* make data into a big number */
+	// make data into a big number 
 	if (BN_bin2bn(from,(int)flen,&f) == NULL) goto err;
 
 	if ((rsa->flags & RSA_FLAG_BLINDING) && (rsa->blinding == NULL))
@@ -295,7 +293,7 @@ int padding;
 	if (rsa->flags & RSA_FLAG_BLINDING)
 		if (!BN_BLINDING_convert(&f,rsa->blinding,ctx)) goto err;
 
-	/* do the decrypt */
+	// do the decrypt 
 	if (	(rsa->p != NULL) &&
 		(rsa->q != NULL) &&
 		(rsa->dmp1 != NULL) &&
@@ -312,7 +310,7 @@ int padding;
 		if (!BN_BLINDING_invert(&ret,rsa->blinding,ctx)) goto err;
 
 	p=buf;
-	j=BN_bn2bin(&ret,p); /* j is only used with no-padding mode */
+	j=BN_bn2bin(&ret,p); // j is only used with no-padding mode
 
 	switch (padding)
 		{
@@ -370,8 +368,7 @@ int padding;
 		goto err;
 		}
 
-	/* This check was for equallity but PGP does evil things
-	 * and chops off the top '0' bytes */
+	// This check was for equallity but PGP does evil things and chops off the top '0' bytes 
 	if (flen > num)
 		{
 		RSAerr(RSA_F_RSA_EAY_PUBLIC_DECRYPT,RSA_R_DATA_GREATER_THAN_MOD_LEN);
@@ -379,7 +376,7 @@ int padding;
 		}
 
 	if (BN_bin2bn(from,flen,&f) == NULL) goto err;
-	/* do the decrypt */
+	// do the decrypt 
 	if ((rsa->method_mod_n == NULL) && (rsa->flags & RSA_FLAG_CACHE_PUBLIC))
 		{
 		if ((rsa->method_mod_n=(char *)BN_MONT_CTX_new()) != NULL)
@@ -462,8 +459,7 @@ RSA *rsa;
 		rsa->method_mod_p)) goto err;
 
 	if (!BN_sub(r0,r0,&m1)) goto err;
-	/* This will help stop the size of r0 increasing, which does
-	 * affect the multiply if it optimised for a power of 2 size */
+	// This will help stop the size of r0 increasing, which does affect the multiply if it optimised for a power of 2 size 
 	if (r0->neg)
 		if (!BN_add(r0,r0,rsa->p)) goto err;
 
@@ -499,4 +495,4 @@ RSA *rsa;
 	return(1);
 	}
 
-
+*/
