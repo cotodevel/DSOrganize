@@ -56,9 +56,6 @@ typedef struct
 } MALLOC_LIST;
 
 
-// fix for games & music
-extern struct touchScr touchReadXYNew();
-
 
 #define assert(x,y) { \
 	if(x) { \
@@ -135,6 +132,9 @@ extern bool isScrolling();
 extern void touchDown(int px, int py);
 extern void touchUp();
 extern void goForward();
+
+// fix for games & music
+extern struct touchScr touchReadXYNew();
 
 #ifdef __cplusplus
 }

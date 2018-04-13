@@ -40,8 +40,8 @@
 #include "irc.h"
 #include "configuration.h"
 #include "soundplayer.h"
+#include "fsfatlayerTGDSNew.h"
 
-extern void FAT_DisableWriting(); // for write setting
 
 uint16 startMode = HOME;
 char lLanguage[LANG_SIZE];
@@ -674,8 +674,9 @@ void loadSettings()
 	startMode = mode;
 	mode = tMode;
 	
-	if(disableWrites)
+	if(disableWrites){
 		FAT_DisableWriting();
+	}
 	
 	setMode(startMode);
 }

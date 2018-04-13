@@ -73,8 +73,8 @@ void initWifi()
    	
 	*((volatile u16 *)0x0400010E) = 0; // disable timer3
 	
-	irqSet(IRQ_TIMER3, Timer_50msDSOrganize); // setup timer IRQ
-	irqEnable(IRQ_TIMER3);
+	//irqSet(IRQ_TIMER3, Timer_50msDSOrganize); // setup timer IRQ
+	EnableIrq(IRQ_TIMER3);
    	
    	Wifi_SetSyncHandler(arm9_synctoarm7DSOrganize); // tell wifi lib to use our handler to notify arm7
 
@@ -85,7 +85,7 @@ void initWifi()
 		IRQVBlankWait();
 	
 	// init ssl
-	InitCyaSSL();
+	//InitCyaSSL();	//wolfSSL ?? wasn't this OpenSSL???
 	
 	// init the ssl settings block
 	for(int i = 0;i < NUM_CONNECTIONS; i++)

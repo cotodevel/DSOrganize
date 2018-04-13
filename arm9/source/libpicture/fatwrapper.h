@@ -39,7 +39,7 @@ enum {
 #define ATTRIB_RO	0x01			// Read only
 #endif
 
-//bool			DRAGON_InitFiles();
+bool			DRAGON_InitFiles();
 bool 			DRAGON_FreeFiles();
 u32 			DRAGON_DiscType();
 char 			*DRAGON_tryingInterface();

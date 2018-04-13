@@ -27,7 +27,7 @@ extern "C" {
 #define ABOUT_HELP_WIDTH 245
 
 void drawAboutScreen();
-void freeAbout();
+void freeabout();
 
 #ifdef __cplusplus
 }

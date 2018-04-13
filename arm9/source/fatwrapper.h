@@ -101,7 +101,7 @@ enum {
 extern "C" {
 #endif
 
-//extern bool			DRAGON_InitFiles();
+extern bool			DRAGON_InitFiles();
 extern bool 			DRAGON_FreeFiles();
 extern u32 			DRAGON_DiscType();
 extern char 			*DRAGON_tryingInterface();

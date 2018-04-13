@@ -502,7 +502,7 @@ void launchNDSMethod0(char *file)
 			
 			REG_IME = IME_DISABLE;
 			
-			boot_SCCF(file);
+			//boot_SCCF(file);	//not yet
 			
 			while(1);
 			
@@ -771,11 +771,10 @@ bool checkHelp()
 	return false;
 }
 
-#ifdef DEBUG_MODE
 void debugPrint(char *str)
 {
 	// To ensure it comes out on any debugging screens i have up
-	dprintf(str);
+	printf(str);
 	
 	fb_setDefaultClipping();
 	fb_dispString(3,3,str);
@@ -783,7 +782,6 @@ void debugPrint(char *str)
 	IRQVBlankWait();	
 	fb_swapBuffers();
 }
-#endif
 
 void debugPrintHalt(char *str)
 {

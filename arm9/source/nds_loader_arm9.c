@@ -35,6 +35,7 @@
 #include "language.h"
 
 #include "nds_loader_arm9.h"
+#include "dldi.h"
 
 static addr_t readAddr (data_t *mem, addr_t offset) {
 	return ((addr_t*)mem)[offset/sizeof(addr_t)];
@@ -91,8 +92,11 @@ bool dldiPatchLoader (data_t *binData, u32 binSize)
 		// does not have a DLDI section
 		return false;
 	}
-
-	pDH = (data_t*)(((u32*)(&_io_dldi)) -24);
+	
+	// The only built in driver
+	extern DLDI_INTERFACE _io_dldi_stub;
+	
+	pDH = (data_t*)(((u32*)(&_io_dldi_stub)) -24);
 	pAH = &(binData[patchOffset]);
 
 	if (*((u32*)(pDH + DO_ioType)) == DEVICE_TYPE_DLDI) 

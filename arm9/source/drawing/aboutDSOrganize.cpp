@@ -40,7 +40,7 @@
 
 // About source
 //#include "about_html.h"
-
+extern u8 about[];
 static bool aboutLoaded = false;
 static HTML_RENDERED aboutData;
 static char *abScreen = NULL;
@@ -53,8 +53,8 @@ void drawAboutScreen()
 		setHTMLWidth(ABOUT_HELP_WIDTH, &aboutData);
 		setContent(TYPE_HTML, &aboutData);
 		
-		abScreen = (char *)trackMalloc(strlen((char *)about_html)+1, "temp about");
-		memcpy(abScreen, about_html, strlen((char *)about_html)+1);
+		abScreen = (char *)trackMalloc(strlen((char *)about)+1, "temp about");
+		memcpy(abScreen, about, strlen((char *)about)+1);
 		
 		loadHTMLFromMemory(abScreen, &aboutData);
 		aboutLoaded = true;
@@ -74,7 +74,7 @@ void drawAboutScreen()
 	trackFree(htmlRender);
 }
 
-void freeAbout()
+void freeabout()
 {
 	if(aboutLoaded)
 	{

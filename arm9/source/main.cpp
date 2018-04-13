@@ -124,6 +124,9 @@ USA
 #include "drawing/webbrowser.h"
 
 #include "keypadTGDS.h"
+#include "about.h"
+#include "powerTGDS.h"
+#include "general.h"
 
 // internals
 int yThreshold = 0;
@@ -2650,10 +2653,11 @@ void checkKeys()
 				setLastMode(getMode());
 				setMode(ABOUT);
 				break;
-			case ABOUT:
+			case ABOUT:{
 				setMode(getLastMode());
-				freeAbout();
-				break;
+				freeabout();
+			}
+			break;
 			case TODOLIST:
 				freeTodo();
 				returnHome();
@@ -3047,6 +3051,19 @@ void executeKeys()
 // main program
 //-------------
 
+static TransferSound Snd;
+static TransferSoundData SndDat =		{ (void *)0 , 0, 11025, 64, 64, 1 };
+ 
+ //---------------------------------------------------------------------------------
+ static void setGenericSound( u32 rate, u8 vol, u8 pan, u8 format) {
+ //---------------------------------------------------------------------------------
+ 
+	SndDat.rate		= rate;
+	SndDat.vol		= vol;
+	SndDat.pan		= pan;
+	SndDat.format	= format;
+ }
+ 
 void initProgram()
 {
 	//------------------------
@@ -3084,12 +3101,12 @@ void initProgram()
 	bg_setBGColor(0);
 	drawStartSplash();
 	
-	lcdMainOnTop(); // set fb to top screen
+	SET_MAIN_TOP_LCD();	 // set fb to top screen
 	fb_swapBuffers();
 	bg_swapBuffers();
 	
 	// out of order for competition
-	irqInit(); // initialize irqs
+	//irqInit(); // initialize irqs
 	enableVBlank(); // initialize vblank irq
 	
 	setMode(INITFAT);

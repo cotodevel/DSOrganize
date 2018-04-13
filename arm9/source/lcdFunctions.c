@@ -51,7 +51,7 @@ void setLCDState(bool state)
 	{
 		powerON(POWER_2D_A | POWER_2D_B | POWER_SWAP_LCDS); // turn on everything
 		
-		lcdMainOnTop();	
+		SET_MAIN_TOP_LCD();
 		
 		if(screensFlipped() || configFlipped())
 			SWAP_LCDS();
