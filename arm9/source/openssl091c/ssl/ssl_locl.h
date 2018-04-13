@@ -240,7 +240,7 @@ typedef struct cert_pkey_st
 	} CERT_PKEY;
 
 typedef struct cert_st
-	{
+{
 	int cert_type;
 
 #ifdef undef
@@ -271,7 +271,9 @@ typedef struct cert_st
 	STACK *cert_chain;
 
 	int references;
-	} CERT;
+} CERT;
+
+
 
 /*#define MAC_DEBUG	*/
 
@@ -323,6 +325,10 @@ typedef struct ssl3_comp_st
 	COMP_METHOD *method; /* The method :-) */
 	} SSL3_COMP;
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 extern SSL3_ENC_METHOD ssl3_undef_enc_method;
 extern SSL_CIPHER ssl2_ciphers[];
 extern SSL_CIPHER ssl3_ciphers[];
@@ -337,7 +343,7 @@ SSL_METHOD *sslv3_base_method(void);
 void ssl_clear_cipher_ctx(SSL *s);
 int ssl_clear_bad_session(SSL *s);
 CERT *ssl_cert_new(void);
-void ssl_cert_free(CERT *c);
+extern void ssl_cert_free(CERT *c);
 int ssl_set_cert_type(CERT *c, int type);
 int ssl_get_new_session(SSL *s, int session);
 int ssl_get_prev_session(SSL *s, unsigned char *session,int len);
@@ -582,3 +588,7 @@ int tls1_mac();
 int tls1_generate_master_secret();
 int tls1_alert_code();
 int ssl_ok();
+
+#ifdef __cplusplus
+}
+#endif

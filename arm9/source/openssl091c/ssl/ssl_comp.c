@@ -70,6 +70,7 @@ static void SSL_SESSION_list_add();
 static int ssl_session_num=0;
 static STACK *ssl_session_meth=NULL;
 
+/*
 SSL_SESSION *SSL_get_session(ssl)
 SSL *ssl;
 	{
@@ -117,7 +118,7 @@ SSL_SESSION *SSL_SESSION_new()
 	memset(ss,0,sizeof(SSL_SESSION));
 
 	ss->references=1;
-	ss->timeout=60*5+4; /* 5 minute timeout by default */
+	ss->timeout=60*5+4; // 5 minute timeout by default 
 	ss->time=time(NULL);
 	ss->prev=NULL;
 	ss->next=NULL;
@@ -133,7 +134,7 @@ int session;
 
 	if ((ss=SSL_SESSION_new()) == NULL) return(0);
 
-	/* If the context has a default timeout, use it */
+	// If the context has a default timeout, use it 
 	if (s->ctx->session_timeout != 0)
 		ss->timeout=SSL_get_default_timeout(s);
 
@@ -177,7 +178,7 @@ int session;
 				(char *)ss);
 			CRYPTO_r_unlock(CRYPTO_LOCK_SSL_CTX);
 			if (r == NULL) break;
-			/* else - woops a session_id match */
+			// else - woops a session_id match 
 			}
 		}
 	else
@@ -198,7 +199,7 @@ int len;
 	{
 	SSL_SESSION *ret=NULL,data;
 
-	/* conn_init();*/
+	// conn_init();
 	data.ssl_version=s->version;
 	data.session_id_length=len;
 	if (len > SSL_MAX_SSL_SESSION_ID_LENGTH)
@@ -224,10 +225,9 @@ int len;
 			{
 			s->ctx->sess_cb_hit++;
 
-			/* The following should not return 1, otherwise,
-			 * things are very strange */
+			// The following should not return 1, otherwise, things are very strange
 			SSL_CTX_add_session(s->ctx,ret);
-			/* auto free it */
+			// auto free it 
 			if (!copy)
 				SSL_SESSION_free(ret);
 			}
@@ -250,27 +250,27 @@ int len;
 			return(0);
 		}
 
-	/* If a thread got the session, then 'swaped', and another got
-	 * it and then due to a time-out decided to 'Free' it we could
-	 * be in trouble.  So I'll increment it now, then double decrement
-	 * later - am I speaking rubbish?. */
+	// If a thread got the session, then 'swaped', and another got
+	// it and then due to a time-out decided to 'Free' it we could
+	// be in trouble.  So I'll increment it now, then double decrement
+	// later - am I speaking rubbish?. 
 	CRYPTO_add(&ret->references,1,CRYPTO_LOCK_SSL_SESSION);
 
-	if ((long)(ret->time+ret->timeout) < (long)time(NULL)) /* timeout */
+	if ((long)(ret->time+ret->timeout) < (long)time(NULL)) // timeout 
 		{
 		s->ctx->sess_timeout++;
-		/* remove it from the cache */
+		// remove it from the cache 
 		SSL_CTX_remove_session(s->ctx,ret);
-		SSL_SESSION_free(ret);		/* again to actually Free it */
+		SSL_SESSION_free(ret);		// again to actually Free it 
 		return(0);
 		}
 
 	s->ctx->sess_hit++;
 
-	/* ret->time=time(NULL); */ /* rezero timeout? */
-	/* again, just leave the session 
-	 * if it is the same session, we have just incremented and
-	 * then decremented the reference count :-) */
+	// ret->time=time(NULL); // rezero timeout? 
+	// again, just leave the session 
+	// if it is the same session, we have just incremented and
+	// then decremented the reference count :-) 
 	if (s->session != NULL)
 		SSL_SESSION_free(s->session);
 	s->session=ret;
@@ -284,20 +284,20 @@ SSL_SESSION *c;
 	int ret=0;
 	SSL_SESSION *s;
 
-	/* conn_init(); */
+	//conn_init(); 
 	CRYPTO_add(&c->references,1,CRYPTO_LOCK_SSL_SESSION);
 
 	CRYPTO_w_lock(CRYPTO_LOCK_SSL_CTX);
 	s=(SSL_SESSION *)lh_insert(ctx->sessions,(char *)c);
 	
-	/* Put on the end of the queue unless it is already in the cache */
+	// Put on the end of the queue unless it is already in the cache 
 	if (s == NULL)
 		SSL_SESSION_list_add(ctx,c);
 
-	/* If the same session if is being 're-added', Free the old
-	 * one when the last person stops using it.
-	 * This will also work if it is alread in the cache.
-	 * The references will go up and then down :-) */
+	// If the same session if is being 're-added', Free the old
+	// one when the last person stops using it.
+	// This will also work if it is alread in the cache.
+	// The references will go up and then down :-) 
 	if (s != NULL)
 		{
 		SSL_SESSION_free(s);
@@ -370,7 +370,7 @@ SSL_SESSION *ss;
 	if (i < 0)
 		{
 		fprintf(stderr,"SSL_SESSION_free, bad reference count\n");
-		abort(); /* ok */
+		abort(); // ok 
 		}
 #endif
 
@@ -411,12 +411,12 @@ SSL_SESSION *session;
 			session->timeout=SSL_get_default_timeout(s);
 			}
 
-		/* CRYPTO_w_lock(CRYPTO_LOCK_SSL);*/
+		// CRYPTO_w_lock(CRYPTO_LOCK_SSL);
 		CRYPTO_add(&session->references,1,CRYPTO_LOCK_SSL_SESSION);
 		if (s->session != NULL)
 			SSL_SESSION_free(s->session);
 		s->session=session;
-		/* CRYPTO_w_unlock(CRYPTO_LOCK_SSL);*/
+		// CRYPTO_w_unlock(CRYPTO_LOCK_SSL);
 		ret=1;
 		}
 	else
@@ -473,10 +473,9 @@ static void timeout(s,p)
 SSL_SESSION *s;
 TIMEOUT_PARAM *p;
 	{
-	if ((p->time == 0) || (p->time > (s->time+s->timeout))) /* timeout */
+	if ((p->time == 0) || (p->time > (s->time+s->timeout))) // timeout 
 		{
-		/* The reason we don't call SSL_CTX_remove_session() is to
-		 * save on locking overhead */
+		// The reason we don't call SSL_CTX_remove_session() is to save on locking overhead 
 		lh_delete(p->cache,(char *)s);
 		SSL_SESSION_list_remove(p->ctx,s);
 		s->not_resumable=1;
@@ -519,7 +518,7 @@ SSL *s;
 		return(0);
 	}
 
-/* locked by SSL_CTX in the calling function */
+// locked by SSL_CTX in the calling function
 static void SSL_SESSION_list_remove(ctx,s)
 SSL_CTX *ctx;
 SSL_SESSION *s;
@@ -527,9 +526,9 @@ SSL_SESSION *s;
 	if ((s->next == NULL) || (s->prev == NULL)) return;
 
 	if (s->next == (SSL_SESSION *)&(ctx->session_cache_tail))
-		{ /* last element in list */
+		{ // last element in list 
 		if (s->prev == (SSL_SESSION *)&(ctx->session_cache_head))
-			{ /* only one element in list */
+			{ // only one element in list 
 			ctx->session_cache_head=NULL;
 			ctx->session_cache_tail=NULL;
 			}
@@ -542,12 +541,12 @@ SSL_SESSION *s;
 	else
 		{
 		if (s->prev == (SSL_SESSION *)&(ctx->session_cache_head))
-			{ /* first element in list */
+			{ // first element in list 
 			ctx->session_cache_head=s->next;
 			s->next->prev=(SSL_SESSION *)&(ctx->session_cache_head);
 			}
 		else
-			{ /* middle of list */
+			{ // middle of list 
 			s->next->prev=s->prev;
 			s->prev->next=s->next;
 			}
@@ -555,7 +554,7 @@ SSL_SESSION *s;
 	s->prev=s->next=NULL;
 	}
 
-static void SSL_SESSION_list_add(ctx,s)
+void SSL_SESSION_list_add(ctx,s)
 SSL_CTX *ctx;
 SSL_SESSION *s;
 	{
@@ -577,4 +576,4 @@ SSL_SESSION *s;
 		ctx->session_cache_head=s;
 		}
 	}
-
+*/
