@@ -24,8 +24,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <libfb\libcommon.h>
-#include <libdt\libcommon.h>
+#include <libcommon.h>
+#include <libcommon.h>
 #include "irc.h"
 #include "webbrowser.h"
 #include "../fatwrapper.h"

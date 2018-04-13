@@ -22,7 +22,7 @@
 #include "dsregs.h"
 #include "dsregs_asm.h"
 #include <stdio.h>
-#include <libfb/libcommon.h>
+#include <libcommon.h>
 #include <ini.h>
 #include "font_arial_9.h"
 #include "font_gautami_10.h"
@@ -36,10 +36,10 @@
 #include "graphics.h"
 #include "controls.h"
 #include "globals.h"
-#include "drawing\scribble.h"
-#include "drawing\irc.h"
-#include "drawing\configuration.h"
-#include "drawing\soundplayer.h"
+#include "scribble.h"
+#include "irc.h"
+#include "configuration.h"
+#include "soundplayer.h"
 
 extern void FAT_DisableWriting(); // for write setting
 

@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <libfb\libcommon.h>
+#include <libcommon.h>
 #include <vcard.h>
 #include "fatwrapper.h"
 #include "resources.h"
@@ -37,7 +37,7 @@
 #include "font_arial_13.h"
 #include "font_gautami_10.h"
 #include "font_profont_9.h"
-#include "drawing\database.h"
+#include "database.h"
 
 #include "specific_shared.h"
 

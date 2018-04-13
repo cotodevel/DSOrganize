@@ -27,8 +27,8 @@
 #include "globals.h"
 
 // for ogg vorbis stuff
-#include ".\tremor\ivorbiscodec.h"
-#include ".\tremor\ivorbisfile.h"
+#include "ivorbiscodec.h"
+#include "ivorbisfile.h"
 
 void stripCRLF(char *str)
 {

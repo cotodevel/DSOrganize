@@ -22,8 +22,8 @@
 #include "dsregs_asm.h"
 #include <stdio.h>
 #include <string.h>
-#include <libfb\libcommon.h>
-#include <libdt\libdt.h>
+#include <libcommon.h>
+#include <libdt.h>
 #include <m_apm.h>
 #include "calculator.h"
 #include "../keyboard.h"

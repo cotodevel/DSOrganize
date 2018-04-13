@@ -27,7 +27,7 @@ extern "C" {
 #include "fatwrapper.h"
 #include "http.h"
 #include "aacdec.h"
-#include "api68\api68.h"
+#include "api68.h"
 
 enum {
 	SRC_NONE,
@@ -107,7 +107,7 @@ enum {
 #define SIWRAM1 ((s16 *)0x037FC000)
 
 // mikmod
-#include ".\mikmod\drivers\drv_nos.h"
+#include "drv_nos.h"
 
 typedef struct 
 {

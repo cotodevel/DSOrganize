@@ -32,7 +32,7 @@
 #include "general.h"
 #include "sound.h"
 #include "settings.h"
-#include ".\drawing\database.h"
+#include "database.h"
 
 static CONNECTION wifiConn[NUM_CONNECTIONS];
 static bool wifiConnected = false;

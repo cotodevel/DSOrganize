@@ -24,8 +24,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "nsf.h"
-#include "..\sound.h"
-#include "..\general.h"
+#include "sound.h"
+#include "general.h"
 
 #define ZEROMEMORY(addr,size) memset(addr,0,size)
 #define letoh16(x) (x)

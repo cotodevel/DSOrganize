@@ -22,7 +22,7 @@
 #include "dsregs_asm.h"
 #include <string.h>
 #include <stdio.h>
-#include <libfb\libcommon.h>
+#include <libcommon.h>
 #include <libpicture.h>
 #include "pictureviewer.h"
 #include "browser.h"

@@ -25,7 +25,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <libfb\libcommon.h>
+#include <libcommon.h>
 #include "soundrecorder.h"
 #include "browser.h"
 #include "../fatwrapper.h"

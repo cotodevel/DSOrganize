@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <libfb\libcommon.h>
+#include <libcommon.h>
 #include "configuration.h"
 #include "home.h"
 #include "../fatwrapper.h"

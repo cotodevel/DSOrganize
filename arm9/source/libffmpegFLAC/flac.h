@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include "decoderflac.h"
-#include "..\fatwrapper.h"
+#include "fatwrapper.h"
 
 bool flac_init(DRAGON_FILE *df, FLACContext* fc);
 

@@ -43,7 +43,7 @@
 #include <unistd.h>
 #endif
 
-#include "..\include\mikmod_internals.h"
+#include "mikmod_internals.h"
 #include "drv_nos.h"
 
 #include <string.h>

@@ -30,7 +30,7 @@
 #include "config.h"
 #endif
 
-#include "..\include\mikmod_internals.h"
+#include "mikmod_internals.h"
 
 /* Same as malloc, but sets error variable _mm_error when fails */
 void* _mm_malloc(size_t size)

@@ -23,8 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libfb\libcommon.h>
-#include <libdt\libdt.h>
+#include <libcommon.h>
+#include <libdt.h>
 #include "calendar.h"
 #include "dayview.h"
 #include "../fatwrapper.h"

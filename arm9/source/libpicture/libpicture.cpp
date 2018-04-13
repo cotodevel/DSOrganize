@@ -7,9 +7,9 @@
 #include <setjmp.h>
 #include "fatwrapper.h"
 #include "libpicture.h"
-#include "jpeg\jpegdecoder.h"
-#include "png\png.h"
-#include "gif\gif_lib.h"
+#include "jpegdecoder.h"
+#include "png.h"
+#include "gif_lib.h"
 
 static int largeX = 256;
 static int largeY = 192;

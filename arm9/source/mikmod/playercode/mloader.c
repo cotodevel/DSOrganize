@@ -39,8 +39,8 @@
 #endif
 #include <string.h>
 
-#include "..\include\mikmod_internals.h"
-#include "..\virtualfile.h"
+#include "mikmod_internals.h"
+#include "virtualfile.h"
 
 		MREADER *modreader;
 		MODULE of;

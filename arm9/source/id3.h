@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 #include "fatwrapper.h"
-#include ".\tremor\ivorbisfile.h"
+#include "ivorbisfile.h"
 
 typedef struct
 {

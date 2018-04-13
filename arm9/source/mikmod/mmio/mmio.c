@@ -62,11 +62,11 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "..\..\fatwrapper.h"
-#include "..\..\general.h"
+#include "fatwrapper.h"
+#include "general.h"
 
-#include "..\include\mikmod_internals.h"
-#include "..\virtualfile.h"
+#include "mikmod_internals.h"
+#include "virtualfile.h"
 
 #define COPY_BUFSIZE  1024
 

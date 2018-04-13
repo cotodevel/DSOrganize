@@ -22,12 +22,13 @@
 #include "dsregs_asm.h"
 #include <stdio.h>
 #include <string.h>
-#include <libfb\libcommon.h>
+#include <libcommon.h>
+#include <libfb.h>
 #include "help.h"
-#include "../settings.h"
-#include "../html.h"
-#include "../general.h"
-#include "../globals.h"
+#include "settings.h"
+#include "html.h"
+#include "general.h"
+#include "globals.h"
 
 extern char curLang[30];
 extern bool allowSwapBuffer;

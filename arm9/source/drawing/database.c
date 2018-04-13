@@ -23,8 +23,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <libfb\libcommon.h>
-#include <libdt\libdt.h>
+#include <libcommon.h>
+#include <libdt.h>
 #include "database.h"
 #include "address.h"
 #include "browser.h"

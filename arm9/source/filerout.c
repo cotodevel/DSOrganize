@@ -32,9 +32,9 @@
 #include "globals.h"
 #include "shortcuts.h"
 #include "keyboard.h"
-#include "drawing\browser.h"
-#include "drawing\todo.h"
-#include "drawing\address.h"
+#include "browser.h"
+#include "todo.h"
+#include "address.h"
 
 extern bool showHidden;
 

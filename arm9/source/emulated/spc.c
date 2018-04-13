@@ -29,8 +29,8 @@
 #include <string.h>
 #include <stdint.h>
 #include "spc.h"
-#include "..\sound.h"
-#include "..\general.h"
+#include "sound.h"
+#include "general.h"
 
 /* rather than comment out asserts, just define NDEBUG */
 #define NDEBUG

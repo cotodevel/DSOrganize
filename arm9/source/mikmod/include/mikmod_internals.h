@@ -28,7 +28,7 @@
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
-#include "..\virtualfile.h"
+#include "virtualfile.h"
 
 #ifndef _MIKMOD_INTERNALS_H
 #define _MIKMOD_INTERNALS_H

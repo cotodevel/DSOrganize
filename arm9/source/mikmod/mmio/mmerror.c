@@ -38,7 +38,7 @@
 #include "config.h"
 #endif
 
-#include "..\include\mikmod_internals.h"
+#include "mikmod_internals.h"
 
 /* User installed error callback */
 MikMod_handler_t _mm_errorhandler = NULL;
