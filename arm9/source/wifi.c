@@ -37,6 +37,7 @@
 static CONNECTION wifiConn[NUM_CONNECTIONS];
 static bool wifiConnected = false;
 
+/*
 void *sgIP_malloc(int size) 
 { 
 	return safeMalloc(size); 
@@ -46,13 +47,14 @@ void sgIP_free(void * ptr)
 { 
 	safeFree(ptr); 
 }
+*/
 
-void Timer_50ms(void) 
+void Timer_50msDSOrganize(void) 
 {
 	Wifi_Timer(50);
 }
 
-void arm9_synctoarm7() 
+void arm9_synctoarm7DSOrganize() 
 {
 	SendArm7Command(0xF1, 0);
 }
@@ -71,10 +73,10 @@ void initWifi()
    	
 	*((volatile u16 *)0x0400010E) = 0; // disable timer3
 	
-	irqSet(IRQ_TIMER3, Timer_50ms); // setup timer IRQ
+	irqSet(IRQ_TIMER3, Timer_50msDSOrganize); // setup timer IRQ
 	irqEnable(IRQ_TIMER3);
    	
-   	Wifi_SetSyncHandler(arm9_synctoarm7); // tell wifi lib to use our handler to notify arm7
+   	Wifi_SetSyncHandler(arm9_synctoarm7DSOrganize); // tell wifi lib to use our handler to notify arm7
 
 	*((volatile u16 *)0x0400010C) = (u16)-6553; // 6553.1 * 256 cycles = ~50ms;
 	*((volatile u16 *)0x0400010E) = 0x00C2; // enable, irq, 1/256 clock

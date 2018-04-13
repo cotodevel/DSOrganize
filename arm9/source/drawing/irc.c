@@ -995,7 +995,7 @@ void createTabs()
 	activeTab = 0;
 }
 
-void destroyTabs()
+void destroyTabsIRC()
 {
 	if(tabCount > 1)
 	{
@@ -1012,7 +1012,7 @@ void destroyTabs()
 	tabCount = 0;
 }
 
-void addTab(char *name)
+void addTabIRC(char *name)
 {
 	tabCount++;
 	tabs = (TAB_ARRAY *)trackRealloc(tabs, sizeof(TAB_ARRAY) * tabCount);
@@ -1656,7 +1656,7 @@ bool checkCommand()
 			// check if the window is open
 			
 			if(tabFromName(nick) == -1)
-				addTab(nick); // doesn't exist
+				addTabIRC(nick); // doesn't exist
 			
 			activeTab = tabFromName(nick); // set focus
 		}
@@ -2589,7 +2589,7 @@ void parseMessage(char *msg)
 				if(strcmp(tStr,toNick) == 0) // pm
 				{
 					if(tabFromName(fromNick) == -1) // haven't got an open window
-						addTab(fromNick);
+						addTabIRC(fromNick);
 					
 					if(tabFromName(fromNick) != activeTab && notifyPresent)
 					{
@@ -2650,7 +2650,7 @@ void parseMessage(char *msg)
 		if(strcmp(tStr,toNick) == 0) // pm
 		{
 			if(tabFromName(fromNick) == -1) // haven't got an open window
-				addTab(fromNick);
+				addTabIRC(fromNick);
 			
 			sprintf(cStr, "\n%s", irc_channelreceived);
 			osprintf(tStr, cStr, fromNick, msg, 0);
@@ -2712,7 +2712,7 @@ void parseMessage(char *msg)
 			if(tabFromName(msg) != -1) // already open
 				return;
 			
-			addTab(msg);
+			addTabIRC(msg);
 			activeTab = tabFromName(msg);
 			isTopic = false;
 		}
@@ -4323,7 +4323,7 @@ void drawTopIRCScreen()
 		case IRC_CLOSEDCONNECTION:
 			closeServerConnection();
 			
-			destroyTabs();
+			destroyTabsIRC();
 			createTabs();
 			
 			break;
@@ -4355,7 +4355,7 @@ void drawTopIRCScreen()
 						
 						concatBuffer(console, tStr, cStr);
 						
-						destroyTabs();
+						destroyTabsIRC();
 						createTabs();
 						
 						connected = false;
@@ -4403,7 +4403,7 @@ void drawTopIRCScreen()
 					
 					concatBuffer(console, tStr, cStr);
 					
-					destroyTabs();
+					destroyTabsIRC();
 					createTabs();
 					
 					connected = false;
@@ -4878,7 +4878,7 @@ void ircForward()
 			// check if the window is open
 			
 			if(tabFromName(tabs[activeTab].screen->nicks[listCursor].nick) == -1)
-				addTab(tabs[activeTab].screen->nicks[listCursor].nick); // doesn't exist
+				addTabIRC(tabs[activeTab].screen->nicks[listCursor].nick); // doesn't exist
 			
 			activeTab = tabFromName(tabs[activeTab].screen->nicks[listCursor].nick); // set focus
 			
@@ -4911,7 +4911,7 @@ void ircBack()
 			// home
 			
 			disconnectWifi();
-			destroyTabs();
+			destroyTabsIRC();
 			destroySideTabs();
 			destroyBuffer(console);
 			destroyRecvBuffer();
@@ -4935,7 +4935,7 @@ void ircBack()
 			else
 			{
 				disconnectWifi();
-				destroyTabs();
+				destroyTabsIRC();
 				destroySideTabs();
 				destroyBuffer(console);
 				destroyRecvBuffer();
@@ -4961,7 +4961,7 @@ void ircBack()
 			// check if the window is open
 			
 			if(tabFromName(tabs[activeTab].screen->nicks[listCursor].nick) == -1)
-				addTab(tabs[activeTab].screen->nicks[listCursor].nick); // doesn't exist
+				addTabIRC(tabs[activeTab].screen->nicks[listCursor].nick); // doesn't exist
 			
 			activeTab = tabFromName(tabs[activeTab].screen->nicks[listCursor].nick); // set focus
 			
@@ -5157,7 +5157,7 @@ char ircHandleClick(int px, int py)
 					// check if the window is open
 					
 					if(tabFromName(tabs[activeTab].screen->nicks[listCursor].nick) == -1)
-						addTab(tabs[activeTab].screen->nicks[listCursor].nick); // doesn't exist
+						addTabIRC(tabs[activeTab].screen->nicks[listCursor].nick); // doesn't exist
 					
 					activeTab = tabFromName(tabs[activeTab].screen->nicks[listCursor].nick); // set focus
 				}

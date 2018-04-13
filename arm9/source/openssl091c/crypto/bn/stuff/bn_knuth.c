@@ -37,7 +37,9 @@ int Free_total=0;
 int max=0,max_total=0;
 
 BIGNUM *LBN_new(void );
-BIGNUM *LBN_dup(BIGNUM *a);
+BIGNUM *LBN_dup(BIGNUM *a){
+	return NULL;
+}
 void LBN_free(BIGNUM *a);
 
 int BN_mul_knuth(w, a, b)
@@ -300,33 +302,6 @@ err:
 	}
 
 
-int BN_mask_bits(a,n)
-BIGNUM *a;
-int n;
-	{
-	int b,w;
-
-	w=n/BN_BITS2;
-	b=n%BN_BITS2;
-	if (w >= a->top) return(0);
-	if (b == 0)
-		a->top=w;
-	else
-		{
-		a->top=w+1;
-		a->d[w]&= ~(BN_MASK2<<b);
-		}
-	return(1);
-	}
-
-BIGNUM *LBN_dup(a)
-BIGNUM *a;
-	{
-	new_total++;
-	max_total++;
-	if (max_total > max) max=max_total;
-	return(BN_dup(a));
-	}
 
 BIGNUM *LBN_new()
 	{

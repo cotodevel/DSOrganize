@@ -75,7 +75,7 @@ bool dayViewCursorMove(int curT, int curC)
 	return dvStruct->dayView[curT][curC] != 0;
 }
 
-void loadFile(char *tFile, DV_DYNAMIC *dvFile, int wType)
+void loadFileStream(char *tFile, DV_DYNAMIC *dvFile, int wType)
 {
 	if(DRAGON_FileExists(tFile) == FE_FILE)
 	{
@@ -126,19 +126,19 @@ void loadDay(int whichDay, int whichMonth, int whichYear)
 	
 	// grab the latest day
 	sprintf(tmpFile,"%s%02d%02d%04d.DPL", d_day, whichMonth, whichDay, whichYear);
-	loadFile(tmpFile, dvStruct, TYPE_DAILY);
+	loadFileStream(tmpFile, dvStruct, TYPE_DAILY);
 	
 	// grab anything that is weekly	
 	sprintf(tmpFile,"%s%02d.DPL", d_day, dayOfWeek(whichDay, whichMonth, whichYear));
-	loadFile(tmpFile, dvStruct, TYPE_WEEKLY);
+	loadFileStream(tmpFile, dvStruct, TYPE_WEEKLY);
 	
 	// grab anything that is monthly
 	sprintf(tmpFile,"%s--%02d----.DPL", d_day, whichDay);
-	loadFile(tmpFile, dvStruct, TYPE_MONTHLY);
+	loadFileStream(tmpFile, dvStruct, TYPE_MONTHLY);
 	
 	// grab anything that is annual
 	sprintf(tmpFile,"%s%02d%02d----.DPL", d_day, whichDay, whichMonth);
-	loadFile(tmpFile, dvStruct, TYPE_ANNUALLY);
+	loadFileStream(tmpFile, dvStruct, TYPE_ANNUALLY);
 }
 
 void saveFile(char *fName, DV_DYNAMIC *dvFile) 
@@ -193,7 +193,7 @@ void saveData(char *fName)
 	memset(dvSave, 0, sizeof(DV_DYNAMIC));
 	
 	// grab the current contents of the file to be updated
-	loadFile(fName, dvSave, -1);
+	loadFileStream(fName, dvSave, -1);
 	
 	// loop through the current struct, updating as necessary	
 	for(int tTime = 0;tTime < DV_COUNT; tTime++)

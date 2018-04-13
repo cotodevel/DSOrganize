@@ -37,6 +37,8 @@
 #include "../language.h"
 #include "../controls.h"
 
+#include "specific_shared.h"
+
 extern uint16 browserMode;
 extern char fileName[256];
 extern int vblCount;

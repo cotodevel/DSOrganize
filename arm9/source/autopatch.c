@@ -21,6 +21,8 @@
 #include "dsregs.h"
 #include "dsregs_asm.h"
 
+#include "dldi.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -99,7 +101,10 @@ void patchFile(char *fName)
 	fb_dispString(0,0, l_autopatch);
 	fb_swapBuffers();
 	
-	pDH = (data_t*)(((u32*)(&_io_dldi)) -24);
+	// The only built in driver
+	extern DLDI_INTERFACE _io_dldi_stub;
+
+	pDH = (data_t*)(((u32*)(&_io_dldi_stub)) -24);
 	
 	if (*((u32*)(pDH + DO_ioType)) == DEVICE_TYPE_DLDI) // no built in dldi, load from scratch
 	{	

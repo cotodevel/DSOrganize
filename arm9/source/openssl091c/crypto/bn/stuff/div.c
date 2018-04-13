@@ -141,7 +141,7 @@ printf("reduce q\n");
 #endif
 			q--;
 			}
-		l0=bn_mul_word(tmp->d,sdiv->d,div_n,q);
+		l0=bn_mul_words(tmp->d,sdiv->d,div_n,q);
 		if (l0)
 			tmp->d[div_n]=l0;
 		else

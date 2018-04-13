@@ -45,6 +45,7 @@
 #include "../keyboard.h"
 #include "../language.h"
 #include "../controls.h"
+#include "specific_shared.h"
 
 extern SCRIBBLE_FILE *scribbleList;
 extern char fileName[256];
@@ -126,7 +127,7 @@ void drawScribbleList()
 	
 	if(isFlipped)
 	{
-		lcdSwap();
+		SWAP_LCDS();
 		isFlipped = false;
 	}
 	
@@ -213,7 +214,7 @@ void drawScribbleScreen()
 		
 		memset(fb_backBuffer(), 0xFF, 256*192*2);
 		
-		lcdSwap();
+		SWAP_LCDS();
 		initTools();
 	}
 	
@@ -459,7 +460,7 @@ void exitScribbleConfirm()
 	setFont((uint16 **)font_arial_9);	
 	dispString(0, -3, textEntry, drawBuffer, 1, a, b, c, d);
 	
-	lcdSwap();
+	SWAP_LCDS();
 	ignoreInput = true;
 }
 
@@ -474,7 +475,7 @@ void exitScribbleCancel()
 	trackFree(tmpBuffer);
 	
 	setMode(EDITSCRIBBLE);
-	lcdSwap();
+	SWAP_LCDS();
 	
 	ignoreInput = true;
 }
@@ -701,7 +702,7 @@ void scribbleUp()
 			resetCursor();
 			queuedTool = -1;
 			
-			lcdSwap();
+			SWAP_LCDS();
 			
 			memset(textEntry,0,SCRIBBLE_LEN);
 			
@@ -746,7 +747,7 @@ void createScribble()
 			fb_swapBuffers();
 			pushCursor();
 			setMode(EDITSCRIBBLE);
-			lcdSwap();
+			SWAP_LCDS();
 			
 			initTools();
 		}
@@ -763,7 +764,7 @@ void saveScribble()
 	
 	if(isFlipped)
 	{
-		lcdSwap();
+		SWAP_LCDS();
 		isFlipped = false;
 	}
 	

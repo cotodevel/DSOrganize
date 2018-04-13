@@ -542,14 +542,14 @@ void drawTopConfiguration()
 	if(shouldBeFlipped())
 	{
 		if(!isCFlipped)
-			lcdSwap();
+			SWAP_LCDS();
 		
 		isCFlipped = true;		
 	}
 	else
 	{
 		if(isCFlipped)
-			lcdSwap();
+			SWAP_LCDS();
 		
 		isCFlipped = false;
 	}
@@ -2441,7 +2441,7 @@ void configurationSwitchPages()
 void resetScreenFlip()
 {
 	if(isCFlipped)
-		lcdSwap();
+		SWAP_LCDS();
 	
 	isCFlipped = false;
 	

@@ -183,9 +183,7 @@ BN_ULONG w;
 	return(1);
 	}
 
-int BN_mul_word(a,w)
-BIGNUM *a;
-BN_ULONG w;
+int BN_mul_word(BIGNUM *a, BN_ULONG w)
 	{
 	BN_ULONG ll;
 

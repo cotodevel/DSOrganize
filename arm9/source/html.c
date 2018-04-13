@@ -2873,7 +2873,7 @@ char convertSpecial(char *tag)
 	return outTag;
 }
 
-u32 getNumber(char *str)
+u32 getNumberHTML(char *str)
 {
 	int x = 0;
 	int num = 0;
@@ -3218,7 +3218,7 @@ void takeCareOfItem(int whatVal, int override, char **tempOut, int * tmpDst, boo
 				updateItem(*tmpDst, *tmpBold, *tmpItalics, *tmpUnderline, *tmpSize, *tmpColor, false, *tmpStrikeThrough, *tmpA, 0);
 				break;
 			case FRAMESET:
-				*framesCount--;
+				*(framesCount)--;
 				
 				if(*framesCount < 0)
 					*framesCount = 0;
@@ -3872,7 +3872,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 									getElementText(element, "size", tmpTag);
 									strlwr(tmpTag);
 									
-									htmlPage->formCodes[htmlPage->maxFormControls-1].width = getNumber(tmpTag);
+									htmlPage->formCodes[htmlPage->maxFormControls-1].width = getNumberHTML(tmpTag);
 									
 									if(!htmlPage->formCodes[htmlPage->maxFormControls-1].width)
 										htmlPage->formCodes[htmlPage->maxFormControls-1].width = 128;
@@ -3888,7 +3888,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 									getElementText(element, "maxlength", tmpTag);
 									strlwr(tmpTag);
 									
-									htmlPage->formCodes[htmlPage->maxFormControls-1].maxLength = getNumber(tmpTag);
+									htmlPage->formCodes[htmlPage->maxFormControls-1].maxLength = getNumberHTML(tmpTag);
 									
 									if(!htmlPage->formCodes[htmlPage->maxFormControls-1].maxLength)
 										htmlPage->formCodes[htmlPage->maxFormControls-1].maxLength = 255;
@@ -4224,7 +4224,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 								getElementText(element, "rows", tmpTag);
 								strlwr(tmpTag);
 								
-								int tNumber = getNumber(tmpTag);
+								int tNumber = getNumberHTML(tmpTag);
 								int numEnters;
 								
 								if(tNumber <= 0)
@@ -4240,7 +4240,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 								getElementText(element, "cols", tmpTag);
 								strlwr(tmpTag);
 								
-								tNumber = getNumber(tmpTag) * 10;
+								tNumber = getNumberHTML(tmpTag) * 10;
 								
 								if(tNumber < 120)
 									tNumber = 120;
@@ -4386,7 +4386,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 									getElementText(element, "size", tmpTag);
 									strlwr(tmpTag);
 									
-									int tNumber = getNumber(tmpTag);
+									int tNumber = getNumberHTML(tmpTag);
 									
 									if(tNumber < 3)
 										tNumber = 3;
@@ -5299,11 +5299,11 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 						{	
 							memset(tmpTag, 0, 1024);							
 							getElementText(element, "width", tmpTag);
-							int tWidth = getNumber(tmpTag);
+							int tWidth = getNumberHTML(tmpTag);
 							
 							memset(tmpTag, 0, 1024);
 							getElementText(element, "height", tmpTag);
-							int tHeight = getNumber(tmpTag);
+							int tHeight = getNumberHTML(tmpTag);
 							
 							bool rendered = false;
 							
@@ -6104,7 +6104,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 							getElementText(element, "cellspacing", tmpTag);
 							
 							if(strlen(tmpTag) > 0)
-								cellSpacing = getNumber(tmpTag);
+								cellSpacing = getNumberHTML(tmpTag);
 							else
 								cellSpacing = DEFAULT_TABLE_SPACING;
 							
@@ -6112,7 +6112,7 @@ void loadHTMLFromMemory(char *tempStr, HTML_RENDERED *htmlPage)
 							getElementText(element, "cellpadding", tmpTag);
 							
 							if(strlen(tmpTag) > 0)
-								cellPadding = getNumber(tmpTag);
+								cellPadding = getNumberHTML(tmpTag);
 							else
 								cellPadding = DEFAULT_TABLE_PADDING;
 							

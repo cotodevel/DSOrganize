@@ -86,10 +86,8 @@
 #include <string.h>
 #endif
 
-#ifdef RAND
 #define random rand
 #define srandom(s) srand(s)
-#endif
 
 #ifndef NOPROTO
 void usage(void);

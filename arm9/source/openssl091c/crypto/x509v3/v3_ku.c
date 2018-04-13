@@ -168,7 +168,7 @@ X509_EXTENSION_METHOD X509v3_key_usage_method=
 
 
 /***********************/
-
+/*
 int X509v3_get_key_usage(x,ret)
 STACK *x;
 unsigned long *ret;
@@ -192,7 +192,8 @@ unsigned long *ret;
 	else
 		i=0;
 	return(i);
-	}
+}
+*/
 
 static struct
 	{
@@ -228,6 +229,7 @@ X509 *x;
 	}
 #endif
 
+/*
 int i2a_X509v3_key_usage(bp,use)
 BIO *bp;
 unsigned int use;
@@ -244,8 +246,10 @@ unsigned int use;
 			}
 		}
 	return(1);
-	}
+}
+*/
 
+/*
 unsigned int a2i_X509v3_key_usage(p)
 char *p;
 	{
@@ -277,7 +281,7 @@ char *p;
 			}
 		}
 	return(ret);
-	}
+}
 
 int X509v3_set_key_usage(x,use)
 X509 *x;
@@ -302,7 +306,7 @@ unsigned int use;
 	else
 		ext=X509_get_ext(x,i);
 
-	/* fill in 'ext' */
+	// fill in 'ext' 
 	os=X509_EXTENSION_get_data(ext);
 
 	i=0;
@@ -317,5 +321,6 @@ unsigned int use;
 		data[1]=(use>>8)&0xff;
 		}
 	return((X509v3_pack_string(&os,V_ASN1_BIT_STRING,data,i) == NULL)?0:1);
-	}
+}
+*/
 

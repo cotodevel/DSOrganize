@@ -163,7 +163,7 @@ unsigned short *port_ptr;
 		*port_ptr=(unsigned short)i;
 	else
 		{
-		s=getservbyname(str,"tcp");
+		s=NULL;	//getservbyname(str,"tcp");
 		if (s == NULL)
 			{
 			if (strcmp(str,"http") == 0)

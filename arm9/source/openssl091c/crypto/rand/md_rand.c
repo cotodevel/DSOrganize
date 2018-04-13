@@ -120,6 +120,10 @@ We need a message digest of some type
 /* #define NORAND	1 */
 /* #define PREDICT	1 */
 
+uid_t getuid(){
+	return 0;
+}
+
 #define STATE_SIZE	1023
 static int state_num=0,state_index=0;
 static unsigned char state[STATE_SIZE+MD_DIGEST_LENGTH];

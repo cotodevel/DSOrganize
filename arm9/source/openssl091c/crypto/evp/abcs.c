@@ -91,7 +91,7 @@ static ERR_STRING_DATA EVP_str_reasons[]=
 	};
 
 #endif
-
+/*
 void ERR_load_EVP_strings()
 	{
 	static int init=1;
@@ -106,3 +106,4 @@ void ERR_load_EVP_strings()
 
 		}
 	}
+*/

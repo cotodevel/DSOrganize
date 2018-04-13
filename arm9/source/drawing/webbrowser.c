@@ -49,6 +49,7 @@
 #include "../settings.h"
 #include "../controls.h"
 #include "../errors.h"
+#include "specific_shared.h"
 
 static HTML_RENDERED htmlPage;
 static u32 bState = WEBSTATE_INIT;

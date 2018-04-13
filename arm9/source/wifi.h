@@ -43,8 +43,8 @@ typedef struct
     SSL_SESSION* session;
 } CONNECTION;
 
-void *sgIP_malloc(int size);
-void sgIP_free(void * ptr);
+//void *sgIP_malloc(int size);
+//void sgIP_free(void * ptr);
 
 void initWifi();
 void getWifiSync();

@@ -116,6 +116,25 @@ static int BN_ref_mod_exp();
 static int RSA_ref_mod_exp();
 #endif
 
+
+
+int RSAPrivateDecrypt(){
+}
+int RSAPrivateEncrypt(){
+}
+int RSAPublicDecrypt(){
+}
+int RSAPublicEncrypt(){
+}
+int R_RandomInit(){
+}
+int R_GetRandomBytesNeeded(){
+}
+int R_RandomUpdate(){
+}
+int R_RandomFinal(){
+}
+
 static RSA_METHOD rsa_pkcs1_ref_meth={
 	"RSAref PKCS#1 RSA",
 	RSA_ref_public_encrypt,

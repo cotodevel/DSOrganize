@@ -3,6 +3,7 @@
 #include "dsregs_asm.h"
 #include <stdlib.h>
 #include "libcommon.h"
+#include "dmaTGDS.h"
 
 static uint16 B_TL[] = { 0xFFFF, 5, 5, 6, 31, 22197, 24311, 27482, 29596, 32767, // width, height, # of pallate entries, pallate entries
 0x0200, 0x2440, 0x49A0, 0x124C, 0x259C, 0x0A39, 0x5072 };
@@ -92,8 +93,8 @@ void fb_dispAnimatedBox(int x, int y, int width, int height, int tx, int ty, con
 	w = 25;
 	
 	if(fb_isbgEnabled()) {
-		dmaCopy(fb_returnFrameBuffer(), bgFrameBufferTemp, BUFFER_SIZE * 2);		
-		dmaCopy(fb_backBuffer(), fb_returnFrameBuffer(), BUFFER_SIZE * 2);
+		dmaTransferWord(3,bgFrameBufferTemp, fb_returnFrameBuffer(), BUFFER_SIZE * 2);		//dmaCopy(fb_returnFrameBuffer(), bgFrameBufferTemp, BUFFER_SIZE * 2);		
+		dmaTransferWord(3,fb_returnFrameBuffer(), fb_backBuffer(), BUFFER_SIZE * 2);	//dmaCopy(fb_backBuffer(), fb_returnFrameBuffer(), BUFFER_SIZE * 2);
 	}
 	
 	while( w < width || w < height ) {
@@ -121,8 +122,8 @@ void fb_dispAnimatedBox(int x, int y, int width, int height, int tx, int ty, con
 	fb_setDialogBox(x, y, width, height);	
 	fb_dispString(tx, ty, strDisp);
 	
-	if(fb_isbgEnabled()) {				
-		dmaCopy(bgFrameBufferTemp, fb_returnFrameBuffer(), BUFFER_SIZE * 2);
+	if(fb_isbgEnabled()) {
+		dmaTransferWord(3, fb_returnFrameBuffer(), bgFrameBufferTemp, BUFFER_SIZE * 2);	//dmaCopy(bgFrameBufferTemp, fb_returnFrameBuffer(), BUFFER_SIZE * 2);
 	}
 	
 	free(bgFrameBufferTemp);
@@ -171,8 +172,8 @@ void bg_dispAnimatedBox(int x, int y, int width, int height, int tx, int ty, con
 	w = 25;
 	
 	if(bg_isbgEnabled()) {
-		dmaCopy(bg_returnFrameBuffer(), bgBufferTemp, BUFFER_SIZE * 2);		
-		dmaCopy(bg_backBuffer(), bg_returnFrameBuffer(), BUFFER_SIZE * 2);
+		dmaTransferWord(3, bgBufferTemp, bg_returnFrameBuffer(), BUFFER_SIZE * 2);	//dmaCopy(bg_returnFrameBuffer(), bgBufferTemp, BUFFER_SIZE * 2);		
+		dmaTransferWord(3, bg_returnFrameBuffer(),bg_backBuffer(), BUFFER_SIZE * 2);	//dmaCopy(bg_backBuffer(), bg_returnFrameBuffer(), BUFFER_SIZE * 2);
 	}
 	
 	while( w < width || w < height ) {
@@ -200,8 +201,8 @@ void bg_dispAnimatedBox(int x, int y, int width, int height, int tx, int ty, con
 	bg_setDialogBox(x, y, width, height);	
 	bg_dispString(tx, ty, strDisp);
 	
-	if(bg_isbgEnabled()) {				
-		dmaCopy(bgBufferTemp, bg_returnFrameBuffer(), BUFFER_SIZE * 2);
+	if(bg_isbgEnabled()) {
+		dmaTransferWord(3,bg_returnFrameBuffer(), bgBufferTemp,BUFFER_SIZE * 2);	//dmaCopy(bgBufferTemp, bg_returnFrameBuffer(), BUFFER_SIZE * 2);
 	}
 	
 	free(bgBufferTemp);

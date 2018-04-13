@@ -81,7 +81,7 @@ void initTextEditor()
 	hasLoaded = false;
 }
 
-void wrapCalculate()
+void wrapCalculateTextEditor()
 {
 	ptCount = getWrapPoints(0, 5, textFile, LEFT, TOP, RIGHT, BOTTOM + (isTextEditorFixed() ? FIXEDPAD : 0), &pts, setTextEditorFont());		
 }
@@ -536,7 +536,7 @@ void drawEditScreen()
 		copying = false;		
 		hasLoaded = true;
 		
-		wrapCalculate();
+		wrapCalculateTextEditor();
 		
 		filePos = 0;
 		resetCursor();
@@ -829,7 +829,7 @@ void editTextFileAction(char c)
 	}
 	
 	genericAction(textFile, bufferLength - 1, c);
-	wrapCalculate();
+	wrapCalculateTextEditor();
 	checkCursorPosition();
 }
 

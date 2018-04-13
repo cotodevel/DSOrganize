@@ -300,7 +300,7 @@ des_key_schedule ks3;
 	}
 
 #ifndef DES_DEFAULT_OPTIONS
-
+/*
 void des_ncbc_encrypt(input, output, length, schedule, ivec, enc)
 des_cblock (*input);
 des_cblock (*output);
@@ -498,5 +498,5 @@ int enc;
 	tin0=tin1=tout0=tout1=xor0=xor1=0;
 	tin[0]=tin[1]=0;
 	}
-
+*/
 #endif /* DES_DEFAULT_OPTIONS */

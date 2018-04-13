@@ -62,6 +62,19 @@
 #include "objects.h"
 #include "x509.h"
 
+
+void MDC2_Init(MDC2_CTX *c){
+
+}
+
+void MDC2_Update(MDC2_CTX *c, unsigned char *data, unsigned long len){
+
+}
+
+void MDC2_Final(unsigned char *md, MDC2_CTX *c){
+
+}
+
 static EVP_MD mdc2_md=
 	{
 	NID_mdc2,

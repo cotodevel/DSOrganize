@@ -68,7 +68,9 @@
 #include "bio.h"
 
 #include <iodef.h>		/* VMS IO$_ definitions */
-extern int SYS$QIOW();
+int SYS$QIOW(){
+
+}
 typedef unsigned short io_channel;
 /*************************************************************************/
 struct io_status { short status, count; long flags; };

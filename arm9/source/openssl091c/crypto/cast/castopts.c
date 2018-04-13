@@ -151,7 +151,6 @@ struct tms {
 #endif
 
 #define BUFSIZE	((long)1024)
-long run=0;
 
 #ifndef NOPROTO
 double Time_F(int s);
@@ -159,7 +158,6 @@ double Time_F(int s);
 double Time_F();
 #endif
 
-#ifdef SIGALRM
 #if defined(__STDC__) || defined(sgi)
 #define SIGRETTYPE void
 #else
@@ -167,61 +165,14 @@ double Time_F();
 #endif
 
 #ifndef NOPROTO
-SIGRETTYPE sig_done(int sig);
+extern SIGRETTYPE sig_done(int sig);
 #else
-SIGRETTYPE sig_done();
+extern SIGRETTYPE sig_done();
 #endif
 
-SIGRETTYPE sig_done(sig)
-int sig;
-	{
-	signal(SIGALRM,sig_done);
-	run=0;
-#ifdef LINT
-	sig=sig;
-#endif
-	}
-#endif
 
 #define START	0
 #define STOP	1
-
-double Time_F(s)
-int s;
-	{
-	double ret;
-#ifdef TIMES
-	static struct tms tstart,tend;
-
-	if (s == START)
-		{
-		times(&tstart);
-		return(0);
-		}
-	else
-		{
-		times(&tend);
-		ret=((double)(tend.tms_utime-tstart.tms_utime))/HZ;
-		return((ret == 0.0)?1e-6:ret);
-		}
-#else /* !times() */
-	static struct timeb tstart,tend;
-	long i;
-
-	if (s == START)
-		{
-		ftime(&tstart);
-		return(0);
-		}
-	else
-		{
-		ftime(&tend);
-		i=(long)tend.millitm-(long)tstart.millitm;
-		ret=((double)(tend.time-tstart.time))+((double)i)/1000.0;
-		return((ret == 0.0)?1e-6:ret);
-		}
-#endif
-	}
 
 #ifdef SIGALRM
 #define print_name(name) fprintf(stderr,"Doing %s's for 10 seconds\n",name); alarm(10);
@@ -229,20 +180,6 @@ int s;
 #define print_name(name) fprintf(stderr,"Doing %s %ld times\n",name,cb);
 #endif
 	
-#define time_it(func,name,index) \
-	print_name(name); \
-	Time_F(START); \
-	for (count=0,run=1; COND(cb); count+=4) \
-		{ \
-		unsigned long d[2]; \
-		func(d,&sch); \
-		func(d,&sch); \
-		func(d,&sch); \
-		func(d,&sch); \
-		} \
-	tm[index]=Time_F(STOP); \
-	fprintf(stderr,"%ld %s's in %.2f second\n",count,name,tm[index]); \
-	tm[index]=((double)COUNT(cb))/tm[index];
 
 #define print_it(name,index) \
 	fprintf(stderr,"%s bytes per sec = %12.2f (%5.1fuS)\n",name, \

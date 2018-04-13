@@ -461,7 +461,7 @@ EVP_CIPHER_ctx *c;
 		b->callback(b,BIO_CB_CTRL,(char *)c,BIO_CTRL_SET,e,1L);
 	}
 */
-
+/*
 void BIO_set_cipher(b,c,k,i,e)
 BIO *b;
 EVP_CIPHER *c;
@@ -484,4 +484,4 @@ int e;
 	if (b->callback != NULL)
 		b->callback(b,BIO_CB_CTRL,(char *)c,BIO_CTRL_SET,e,1L);
 	}
-
+*/

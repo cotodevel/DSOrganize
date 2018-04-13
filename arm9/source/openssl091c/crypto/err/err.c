@@ -83,7 +83,7 @@ static unsigned long pid_hash();
 static int pid_cmp();
 static unsigned long get_error_values();
 static void ERR_STATE_free();
-ERR_STATE *s;
+ERR_STATE *errstat;
 #endif
 
 #ifndef NO_ERR
@@ -612,47 +612,8 @@ int flags;
 	es->err_data_flags[es->top]=flags;
 	}
 
-/*
+
 void ERR_add_error_data( VAR_PLIST(int , num))
-VAR_ALIST
-        {
-        VAR_BDEFN(args, int, num);
-	int i,n,s;
-	char *str,*p,*a;
-
-	s=64;
-	str=Malloc(s+1);
-	if (str == NULL) return;
-	str[0]='\0';
-
-	VAR_INIT(args,int,num);
-	n=0;
-	for (i=0; i<num; i++)
-		{
-		VAR_ARG(args,char *,a);
-		// ignore NULLs, thanks to Bob Beck <beck@obtuse.com> 
-		if (a != NULL)
-			{
-			n+=strlen(a);
-			if (n > s)
-				{
-				s=n+20;
-				p=Realloc(str,s+1);
-				if (p == NULL)
-					{
-					Free(str);
-					return;
-					}
-				else
-					str=p;
-				}
-			strcat(str,a);
-			}
-		}
-	ERR_set_error_data(str,ERR_TXT_MALLOCED|ERR_TXT_STRING);
-
-	VAR_END( args );
-	
-	}
-
-*/
+{
+        
+}

@@ -94,6 +94,7 @@ static ERR_STRING_DATA EVP_str_reasons[]=
 
 static int EVP_lib_error_code=0;
 
+/*
 void ERR_load_EVP_strings()
 	{
 	static int init=1;
@@ -111,7 +112,7 @@ void ERR_load_EVP_strings()
 
 		}
 	}
-
+*/
 void ERR_EVP_error(function,reason,file,line)
 int function;
 int reason;

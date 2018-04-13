@@ -253,7 +253,7 @@ void stripEnd(char *str)
 	}
 }
 
-void insertChar(HB_LIST *hb, int state, int x, char c)
+void insertCharDB(HB_LIST *hb, int state, int x, char c)
 {
 	switch(state)
 	{
@@ -364,13 +364,13 @@ int parseList(char *list)
 		}
 		else if(list[lPos] == '|') // end of data section
 		{
-			insertChar(&hbList[pos], state, x, 0);
+			insertCharDB(&hbList[pos], state, x, 0);
 			state++;
 			x = 0;
 		}
 		else
 		{
-			insertChar(&hbList[pos], state, x, list[lPos]);
+			insertCharDB(&hbList[pos], state, x, list[lPos]);
 			x++;
 		}
 		

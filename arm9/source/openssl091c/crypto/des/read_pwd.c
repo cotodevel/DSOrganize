@@ -74,7 +74,6 @@
  * TERMIO, TERMIOS, VMS, MSDOS and SGTTY
  */
  
-/*
 #if defined(__sgi) && !defined(TERMIOS)
 #define TERMIOS
 #undef  TERMIO
@@ -220,7 +219,7 @@ int verify;
 	long status;
 	unsigned short channel = 0;
 #else
-#ifndef MSDOS
+#ifdef MSDOS
 	TTY_STRUCT tty_orig,tty_new;
 #endif
 #endif
@@ -458,4 +457,3 @@ FILE *tty;
 	return(strlen(buf));
 	}
 #endif
-*/

@@ -54,7 +54,7 @@ void setLCDState(bool state)
 		lcdMainOnTop();	
 		
 		if(screensFlipped() || configFlipped())
-			lcdSwap();
+			SWAP_LCDS();
 		
 		needsRefresh = true;
 		lcdOn = true;

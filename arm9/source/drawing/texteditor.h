@@ -51,7 +51,7 @@ extern "C" {
 #define READ_BUFFER_SIZE 101
 
 void freeText();
-void wrapCalculate();
+void wrapCalculateTextEditor();
 int getLocation();
 int getVirtualLine();
 int getVirtualColumn();
