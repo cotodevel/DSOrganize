@@ -45,7 +45,7 @@ void Timer1handlerUser(){
 __attribute__((section(".itcm")))
 #endif
 void Timer2handlerUser(){
-	micInterrupt();
+	micInterrupt();		//DSO T2 handler
 }
 
 #ifdef ARM9

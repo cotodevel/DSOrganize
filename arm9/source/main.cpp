@@ -3114,7 +3114,10 @@ void initProgram()
 	invalidateHomeLoaded();
 	
 	setGenericSound(11025, 127, 64, 1);
-	waitForInit(); // wait until arm7 has loaded and gone to sleep
+	waitForInit();			//  wait until arm7 has loaded and gone to sleep
+	
+	//data aborts here
+	
 	initComplexSound(); // initialize sound variables
 	initWifi();
 	fixGautami();
@@ -3141,7 +3144,8 @@ void initProgram()
 	oldYear = 0;
 	oldMonth = 0;
 	
-	if(!DRAGON_InitFiles())
+	while(1==1){}
+	if(DRAGON_InitFiles() == false)
 	{
 		// oops, no cf card!
 		setMode(DISPLAYCOW);
@@ -3159,7 +3163,10 @@ void initProgram()
 			// wee, la la la!
 		}
 	}
-	
+	//otherwise card init correctly.
+	else{
+		setMode(INITPLUGIN);
+	}
 	//--------------------------------------------------------------------
 	//finished init, now check to make sure the DSOrganize dir is there...
 	//--------------------------------------------------------------------
@@ -3202,7 +3209,7 @@ void initProgram()
 		}
 	}
 	
-	setMode(INITPLUGIN);
+	//setMode(INITPLUGIN);	//ori
 	
 	//-------------------------------------------------------------------
 	//finished creating dirs, now check to make sure if they extracted it

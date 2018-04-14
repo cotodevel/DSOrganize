@@ -27,7 +27,7 @@ include $(DEFAULT_GCC_PATH)Makefile.basenewlib
 
 #Custom
 # Project Specific
-export EXECUTABLE_FNAME = dsorganize.nds
+export EXECUTABLE_FNAME = dsorganize-new.nds
 export EXECUTABLE_VERSION_HEADER =	3.1129
 export EXECUTABLE_VERSION =	"$(EXECUTABLE_VERSION_HEADER)"
 

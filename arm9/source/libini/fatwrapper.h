@@ -40,7 +40,7 @@ enum {
 
 #define MAX_FILES 10
 
-bool			DRAGON_InitFiles();
+extern bool			DRAGON_InitFiles();
 bool 			DRAGON_FreeFiles();
 u32 			DRAGON_DiscType();
 char 			*DRAGON_tryingInterface();

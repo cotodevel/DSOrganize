@@ -901,8 +901,7 @@ int main(int _argc, sint8 **_argv) {
 	//irqEnable(IRQ_FIFO_NOT_EMPTY);
 	//REG_IPC_FIFO_CR = IPC_FIFO_ENABLE | IPC_FIFO_SEND_CLEAR | IPC_FIFO_RECV_IRQ;
 	
-	SendMultipleWordACK(ARM9COMMAND_INIT, 0, 0, NULL);
-	
+	setSenderStatus(true);
     while (1) {
 		IRQVBlankWait();
 	}

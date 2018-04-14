@@ -255,10 +255,15 @@ void vBlank() // in case i ever need it... oops apparently I did.
 				
 				if(getMode() == INITFAT)
 				{
-					char tStr[64];
-					sprintf(tStr, "Trying %s...", DRAGON_tryingInterface()); // \n\n%d, curSize);
-					
-					bg_dispString(0,25,tStr);
+					if(getSenderStatus() == true){
+						//ARM7 INIT OK.
+						char tStr[64];
+						sprintf(tStr, "[ARM7OK]Trying %s...", DRAGON_tryingInterface()); // \n\n%d, curSize);
+						bg_dispString(0,25,tStr);
+					}
+					else{
+						//ARM7 INIT WAIT
+					}
 				}
 				else
 				{

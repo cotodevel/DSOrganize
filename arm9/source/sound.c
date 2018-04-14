@@ -46,7 +46,7 @@
 #include "videoTGDS.h"
 #include "sound.h"
 
-bool canSend = false;
+
 sndData soundData;
 bool cutOff = false;
 bool sndPaused = false;
@@ -698,7 +698,7 @@ void FIFO_Receive()
 		switch(command)
 		{
 			case ARM9COMMAND_INIT:
-				canSend = true;
+				setSenderStatus(true);
 				break;
 			case ARM9COMMAND_UPDATE_BUFFER:
 				updateRequested = true;
@@ -808,9 +808,9 @@ void stopSound()
 
 void waitForInit()
 {
-	while(!canSend)
+	while(getSenderStatus() == false)
 	{
-		IRQVBlankWait();
+		//IRQVBlankWait();
 	}
 }
 
