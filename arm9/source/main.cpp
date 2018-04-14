@@ -3097,6 +3097,9 @@ void initProgram()
 	//vramSetBankI(VRAM_I_LCD);
 	VRAMBLOCK_SETBANK_I(VRAM_I_LCDC_MODE);
 	
+	//custom Handler
+	setupCustomExceptionHandler((uint32*)&CustomDebugHandler);
+	
 	fb_setBGColor(30653);	
 	bg_setBGColor(0);
 	drawStartSplash();
@@ -3144,7 +3147,6 @@ void initProgram()
 	oldYear = 0;
 	oldMonth = 0;
 	
-	while(1==1){}
 	if(DRAGON_InitFiles() == false)
 	{
 		// oops, no cf card!

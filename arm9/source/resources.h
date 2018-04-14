@@ -33,6 +33,7 @@ extern char *res_uAgent;
 extern char *res_sAgent;
 extern char *res_bAgent;
 
+extern void CustomDebugHandler();
 #ifdef __cplusplus
 }
 #endif
