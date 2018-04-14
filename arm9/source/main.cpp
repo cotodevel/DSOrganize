@@ -3121,9 +3121,6 @@ void initProgram()
 	
 	initComplexSound(); // initialize sound variables
 	initWifi();
-	
-	//printfDebugger("initWifi() OK");	//while(1==1){} inside
-	
 	fixGautami();
 	
 	setCursorProperties(0, 2, 0, 0);
@@ -3136,7 +3133,9 @@ void initProgram()
 	// also takes care of partial translations.	
 	initLanguage();
 	initRandomList();
-	fixAndTags();
+	printfDebugger("initRandomList() OK");	//while(1==1){} inside
+	
+	fixAndTags();	//segfault
 	
 	resetKeyboard();
 	
