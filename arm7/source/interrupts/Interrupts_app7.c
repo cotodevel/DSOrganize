@@ -38,7 +38,7 @@ void Timer0handlerUser(){
 __attribute__((section(".itcm")))
 #endif
 void Timer1handlerUser(){
-	TIMER1Handler();
+	TIMER1Handler();	//DSO T1 handler
 }
 
 #ifdef ARM9

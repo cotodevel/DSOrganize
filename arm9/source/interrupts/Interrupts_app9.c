@@ -61,6 +61,7 @@ void HblankUser(){
 __attribute__((section(".itcm")))
 #endif
 void VblankUser(){
+	vBlank();	//IRQ_VBLANK DSO @ ARM9
 	if(getsIPCSharedTGDSSpecific()->frameCounter9 < 60){
 		getsIPCSharedTGDSSpecific()->frameCounter9++;
 	}
