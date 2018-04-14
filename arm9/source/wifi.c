@@ -33,6 +33,7 @@
 #include "sound.h"
 #include "settings.h"
 #include "database.h"
+#include "wifi_arm9.h"
 
 static CONNECTION wifiConn[NUM_CONNECTIONS];
 static bool wifiConnected = false;
@@ -66,6 +67,7 @@ void getWifiSync()
 
 void initWifi()
 {
+	/*
 	u32 Wifi_pass = Wifi_Init(WIFIINIT_OPTION_USELED);
 	
     REG_IPC_FIFO_TX = 0xF0000000;
@@ -83,6 +85,20 @@ void initWifi()
 	
 	while(Wifi_CheckInit()==0) 	// wait for arm7 to be initted successfully
 		IRQVBlankWait();
+	
+	// CyaSSL init
+	InitCyaSSL();
+	
+	// init the ssl settings block
+	for(int i = 0;i < NUM_CONNECTIONS; i++)
+	{
+		wifiConn[i].sock = -1;
+	}
+	*/
+	
+	bool useWIFI = true;
+	bool useFirmwareSettings = true;
+	WNifi_InitSafeDefault(useFirmwareSettings,useWIFI);
 	
 	// CyaSSL init
 	InitCyaSSL();

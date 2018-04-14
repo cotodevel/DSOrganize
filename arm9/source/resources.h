@@ -20,6 +20,10 @@
 #ifndef _RESOURCES_INCLUDED
 #define _RESOURCES_INCLUDED
 
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,6 +38,8 @@ extern char *res_sAgent;
 extern char *res_bAgent;
 
 extern void CustomDebugHandler();
+extern void printfDebugger(sint8 *fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif

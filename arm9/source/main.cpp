@@ -3119,10 +3119,11 @@ void initProgram()
 	setGenericSound(11025, 127, 64, 1);
 	waitForInit();			//  wait until arm7 has loaded and gone to sleep
 	
-	//data aborts here
-	
 	initComplexSound(); // initialize sound variables
 	initWifi();
+	
+	//printfDebugger("initWifi() OK");	//while(1==1){} inside
+	
 	fixGautami();
 	
 	setCursorProperties(0, 2, 0, 0);
