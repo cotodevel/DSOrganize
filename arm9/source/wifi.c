@@ -84,8 +84,8 @@ void initWifi()
 	while(Wifi_CheckInit()==0) 	// wait for arm7 to be initted successfully
 		IRQVBlankWait();
 	
-	// init ssl
-	//InitCyaSSL();	//wolfSSL ?? wasn't this OpenSSL???
+	// CyaSSL init
+	InitCyaSSL();
 	
 	// init the ssl settings block
 	for(int i = 0;i < NUM_CONNECTIONS; i++)
@@ -157,7 +157,7 @@ int doConnect(int sock, struct sockaddr *tcp_sain, int size, bool useSSL)
 		wifiConn[id].ssl = SSL_new(wifiConn[id].ctx);
 		SSL_set_fd(wifiConn[id].ssl, sock);
 		
-		if(SSL_connect(wifiConn[id].ssl) != SSL_ST_OK)//SSL_SUCCESS)
+		if(SSL_connect(wifiConn[id].ssl) != SSL_SUCCESS)
 		{
 			// couldn't get valid socket id
 			wifiClose(sock);

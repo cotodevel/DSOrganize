@@ -65,47 +65,8 @@ export DIRS_ARM7_HEADER = source/	\
 
 
 #####################################################ARM9#####################################################
-export DIRS_ARM9_SRC = source/openssl091c/apps/	\
-			source/openssl091c/crypto/asn1/	\
-			source/openssl091c/crypto/bf/	\
-			source/openssl091c/crypto/bio/	\
-			source/openssl091c/crypto/bn/	\
-			source/openssl091c/crypto/bn/stuff/	\
-			source/openssl091c/crypto/buffer/	\
-			source/openssl091c/crypto/cast/	\
-			source/openssl091c/crypto/comp/	\
-			source/openssl091c/crypto/conf/	\
-			source/openssl091c/crypto/des/	\
-			source/openssl091c/crypto/dh/	\
-			source/openssl091c/crypto/dsa/	\
-			source/openssl091c/crypto/err/	\
-			source/openssl091c/crypto/evp/	\
-			source/openssl091c/crypto/hmac/	\
-			source/openssl091c/crypto/idea/	\
-			source/openssl091c/crypto/lhash/	\
-			source/openssl091c/crypto/md/	\
-			source/openssl091c/crypto/md2/	\
-			source/openssl091c/crypto/md5/	\
-			source/openssl091c/crypto/mdc2/	\
-			source/openssl091c/crypto/objects/	\
-			source/openssl091c/crypto/pem/	\
-			source/openssl091c/crypto/pkcs7/	\
-			source/openssl091c/crypto/rand/	\
-			source/openssl091c/crypto/rc2/	\
-			source/openssl091c/crypto/rc4/	\
-			source/openssl091c/crypto/rc5/	\
-			source/openssl091c/crypto/ripemd/	\
-			source/openssl091c/crypto/rsa/	\
-			source/openssl091c/crypto/sha/	\
-			source/openssl091c/crypto/stack/	\
-			source/openssl091c/crypto/threads/	\
-			source/openssl091c/crypto/txt_db/	\
-			source/openssl091c/crypto/x509/	\
-			source/openssl091c/crypto/x509v3/	\
-			source/openssl091c/crypto/	\
-			source/openssl091c/rsaref/	\
-			source/openssl091c/ssl/	\
-			source/openssl091c/	\
+export DIRS_ARM9_SRC = source/cyassl140/src/	\
+			source/cyassl140/ctaocrypt/src/	\
 			source/interrupts/	\
 			source/gui/	\
 			source/drawing/	\
@@ -142,47 +103,9 @@ export DIRS_ARM9_SRC = source/openssl091c/apps/	\
 			../common/
 			
 export DIRS_ARM9_HEADER = include/	\
-			source/openssl091c/apps/	\
-			source/openssl091c/crypto/asn1/	\
-			source/openssl091c/crypto/bf/	\
-			source/openssl091c/crypto/bio/	\
-			source/openssl091c/crypto/bn/	\
-			source/openssl091c/crypto/bn/stuff/	\
-			source/openssl091c/crypto/buffer/	\
-			source/openssl091c/crypto/cast/	\
-			source/openssl091c/crypto/comp/	\
-			source/openssl091c/crypto/conf/	\
-			source/openssl091c/crypto/des/	\
-			source/openssl091c/crypto/dh/	\
-			source/openssl091c/crypto/dsa/	\
-			source/openssl091c/crypto/err/	\
-			source/openssl091c/crypto/evp/	\
-			source/openssl091c/crypto/hmac/	\
-			source/openssl091c/crypto/idea/	\
-			source/openssl091c/crypto/lhash/	\
-			source/openssl091c/crypto/md/	\
-			source/openssl091c/crypto/md2/	\
-			source/openssl091c/crypto/md5/	\
-			source/openssl091c/crypto/mdc2/	\
-			source/openssl091c/crypto/objects/	\
-			source/openssl091c/crypto/pem/	\
-			source/openssl091c/crypto/pkcs7/	\
-			source/openssl091c/crypto/rand/	\
-			source/openssl091c/crypto/rc2/	\
-			source/openssl091c/crypto/rc4/	\
-			source/openssl091c/crypto/rc5/	\
-			source/openssl091c/crypto/ripemd/	\
-			source/openssl091c/crypto/rsa/	\
-			source/openssl091c/crypto/sha/	\
-			source/openssl091c/crypto/stack/	\
-			source/openssl091c/crypto/threads/	\
-			source/openssl091c/crypto/txt_db/	\
-			source/openssl091c/crypto/x509/	\
-			source/openssl091c/crypto/x509v3/	\
-			source/openssl091c/crypto/	\
-			source/openssl091c/rsaref/	\
-			source/openssl091c/ssl/	\
-			source/openssl091c/	\
+			source/cyassl140/include/	\
+			source/cyassl140/include/openssl/	\
+			source/cyassl140/ctaocrypt/include/	\
 			source/gui/	\
 			source/aac/pub/	\
 			source/emulated/	\
