@@ -3133,10 +3133,7 @@ void initProgram()
 	// also takes care of partial translations.	
 	initLanguage();
 	initRandomList();
-	printfDebugger("initRandomList() OK");	//while(1==1){} inside
-	
-	fixAndTags();	//segfault
-	
+	fixAndTags();
 	resetKeyboard();
 	
 	curDay = getDay();
@@ -3167,7 +3164,7 @@ void initProgram()
 	}
 	//otherwise card init correctly.
 	else{
-		setMode(INITPLUGIN);
+		
 	}
 	//--------------------------------------------------------------------
 	//finished init, now check to make sure the DSOrganize dir is there...
@@ -3206,67 +3203,74 @@ void initProgram()
 		bg_dispString(0,0, l_createdir);
 		bg_swapBuffers();
 		
-		while(!keysPressed())
-		{
-		}
+		//while(!keysPressed())
+		//{
+		//}
 	}
-	
-	//setMode(INITPLUGIN);	//ori
+	else{
+		
+	}
+	setMode(INITPLUGIN);
 	
 	//-------------------------------------------------------------------
 	//finished creating dirs, now check to make sure if they extracted it
 	//did their extracting program actually get all the dirs?
 	//-------------------------------------------------------------------	
 	
-	DRAGON_chdir(d_base);
 	
-	if(DRAGON_FileExists("Day") != FE_DIR)
+	DRAGON_chdir(d_base);	//DRAGON_chdir(getfatfsPath(d_base)) format incorrect, use DRAGON_chdir("/DSOrganize"); for chdir
+	
+	if(DRAGON_FileExists("DAY") != FE_DIR)
 	{
 		DRAGON_mkdir("DAY");
 	}
-	if(DRAGON_FileExists("Help") != FE_DIR)
+	if(DRAGON_FileExists("HELP") != FE_DIR)
 	{
 		DRAGON_mkdir("HELP");
 	}
-	if(DRAGON_FileExists("Lang") != FE_DIR)
+	if(DRAGON_FileExists("LANG") != FE_DIR)
 	{
 		DRAGON_mkdir("LANG");
 	}
-	if(DRAGON_FileExists("Reminder") != FE_DIR)
+	if(DRAGON_FileExists("REMINDER") != FE_DIR)
 	{
 		DRAGON_mkdir("REMINDER");
 	}
-	if(DRAGON_FileExists("Scribble") != FE_DIR)
+	if(DRAGON_FileExists("SCRIBBLE") != FE_DIR)
 	{
 		DRAGON_mkdir("SCRIBBLE");
 	}
-	if(DRAGON_FileExists("Todo") != FE_DIR)
+	if(DRAGON_FileExists("TODO") != FE_DIR)
 	{
 		DRAGON_mkdir("TODO");
 	}
-	if(DRAGON_FileExists("VCard") != FE_DIR)
+	if(DRAGON_FileExists("VCARD") != FE_DIR)
 	{
 		DRAGON_mkdir("VCARD");
 	}
-	if(DRAGON_FileExists("Icons") != FE_DIR)
+	if(DRAGON_FileExists("ICONS") != FE_DIR)
 	{
 		DRAGON_mkdir("ICONS");
 	}
-	if(DRAGON_FileExists("Cache") != FE_DIR)
+	if(DRAGON_FileExists("CACHE") != FE_DIR)
 	{
 		DRAGON_mkdir("CACHE");
 	}
-	if(DRAGON_FileExists("Home") != FE_DIR)
+	if(DRAGON_FileExists("HOME") != FE_DIR)
 	{
 		DRAGON_mkdir("HOME");
 	}
 	
 	DRAGON_chdir("/");
 	
+	
 	//-------------------------------------------
 	//how about we load the settings for them eh?
 	//-------------------------------------------
-	loadSettings();
+	loadSettings();	//segfault here
+	
+	printfDebugger("loadSettings() OK");	//while(1==1){} inside
+	
 	
 	fb_setBGColor(genericFillColor);
 	bg_setBGColor(genericFillColor);

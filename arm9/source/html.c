@@ -40,12 +40,7 @@
 #include "database.h"
 
 #include "specific_shared.h"
-
-// special tags
-//#include "tags_bin.h"
-
 extern int tags_bin;
-
 
 #define NOELEMENT -2
 #define NONE -1
@@ -2781,7 +2776,7 @@ void fixAndTags()
 {
 	// Grab the actual data
 	int whichTag = 0;
-	TAG_TYPE *tags = (TAG_TYPE *)tags_bin;
+	TAG_TYPE *tags = (TAG_TYPE *)&tags_bin;
 	
 	// loop until end line
 	while(tags[whichTag].tag[0] != ' ')
@@ -2812,7 +2807,7 @@ char findAndTag(char *tag)
 {
 	// Grab the actual data
 	int whichTag = 0;	
-	TAG_TYPE *tags = (TAG_TYPE *)tags_bin;
+	TAG_TYPE *tags = (TAG_TYPE *)&tags_bin;
 	
 	// loop until end line
 	while(tags[whichTag].tag[0] != ' ')

@@ -401,15 +401,15 @@ void loadExternalDLDI()
 
 void loadSettings()
 {
-	char sStr[256];
+	char sStr[256] = {0};
 	
 	defaultLocations();
 	
 	sprintf(sStr, "%sconfig.ini", d_base);	
 	
-	if(DRAGON_FileExists(sStr) != FE_FILE)
+	if(DRAGON_FileExists(sStr) != FE_FILE){
 		makeDefaultSettings();
-		
+	}
 	setIniFile(sStr);
 	
 	if(getSetting("HomeScreen", "Order", sStr))

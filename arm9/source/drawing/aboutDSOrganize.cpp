@@ -53,8 +53,8 @@ void drawAboutScreen()
 		setHTMLWidth(ABOUT_HELP_WIDTH, &aboutData);
 		setContent(TYPE_HTML, &aboutData);
 		
-		abScreen = (char *)trackMalloc(strlen((char *)about)+1, "temp about");
-		memcpy(abScreen, about, strlen((char *)about)+1);
+		abScreen = (char *)trackMalloc(strlen((char *)&about)+1, "temp about");
+		memcpy(abScreen, &about, strlen((char *)&about)+1);
 		
 		loadHTMLFromMemory(abScreen, &aboutData);
 		aboutLoaded = true;

@@ -169,7 +169,8 @@ void quickSwap(int *x, int *y)
 void findDataDirectory()
 {
 	useDataDir = false;
-	
+	//use the default 0:/DSOrganize <dir>
+	/*
 	DRAGON_chdir("/");
 	if(DRAGON_FileExists("data") == FE_DIR) // detected homebrew data dir
 	{
@@ -180,40 +181,40 @@ void findDataDirectory()
 		else
 			DRAGON_chdir("/");
 	}
-	
+	*/
 }
 
 void makeDirectories() // for creating the right paths to the data dir
 {
 	if(useDataDir)
 	{
-		strcpy(d_base, "/data/DSOrganize/");
-		strcpy(d_day, "/data/DSOrganize/day/");
-		strcpy(d_help, "/data/DSOrganize/help/");
-		strcpy(d_lang, "/data/DSOrganize/lang/");
-		strcpy(d_reminder, "/data/DSOrganize/reminder/");
-		strcpy(d_scribble, "/data/DSOrganize/scribble/");
-		strcpy(d_todo, "/data/DSOrganize/todo/");
-		strcpy(d_vcard, "/data/DSOrganize/vcard/");
-		strcpy(d_icons, "/data/DSOrganize/icons/");
-		strcpy(d_res, "/data/DSOrganize/resources/");
-		strcpy(d_cache, "/data/DSOrganize/cache/");
-		strcpy(d_home, "/data/DSOrganize/home/");
+		strcpy(d_base, "/data/DSOrganize");
+		strcpy(d_day, "/data/DSOrganize/day");
+		strcpy(d_help, "/data/DSOrganize/help");
+		strcpy(d_lang, "/data/DSOrganize/lang");
+		strcpy(d_reminder, "/data/DSOrganize/reminder");
+		strcpy(d_scribble, "/data/DSOrganize/scribble");
+		strcpy(d_todo, "/data/DSOrganize/todo");
+		strcpy(d_vcard, "/data/DSOrganize/vcard");
+		strcpy(d_icons, "/data/DSOrganize/icons");
+		strcpy(d_res, "/data/DSOrganize/resources");
+		strcpy(d_cache, "/data/DSOrganize/cache");
+		strcpy(d_home, "/data/DSOrganize/home");
 	}
 	else
 	{
-		strcpy(d_base, "/DSOrganize/");
-		strcpy(d_day, "/DSOrganize/day/");
-		strcpy(d_help, "/DSOrganize/help/");
-		strcpy(d_lang, "/DSOrganize/lang/");
-		strcpy(d_reminder, "/DSOrganize/reminder/");
-		strcpy(d_scribble, "/DSOrganize/scribble/");
-		strcpy(d_todo, "/DSOrganize/todo/");
-		strcpy(d_vcard, "/DSOrganize/vcard/");
-		strcpy(d_icons, "/DSOrganize/icons/");
-		strcpy(d_res, "/DSOrganize/resources/");
-		strcpy(d_cache, "/DSOrganize/cache/");
-		strcpy(d_home, "/DSOrganize/home/");
+		strcpy(d_base, "/DSOrganize");
+		strcpy(d_day, "/DSOrganize/day");
+		strcpy(d_help, "/DSOrganize/help");
+		strcpy(d_lang, "/DSOrganize/lang");
+		strcpy(d_reminder, "/DSOrganize/reminder");
+		strcpy(d_scribble, "/DSOrganize/scribble");
+		strcpy(d_todo, "/DSOrganize/todo");
+		strcpy(d_vcard, "/DSOrganize/vcard");
+		strcpy(d_icons, "/DSOrganize/icons");
+		strcpy(d_res, "/DSOrganize/resources");
+		strcpy(d_cache, "/DSOrganize/cache");
+		strcpy(d_home, "/DSOrganize/home");
 	}
 }
 
