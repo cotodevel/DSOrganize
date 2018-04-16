@@ -3298,8 +3298,6 @@ void drawCurrentApp()
 			break;
 		case HOME:	//4
 			drawSplash();
-			printfDebugger("drawSplash() OK");	//while(1==1){} inside
-			
 			drawHomeScreen();
 			break;
 		case HOMEMORE:
@@ -3498,6 +3496,7 @@ int main(int _argc, sint8 **_argv) {
 				// save the current mode before switching modes
 				oldMode = getMode();
 			}
+			//so far here
 			
 			updateStreamLoop();
 			checkKeys();

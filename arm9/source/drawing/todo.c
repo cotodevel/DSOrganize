@@ -122,7 +122,6 @@ void fixGautami()
 void loadCurrentTodos(char **rStr)
 {
 	int tmpEntries = populateTodoList(d_todo);
-	printfDebugger("populateTodoList() OK");
 	
 	if(tmpEntries == 0)
 	{

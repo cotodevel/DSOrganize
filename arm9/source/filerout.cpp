@@ -833,9 +833,6 @@ uint16 populateTodoList(char *dir)
 	DRAGON_chdir(dir);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
-	
-	printfDebugger("trying:%s",tmpFile);
-	
 	freeTodo();
 	
 	todoList = (TODO_FILE *)trackMalloc(sizeof(TODO_FILE),"Todo list");	
@@ -871,9 +868,11 @@ uint16 populateTodoList(char *dir)
 		fType = DRAGON_FindNextFile(tmpFile);		
 	}
 	
+	
 	DRAGON_closeFind();
 	DRAGON_chdir("/");	
 	sortTodoList(pos);	
+	
 	return pos;
 }
 

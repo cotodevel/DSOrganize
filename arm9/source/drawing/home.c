@@ -198,10 +198,7 @@ void drawSplash()
 		loadCurrentDayPlanner(&curDayPlanner);
 		
 		// load todos
-		loadCurrentTodos(&curTodo);		
-		
-		printfDebugger("loadCurrentTodos() OK");
-		
+		loadCurrentTodos(&curTodo);
 		homeLoaded = true;
 	}
 	
@@ -253,6 +250,7 @@ void drawSplash()
 	fb_drawRect(0,191-17,255,191-17,homeDateBorderColor);
 	fb_drawRect(0,191-19,255,191-18,homeDateBorderFillColor);
 	fb_drawRect(0,191-20,255,191-20,homeDateBorderColor);
+	
 }
 
 void drawHomeScreen()
