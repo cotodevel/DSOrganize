@@ -1,0 +1,31 @@
+Audio Format Implementations
+============================
+wav - 8, 16, 24, and 32 bit stereo and mono files supported
+mp3 - high quality decoding of cbr and vbr files with 4x upsampling and id3v1.1 support
+mp2/mpa - high quality decoding of all files with id3v1.1 support
+ogg - high quality decoding with support for ogg vorbis tags
+aac - support for 1 or 2 channel audio with high quality decoding
+m4a/m4b - support for decoding virtually all unecrypted files
+mod/xm/it/s3m/etc... - some xm files do not work due to bug in libmikmod
+flac - support for 1 or 2 channel audio with normal decoding quality
+sid - support for most sid files, no seeking support
+nsf - support for virtually all files, multi-track support, no seeking support
+spc - support for virtually all files, no seeking support
+sndh - support for virtually all files, multi-track support, no seeking support
+mp3/aac/ogg streams - Fully supported from icecast or shoutcast servers
+
+Playlist Format Implementations
+===============================
+pls - Full support for unix/windows written files, stream support
+m3u - Full support for unix/windows written files, stream support
+
+Picture Format Implementations
+==============================
+bmp - supports uncompressed files in 2/4/16/256 color and 16/24bit modes
+jpg - supports regular and progressive files and most major compression types
+png - supports regular and progressive files with or without alpha channels
+gif - supports regular and animated files including decode-on-demand for large animated gif files
+
+Internal Formats
+================
+dss - File extension for DSO shortcuts
