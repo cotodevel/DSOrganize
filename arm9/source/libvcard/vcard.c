@@ -513,7 +513,7 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	{	// new vcard						
 		
 		sprintf(filename, "%s.vcf", listName);
-		if(DRAGON_FileExists(filename) != FE_NONE)
+		if(DRAGON_FileExists(filename) != FT_NONE)
 			sprintf(filename, "%s%d%d%d%d%d.vcf", listName, getDay(), getMonth(), getYear(), getHour(true), getMinute());
 		
 		safeFileName(filename);
@@ -800,7 +800,7 @@ bool checkMultiples(char *tmpFile)
 				while(!found)
 				{
 					sprintf(str2, "%s_%d%s", str, fNum, ext);  //in the format of originalfile_2.vcf, well keep trying until we find a good file
-					if(DRAGON_FileExists(str2) == FE_NONE)
+					if(DRAGON_FileExists(str2) == FT_NONE)
 						found = true;
 					else
 						fNum++;
@@ -876,9 +876,9 @@ void separateMultiples(char *dir)
 		DRAGON_chdir(dir);
 		fType = DRAGON_FindFirstFile(tmpFile);
 		
-		while(fType != FE_NONE)
+		while(fType != FT_NONE)
 		{
-			if(fType == FE_FILE)
+			if(fType == FT_FILE)
 			{
 				DRAGON_preserveVars();
 				

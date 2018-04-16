@@ -1358,7 +1358,7 @@ void loadIRCConfig()
 	sprintf(fName, "%sIRC.ini", d_base);
 	
 	DRAGON_chdir("/");
-	if(DRAGON_FileExists(fName) != FE_FILE)
+	if(DRAGON_FileExists(fName) != FT_FILE)
 		return;
 	
 	loadConfig(fName, setIRCString);
@@ -1781,9 +1781,9 @@ int listLanguages(LANG_LIST buffer[])
 	DRAGON_chdir(d_lang);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
-		if(fType == FE_FILE)
+		if(fType == FT_FILE)
 		{
 			if(isLangauge(tmpFile))
 			{

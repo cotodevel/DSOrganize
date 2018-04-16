@@ -1437,7 +1437,7 @@ void renameEntry(char *oldFileName, char *newFileName)
 		strcat(oldFile, ".bmf");
 		strcat(newFile, ".bmf");
 		
-		if(DRAGON_FileExists(oldFile) != FE_NONE)
+		if(DRAGON_FileExists(oldFile) != FT_NONE)
 			DRAGON_rename(oldFile, newFile);
 	}
 }
@@ -1490,16 +1490,16 @@ void deleteFAT(char *entry, bool deleteFinal)
 {
 	DRAGON_chdir("/");
 	
-	if(DRAGON_FileExists(entry) == FE_NONE)
+	if(DRAGON_FileExists(entry) == FT_NONE)
 		return;
 	
-	if(DRAGON_FileExists(entry) == FE_FILE)
+	if(DRAGON_FileExists(entry) == FT_FILE)
 	{
 		DRAGON_remove(entry);
 		return;
 	}
 	
-	// type is FE_DIR, make sure it's empty
+	// type is FT_DIR, make sure it's empty
 	
 	char toDelete[256];
 	char done = false;
@@ -1510,7 +1510,7 @@ void deleteFAT(char *entry, bool deleteFinal)
 	
 	while(!done)
 	{
-		if(type == FE_DIR)
+		if(type == FT_DIR)
 		{
 			if(strcmp(toDelete, ".") != 0 && strcmp(toDelete, "..") != 0)
 			{
@@ -1530,7 +1530,7 @@ void deleteFAT(char *entry, bool deleteFinal)
 				DRAGON_chdir(entry);
 			}
 		}
-		else if(type == FE_FILE)
+		else if(type == FT_FILE)
 			DRAGON_remove(toDelete);
 		else
 			done = true;

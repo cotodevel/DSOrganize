@@ -408,7 +408,7 @@ void loadSettings()
 	PathFix.erase(PathFix.length()-1);
 	std::string FullPath = (PathFix + string(d_base) + string("/") + string("config.ini"));
 	
-	if(DRAGON_FileExists(FullPath.c_str()) != FE_FILE){
+	if(DRAGON_FileExists(FullPath.c_str()) != FT_FILE){
 		//default settings
 		makeDefaultSettings();
 	}
@@ -699,7 +699,7 @@ void loadWifi()
 	
 	dsoProfiles = (WIFI_PROFILE *)safeMalloc(3 * sizeof(WIFI_PROFILE));
 	
-	if(DRAGON_FileExists(sStr) != FE_FILE)
+	if(DRAGON_FileExists(sStr) != FT_FILE)
 	{
 		memset(dsoProfiles, 0, sizeof(WIFI_PROFILE) * 3);
 		return;
@@ -1659,10 +1659,10 @@ void loadColors()
 	DRAGON_chdir("/");
 	sprintf(sStr, "%s%s/colors.ini", d_icons, cIconSet);
 	
-	if(DRAGON_FileExists(sStr) != FE_FILE)
+	if(DRAGON_FileExists(sStr) != FT_FILE)
 	{
 		sprintf(sStr, "%scolors.ini", d_base);
-		if(DRAGON_FileExists(sStr) != FE_FILE)
+		if(DRAGON_FileExists(sStr) != FT_FILE)
 		{	
 			return;
 		}

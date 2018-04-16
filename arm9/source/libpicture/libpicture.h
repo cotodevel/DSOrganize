@@ -1,10 +1,6 @@
 #ifndef _PICTURE_INCLUDED
 #define _PICTURE_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "gif_lib.h"
 
 #define PIC_NONE 0
@@ -109,27 +105,31 @@ typedef struct
 	void (*resetFunction)();
 } PICTURE_DATA;
 
-void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight);
-void freeImage(PICTURE_DATA *pd);
-void openGifStreaming(char *fName, PICTURE_DATA *pd);
-void closeGifStreaming(PICTURE_DATA *pd);
-void loadNextImage(PICTURE_DATA *pd);
-void restartGifFile(PICTURE_DATA *pd);
-void restartAnimation(PICTURE_DATA *pd);
-void copyFileData(PICTURE_DATA *pd);
-bool getPictureSize(char *fName, int *max_X, int *max_Y);
-void initImage(PICTURE_DATA *pd, int thumbWidth, int thumbHeight);
-bool saveImageFromHandle(PICTURE_DATA *pd);
-bool saveImage(char *fName, void *rawData, int max_X, int max_Y);
-bool createImage(PICTURE_DATA *pd, int max_X, int max_Y, uint16 fillColor);
-void setBGColor(uint16 color, PICTURE_DATA *pd);
-void enableGIFFileStreaming();
-void disableGIFFileStreaming();
-void setLargeDimensions(int x, int y);
-int getTypeFromMagicID(char *fName);
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight);
+extern void freeImage(PICTURE_DATA *pd);
+extern void openGifStreaming(char *fName, PICTURE_DATA *pd);
+extern void closeGifStreaming(PICTURE_DATA *pd);
+extern void loadNextImage(PICTURE_DATA *pd);
+extern void restartGifFile(PICTURE_DATA *pd);
+extern void restartAnimation(PICTURE_DATA *pd);
+extern void copyFileData(PICTURE_DATA *pd);
+extern bool getPictureSize(char *fName, int *max_X, int *max_Y);
+extern void initImage(PICTURE_DATA *pd, int thumbWidth, int thumbHeight);
+extern bool saveImageFromHandle(PICTURE_DATA *pd);
+extern bool saveImage(char *fName, void *rawData, int max_X, int max_Y);
+extern bool createImage(PICTURE_DATA *pd, int max_X, int max_Y, uint16 fillColor);
+extern void setBGColor(uint16 color, PICTURE_DATA *pd);
+extern void enableGIFFileStreaming();
+extern void disableGIFFileStreaming();
+extern void setLargeDimensions(int x, int y);
+extern int getTypeFromMagicID(char *fName);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

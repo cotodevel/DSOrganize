@@ -9,6 +9,13 @@ extern "C" {
 #include "dsregs.h"
 #include "dsregs_asm.h"
 
+//FT_NONE = 0
+//FT_FILE = 1
+//FT_DIR = 2
+#define FT_NONE (int)(0)
+#define FT_FILE (int)(1)
+#define FT_DIR (int)(2)
+
 typedef struct {
 	void *selfPoint;
 	void *fp;
@@ -16,11 +23,13 @@ typedef struct {
 	u32 chanceOfUnicode;
 } DRAGON_FILE;
 
+/*
 enum {
 	FE_NONE, 
 	FE_FILE, 
 	FE_DIR
 };
+*/
 
 #ifndef EOF
 #define EOF -1
@@ -71,7 +80,7 @@ int 			DRAGON_fputs(const char *string, DRAGON_FILE* df);
 int 			DRAGON_fseek(DRAGON_FILE* df, s32 offset, int origin);
 u32 			DRAGON_ftell(DRAGON_FILE* df);
 void 			DRAGON_detectUnicode(DRAGON_FILE* df);
-
+extern void			DRAGON_closeFind();
 // debug
 void writeDebug(const char *s, ...);
 void debugPrint(char *str);

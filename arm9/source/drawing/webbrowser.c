@@ -50,6 +50,7 @@
 #include "../controls.h"
 #include "../errors.h"
 #include "specific_shared.h"
+#include "fatwrapper.h"
 
 static HTML_RENDERED htmlPage;
 static u32 bState = WEBSTATE_INIT;
@@ -397,7 +398,7 @@ void loadSearchPreferences()
 	searchStrings = NULL;
 	searchMax = 0;
 	
-	if(DRAGON_FileExists("searchprefs.txt") != FE_FILE)
+	if(DRAGON_FileExists("searchprefs.txt") != FT_FILE)
 		return;
 	
 	DRAGON_FILE *df = DRAGON_fopen("searchprefs.txt", "r");
@@ -441,7 +442,7 @@ void loadSpecialKeys()
 	
 	DRAGON_chdir(d_base);
 	
-	if(DRAGON_FileExists("specialkeys.txt") != FE_FILE)
+	if(DRAGON_FileExists("specialkeys.txt") != FT_FILE)
 		return;
 	
 	DRAGON_FILE *df = DRAGON_fopen("specialkeys.txt", "r");
@@ -467,7 +468,7 @@ void loadFavorites()
 	
 	favorites = NULL;
 	
-	if(DRAGON_FileExists("favorites.txt") != FE_FILE)
+	if(DRAGON_FileExists("favorites.txt") != FT_FILE)
 		return;
 	
 	DRAGON_FILE *df = DRAGON_fopen("favorites.txt", "r");
@@ -1110,7 +1111,7 @@ exitFor:		// because you cant break out of a for while in a switch
 			
 			sprintf(downFile, "%s%08X.%s", d_cache, (u32)CalcCRC32(tURL), tEXT);
 			
-			if(DRAGON_FileExists(downFile) == FE_NONE)
+			if(DRAGON_FileExists(downFile) == FT_NONE)
 			{
 				downFP = DRAGON_fopen(downFile, "w");
 				resetRCount();
@@ -2692,7 +2693,7 @@ void webBrowserForward()
 		
 		sprintf(downFile, "%s%08X.TMP", d_cache, (u32)CalcCRC32(inputBuffer));
 		
-		if(DRAGON_FileExists(downFile) != FE_NONE)
+		if(DRAGON_FileExists(downFile) != FT_NONE)
 			DRAGON_remove(downFile);
 		
 		downFP = DRAGON_fopen(downFile, "w");

@@ -9,18 +9,26 @@ extern "C" {
 #include "dsregs.h"
 #include "dsregs_asm.h"
 
+//FT_NONE = 0
+//FT_FILE = 1
+//FT_DIR = 2
+#define FT_NONE (int)(0)
+#define FT_FILE (int)(1)
+#define FT_DIR (int)(2)
+
 typedef struct {
 	void *fp;
 	u32 firstCluster;
 	u32 chanceOfUnicode;
 } DRAGON_FILE;
 
+/*
 enum {
 	FE_NONE, 
 	FE_FILE, 
 	FE_DIR
 };
-
+*/
 #ifndef EOF
 #define EOF -1
 #define SEEK_SET	0

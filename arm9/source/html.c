@@ -7203,7 +7203,7 @@ void loadHTMLFromFile(char *htmlFile, HTML_RENDERED *htmlPage)
 	htmlPage->height = -1;
 	memset(htmlPage->title, 0, 256);
 	
-	if(DRAGON_FileExists(htmlFile) != FE_FILE)
+	if(DRAGON_FileExists(htmlFile) != FT_FILE)
 		return;
 	
 	DRAGON_FILE *fp = DRAGON_fopen(htmlFile, "r");

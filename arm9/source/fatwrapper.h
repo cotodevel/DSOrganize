@@ -20,30 +20,28 @@
 #ifndef _FATWRAPPER_INCLUDED
 #define _FATWRAPPER_INCLUDED
 
+#ifdef __cplusplus
+using namespace std;
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <vector>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#endif
+
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "specific_shared.h"
+#include "videoTGDS.h"
+#include "consoleTGDS.h"
+#include "fsfatlayerTGDSNew.h"
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "general.h"
-#include "fatwrapper.h"
-#include "language.h"
-#include "specific_shared.h"
-#include "devoptab_devices.h"
-#include "posixHandleTGDS.h"
-#include "utilsTGDS.h"
-#include <unistd.h>
-#include <sys/dir.h>
-#include <fcntl.h>
-#include "fsfatlayerTGDSNew.h"
-#include "fileHandleTGDS.h"
-#include "xenofunzip.h"
-#include "InterruptsARMCores_h.h"
-#include "specific_shared.h"
-#include "ff.h"
-#include "memoryHandleTGDS.h"
-#include "reent.h"
-#include "sys/types.h"
 
 //FT_NONE = 0
 //FT_FILE = 1
@@ -67,12 +65,13 @@ typedef struct {
 	u32 leadCursor;	
 } DRAGON_FILE;
 
+/*
 enum {
 	FE_NONE, 
 	FE_FILE, 
 	FE_DIR
 };
-
+*/
 
 #ifndef EOF
 #define EOF -1
@@ -91,7 +90,7 @@ enum {
 #define ATTRIB_RO	0x01			// Read only
 #endif
 
-#define MAX_FILES 4 // to match the max files in gba_nds_fat
+#define MAX_FILES 4 				// to match the max files in gba_nds_fat
 #define CACHE_SIZE (64 * 1024) // 512 kb
 #define CACHE_BUFFER 1024 // 1 kb buffer between the lead and lag
 #define SEEK_BUFFER (16 * 1024) // 16 kb of data left after seeking

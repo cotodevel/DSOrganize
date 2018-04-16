@@ -588,13 +588,13 @@ void drawTopConfiguration()
 				sprintf(tmpLocation, "%s%s/config/%s", d_help, curLang, textStrings[configCursor]);
 				sprintf(tmpLocation2, "%s%s/config/%s", d_help, "english", textStrings[configCursor]);
 				
-				if(DRAGON_FileExists(tmpLocation) == FE_FILE)
+				if(DRAGON_FileExists(tmpLocation) == FT_FILE)
 				{
 					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation, "r");
 					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
 					DRAGON_fclose(fp);
 				}
-				else if(DRAGON_FileExists(tmpLocation2) == FE_FILE)
+				else if(DRAGON_FileExists(tmpLocation2) == FT_FILE)
 				{
 					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation2, "r");
 					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;

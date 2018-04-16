@@ -114,6 +114,8 @@ int randFile(char *curFile, int fileType, int numEntries);
 // for pls files
 char *getLastDir();
 
+extern bool isScribbleFile(char *tmpFile);
+
 #ifdef __cplusplus
 }
 #endif

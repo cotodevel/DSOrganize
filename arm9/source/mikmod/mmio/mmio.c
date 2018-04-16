@@ -113,7 +113,7 @@ VIRTUAL_FILE* _mm_fopen(CHAR* fname,CHAR* attrib)
 
 BOOL _mm_FileExists(CHAR* fname)
 {
-	if(DRAGON_FileExists(fname)==FE_FILE)
+	if(DRAGON_FileExists(fname)==FT_FILE)
 		return 1;
 	
 	return 0;	

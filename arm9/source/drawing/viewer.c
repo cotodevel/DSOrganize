@@ -153,7 +153,7 @@ void drawViewerScreens()
 		strcpy(bookmarkFile, fName);
 		strcat(bookmarkFile, ".bmf");
 		
-		if(DRAGON_FileExists(bookmarkFile) != FE_NONE)
+		if(DRAGON_FileExists(bookmarkFile) != FT_NONE)
 		{
 			DRAGON_FILE *fp = DRAGON_fopen(bookmarkFile, "r");
 			DRAGON_fread(bookmarks, 4, 10, fp);

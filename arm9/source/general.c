@@ -172,11 +172,11 @@ void findDataDirectory()
 	//use the default 0:/DSOrganize <dir>
 	/*
 	DRAGON_chdir("/");
-	if(DRAGON_FileExists("data") == FE_DIR) // detected homebrew data dir
+	if(DRAGON_FileExists("data") == FT_DIR) // detected homebrew data dir
 	{
 		DRAGON_chdir("/data/");
 		
-		if(DRAGON_FileExists("DSOrganize") == FE_DIR)
+		if(DRAGON_FileExists("DSOrganize") == FT_DIR)
 			useDataDir = true;
 		else
 			DRAGON_chdir("/");

@@ -166,16 +166,19 @@ void drawSplash()
 	
 	if(!homeLoaded)
 	{
-		if(curReminder)
+		if(curReminder){
 			trackFree(curReminder);
+		}
 		curReminder = NULL;
 		
-		if(curDayPlanner)
+		if(curDayPlanner){
 			trackFree(curDayPlanner);
+		}
 		curDayPlanner = NULL;
 		
-		if(curTodo)
+		if(curTodo){
 			trackFree(curTodo);
+		}
 		curTodo = NULL;
 		
 		// load reminder
@@ -196,6 +199,8 @@ void drawSplash()
 		
 		// load todos
 		loadCurrentTodos(&curTodo);		
+		
+		printfDebugger("loadCurrentTodos() OK");
 		
 		homeLoaded = true;
 	}
@@ -442,7 +447,7 @@ void drawHomeScreenShortcuts()
 		DRAGON_chdir(d_home);
 		fType = DRAGON_FindFirstFile(tmpFile);
 		
-		while(fType != FE_NONE && scCount < MAX_SHORTCUTS)
+		while(fType != FT_NONE && scCount < MAX_SHORTCUTS)
 		{
 			if(getFileType(tmpFile) == SHORTCUTFILE)
 			{

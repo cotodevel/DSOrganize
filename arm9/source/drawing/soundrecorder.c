@@ -79,7 +79,7 @@ void startRecording()
 	if(isRecording)
 		return;
 	
-	if(DRAGON_FileExists(fileName) != FE_NONE)
+	if(DRAGON_FileExists(fileName) != FT_NONE)
 		DRAGON_remove(fileName);
 	
 	recFile = DRAGON_fopen(fileName, "w");

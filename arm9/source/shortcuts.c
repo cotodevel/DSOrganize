@@ -166,7 +166,7 @@ void launchShortcut(SHORTCUT *sc)
 		return;
 	
 	DRAGON_chdir("/");
-	if(DRAGON_FileExists(sc->path) == FE_NONE)
+	if(DRAGON_FileExists(sc->path) == FT_NONE)
 		return;
 	
 	int x = 0;
@@ -278,7 +278,7 @@ void loadShortcutIcon(SHORTCUT *sc)
 	
 	sprintf(crcFile, "%s%08X.ico", d_icons, fileCRC);
 	
-	if(DRAGON_FileExists(crcFile) == FE_FILE) // theres already a cached icon
+	if(DRAGON_FileExists(crcFile) == FT_FILE) // theres already a cached icon
 	{
 		u32 tFile;
 		DRAGON_FILE *fp = DRAGON_fopen(crcFile, "r");
@@ -291,7 +291,7 @@ void loadShortcutIcon(SHORTCUT *sc)
 		return;
 	}	
 	
-	if(DRAGON_FileExists(sc->largeiconpath) != FE_FILE) // no cache, file doesn't exist
+	if(DRAGON_FileExists(sc->largeiconpath) != FT_FILE) // no cache, file doesn't exist
 	{
 		createDefaultIcon(sc);
 		return;

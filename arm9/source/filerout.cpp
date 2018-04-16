@@ -17,8 +17,6 @@
  *                                                                         *
  ***************************************************************************/
  
-#include <string.h>
-#include <stdio.h>
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
@@ -35,6 +33,7 @@
 #include "browser.h"
 #include "todo.h"
 #include "address.h"
+#include "resources.h"
 
 extern bool showHidden;
 
@@ -169,9 +168,9 @@ uint16 populateList(char *dir)
 	DRAGON_chdir(dir);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
-		if(fType == FE_FILE)
+		if(fType == FT_FILE)
 		{
 			if(isVCard(tmpFile))
 			{
@@ -311,7 +310,7 @@ uint16 populateDirList(char *dir)
 	freeDirList();	
 	dirList = (BROWSER_FILE *)trackMalloc(sizeof(BROWSER_FILE),"Browser list");
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
 		dirList = (BROWSER_FILE *)trackRealloc(dirList, (sizeof(BROWSER_FILE)) * (pos + 2));
 		
@@ -332,7 +331,7 @@ uint16 populateDirList(char *dir)
 			dirList[pos].played = false;			
 			dirList[pos].fileSize = 0;
 			
-			if(fType == FE_FILE)
+			if(fType == FT_FILE)
 			{
 				DRAGON_FILE *fFile = DRAGON_fopen(tmpFile, "r");
 				dirList[pos].fileSize = DRAGON_flength(fFile);
@@ -340,7 +339,7 @@ uint16 populateDirList(char *dir)
 				
 				dirList[pos].fileType = getFileType(tmpFile);			
 			}
-			if(fType == FE_DIR)
+			if(fType == FT_DIR)
 				dirList[pos].fileType = DIRECTORY;
 			
 			pos++;
@@ -686,17 +685,17 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 		DRAGON_preserveVars();
 		DRAGON_chdir("/");
 		
-		//if(DRAGON_FileExists(sc.smalliconpath) == FE_FILE)
+		//if(DRAGON_FileExists(sc.smalliconpath) == FT_FILE)
 		//	memcpy(file->iconData, unknownlarge, 1026*2);	// load icon in the future (or never)
 		//else
 		//{
 			switch(DRAGON_FileExists(sc.path))
 			{
-				case FE_DIR:
+				case FT_DIR:
 					memcpy(file->iconData, diretorylarge, 1026*2);
 					
 					break;
-				case FE_FILE:{
+				case FT_FILE:{
 					int tFileType = getFileType(sc.path);
 					
 					if(tFileType == NDSFILE)
@@ -824,7 +823,7 @@ int compareTodo(const void * a, const void * b)
 
 uint16 populateTodoList(char *dir)
 {
-	char tmpFile[256];
+	char tmpFile[512];
 	int fType;
 	
 	uint16 pos = 0;
@@ -834,12 +833,15 @@ uint16 populateTodoList(char *dir)
 	DRAGON_chdir(dir);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
+	
+	printfDebugger("trying:%s",tmpFile);
+	
 	freeTodo();
 	
 	todoList = (TODO_FILE *)trackMalloc(sizeof(TODO_FILE),"Todo list");	
 	memset(todoList,0,sizeof(TODO_FILE));
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
 		if(getFileType(tmpFile) == TODOFILE)
 		{
@@ -924,9 +926,9 @@ bool isScribbleFile(char *tmpFile)
 		strlwr(tStr);
 		if(strcmp(tStr, ".bmp") == 0 || strcmp(tStr, ".png") == 0)
 		{
-			int x, y;
+			int x = 0, y = 0;
 			
-			if(getPictureSize(tmpFile, x, y))
+			if(getPictureSize(tmpFile, &x, &y))
 			{
 				if(x == 256 && y == 192)
 					return true;
@@ -971,7 +973,7 @@ uint16 populateScribbleList(char *dir)
 	scribbleList = (SCRIBBLE_FILE *)trackMalloc(sizeof(SCRIBBLE_FILE),"Scribble list");	
 	memset(scribbleList,0,sizeof(SCRIBBLE_FILE));
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
 		if(isScribbleFile(tmpFile))
 		{

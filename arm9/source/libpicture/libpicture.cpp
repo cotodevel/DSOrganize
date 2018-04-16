@@ -954,7 +954,7 @@ void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight)
 {
 	freeImage(pd);
 	
-	if(DRAGON_FileExists(fName) != FE_FILE)
+	if(DRAGON_FileExists(fName) != FT_FILE)
 	{
 		pd->error = true;
 		pd->picType = PIC_NONE;
@@ -2489,7 +2489,7 @@ bool saveImage(char *fName, void *rawData, int max_X, int max_Y)
 	
 	if(strcmp(ext,".bmp") == 0)
 	{
-		if(DRAGON_FileExists(fName) == FE_FILE)
+		if(DRAGON_FileExists(fName) == FT_FILE)
 			DRAGON_remove(fName);
 		
 		uint tData = 0;

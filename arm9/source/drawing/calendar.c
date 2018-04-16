@@ -225,34 +225,34 @@ void drawReminders()
 			for(uint16 x=1;x<=31;x++)
 			{	
 				sprintf(str,"%s%02d%02d%04d.REM",d_reminder,curMonth,x,curYear);
-				if(DRAGON_FileExists(str) == FE_FILE)
+				if(DRAGON_FileExists(str) == FT_FILE)
 					reminders[x] = 1;
 				else
 					reminders[x] = 0;
 					
 				sprintf(str,"%s%02d%02d%04d.DPL", d_day, curMonth, x, curYear);
-				if(DRAGON_FileExists(str) == FE_FILE)
+				if(DRAGON_FileExists(str) == FT_FILE)
 				{
 					dayViews[x] = 1;
 				}
 				else
 				{
 					sprintf(str,"%s%02d.DPL", d_day, dayOfWeek(x, curMonth, curYear));
-					if(DRAGON_FileExists(str) == FE_FILE)
+					if(DRAGON_FileExists(str) == FT_FILE)
 					{
 						dayViews[x] = 1;
 					}
 					else
 					{
 						sprintf(str,"%s--%02d----.DPL", d_day, x);
-						if(DRAGON_FileExists(str) == FE_FILE)
+						if(DRAGON_FileExists(str) == FT_FILE)
 						{
 							dayViews[x] = 1;
 						}
 						else
 						{
 							sprintf(str,"%s%02d%02d----.DPL", d_day, curDay, curMonth);
-							if(DRAGON_FileExists(str) == FE_FILE)
+							if(DRAGON_FileExists(str) == FT_FILE)
 							{
 								dayViews[x] = 1;
 							}
@@ -276,7 +276,7 @@ void drawReminders()
 		
 		createReminder();
 		
-		if(DRAGON_FileExists(str) == FE_FILE)
+		if(DRAGON_FileExists(str) == FT_FILE)
 		{		
 			DRAGON_FILE *fFile = DRAGON_fopen(str, "r");
 			uint16 len = DRAGON_fread(reminder, 1, REM_SIZE - 1, fFile);
@@ -304,7 +304,7 @@ void loadCurrentReminder(char **rStr)
 	char str[256];
 	sprintf(str,"%s%02d%02d%04d.REM",d_reminder,getMonth(),getDay(),getYear());	
 	
-	if(DRAGON_FileExists(str) == FE_FILE)
+	if(DRAGON_FileExists(str) == FT_FILE)
 	{		
 		DRAGON_FILE *fFile = DRAGON_fopen(str, "r");
 		u32 tLen = DRAGON_flength(fFile);
@@ -380,7 +380,7 @@ void saveReminder()
 	
 	if(reminder == NULL || reminder[0] == 0)
 	{
-		if(DRAGON_FileExists(str) == FE_FILE)
+		if(DRAGON_FileExists(str) == FT_FILE)
 		{
 			//delete file, nothing in it!
 			DRAGON_remove(str);			

@@ -2282,7 +2282,7 @@ void sendBuffer()
 
 void parseScriptFile(char *fName)
 {
-	if(DRAGON_FileExists(fName) != FE_FILE)
+	if(DRAGON_FileExists(fName) != FT_FILE)
 	{
 		return;
 	}
@@ -4183,7 +4183,7 @@ void resetIRCMode()
 	
 	DRAGON_chdir(d_base);
 	
-	if(DRAGON_FileExists("notify.wav") == FE_FILE)
+	if(DRAGON_FileExists("notify.wav") == FT_FILE)
 		notifyPresent = true;
 	
 	DRAGON_chdir("/");

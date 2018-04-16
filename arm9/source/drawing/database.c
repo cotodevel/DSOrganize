@@ -1007,7 +1007,7 @@ void checkFile()
 		closeData();
 		DRAGON_fclose(downFP);
 		
-		if(DRAGON_FileExists(downFile) != FE_NONE)
+		if(DRAGON_FileExists(downFile) != FT_NONE)
 			DRAGON_remove(downFile);
 		
 		if(rCount > (RETRIES - 1))
@@ -1087,7 +1087,7 @@ void checkFile()
 			closeData();
 			DRAGON_fclose(downFP);
 			
-			if(DRAGON_FileExists(downFile) != FE_NONE)
+			if(DRAGON_FileExists(downFile) != FT_NONE)
 				DRAGON_remove(downFile);
 			
 			if(rCount > (RETRIES - 1))
@@ -1134,7 +1134,7 @@ void checkFile()
 				closeData();
 				DRAGON_fclose(downFP);
 				
-				if(DRAGON_FileExists(downFile) != FE_NONE)
+				if(DRAGON_FileExists(downFile) != FT_NONE)
 					DRAGON_remove(downFile);
 				
 				if(rCount > (RETRIES - 1))
@@ -1170,7 +1170,7 @@ void checkFile()
 				closeData();
 				DRAGON_fclose(downFP);
 				
-				if(DRAGON_FileExists(downFile) != FE_NONE)
+				if(DRAGON_FileExists(downFile) != FT_NONE)
 					DRAGON_remove(downFile);
 				
 				if(rCount > (RETRIES - 1))
@@ -1381,7 +1381,7 @@ void checkFile()
 					closeData();
 					DRAGON_fclose(downFP);
 					
-					if(DRAGON_FileExists(downFile) != FE_NONE)
+					if(DRAGON_FileExists(downFile) != FT_NONE)
 						DRAGON_remove(downFile);
 					
 					downFP = DRAGON_fopen(downFile, "w");
@@ -1485,7 +1485,7 @@ void cancelDownload()
 	
 	currentDownload = false;
 	
-	if(DRAGON_FileExists(downFile) != FE_NONE)
+	if(DRAGON_FileExists(downFile) != FT_NONE)
 		DRAGON_remove(downFile);
 	
 	clearPostData();
@@ -1764,7 +1764,7 @@ void drawTopDatabaseScreen()
 					break;
 				case MKDR:
 					// mkdir is relative to current path
-					if(DRAGON_FileExists(instList[tmpPos].instruction) == FE_DIR)
+					if(DRAGON_FileExists(instList[tmpPos].instruction) == FT_DIR)
 					{
 						// already exists
 						
@@ -1780,7 +1780,7 @@ void drawTopDatabaseScreen()
 						break;
 					}
 					
-					if(DRAGON_FileExists(instList[tmpPos].instruction) == FE_FILE)
+					if(DRAGON_FileExists(instList[tmpPos].instruction) == FT_FILE)
 					{
 						// it's a file, lets delete it first
 						DRAGON_remove(instList[tmpPos].instruction);
@@ -1827,7 +1827,7 @@ void drawTopDatabaseScreen()
 					
 					strcpy(downFile, tmpStr);
 					
-					if(DRAGON_FileExists(downFile) != FE_NONE)
+					if(DRAGON_FileExists(downFile) != FT_NONE)
 						DRAGON_remove(downFile);
 					
 					downFP = DRAGON_fopen(downFile, "w");

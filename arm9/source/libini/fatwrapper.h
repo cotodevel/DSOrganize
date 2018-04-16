@@ -9,18 +9,26 @@ extern "C" {
 #include "dsregs.h"
 #include "dsregs_asm.h"
 
+//FT_NONE = 0
+//FT_FILE = 1
+//FT_DIR = 2
+#define FT_NONE (int)(0)
+#define FT_FILE (int)(1)
+#define FT_DIR (int)(2)
+
+
 typedef struct {
 	void *fp;
 	u32 firstCluster;
 	u32 chanceOfUnicode;
 } DRAGON_FILE;
-
+/*
 enum {
 	FE_NONE, 
 	FE_FILE, 
 	FE_DIR
 };
-
+*/
 #ifndef EOF
 #define EOF -1
 #define SEEK_SET	0
@@ -65,7 +73,7 @@ u32 			DRAGON_fwrite(const void* buffer, u32 size, u32 count, DRAGON_FILE* df);
 u32 			DRAGON_flength(DRAGON_FILE* df);
 int 			DRAGON_FindFirstFile(char* lfn);
 int 			DRAGON_FindNextFile(char* lfn);
-void			DRAGON_closeFind();
+extern void			DRAGON_closeFind();
 uint16 			DRAGON_fgetc(DRAGON_FILE *df);
 void 			DRAGON_fputc(uint16 c, DRAGON_FILE* df);
 char 			*DRAGON_fgets(char *tgtBuffer, int num, DRAGON_FILE* df);

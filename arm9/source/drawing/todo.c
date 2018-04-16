@@ -81,7 +81,7 @@ void saveTodo(TODO_FILE *vf, char *dir)
 	{	// new todo
 		
 		sprintf(filename, "%s.todo", vf->title);
-		if(DRAGON_FileExists(filename) != FE_NONE)
+		if(DRAGON_FileExists(filename) != FT_NONE)
 			sprintf(filename, "%s%d%d%d%d%d.todo", vf->title, getDay(), getMonth(), getYear(), getHour(true), getMinute());
 		
 		safeFileName(filename);
@@ -122,6 +122,7 @@ void fixGautami()
 void loadCurrentTodos(char **rStr)
 {
 	int tmpEntries = populateTodoList(d_todo);
+	printfDebugger("populateTodoList() OK");
 	
 	if(tmpEntries == 0)
 	{

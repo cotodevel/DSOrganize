@@ -525,9 +525,9 @@ int listIconSets(ICON_LIST buffer[])
 	DRAGON_chdir(d_icons);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
-		if(fType == FE_DIR)
+		if(fType == FT_DIR)
 		{
 			if(strcmp(tmpFile,".") != 0 && strcmp(tmpFile,"..") != 0)
 			{
@@ -559,27 +559,27 @@ uint16 *loadIcon(char *path, uint16 *defIcon)
 	strcpy(fileName, path);
 	strcat(fileName, ".bmp");
 	
-	if(DRAGON_FileExists(fileName) != FE_FILE)
+	if(DRAGON_FileExists(fileName) != FT_FILE)
 	{
 		strcpy(fileName, path);
 		strcat(fileName, ".gif");
 		
-		if(DRAGON_FileExists(fileName) != FE_FILE)
+		if(DRAGON_FileExists(fileName) != FT_FILE)
 		{
 			strcpy(fileName, path);
 			strcat(fileName, ".png");
 			
-			if(DRAGON_FileExists(fileName) != FE_FILE)
+			if(DRAGON_FileExists(fileName) != FT_FILE)
 			{
 				strcpy(fileName, path);
 				strcat(fileName, ".jpg");
 				
-				if(DRAGON_FileExists(fileName) != FE_FILE)
+				if(DRAGON_FileExists(fileName) != FT_FILE)
 				{
 					strcpy(fileName, path);
 					strcat(fileName, ".jpeg");
 					
-					if(DRAGON_FileExists(fileName) != FE_FILE) // there is no file with a proper extension
+					if(DRAGON_FileExists(fileName) != FT_FILE) // there is no file with a proper extension
 						return defIcon;
 				}
 			}

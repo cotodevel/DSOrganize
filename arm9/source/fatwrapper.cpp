@@ -409,7 +409,7 @@ int DRAGON_FindNextFile(char* lfn)
 
 void DRAGON_closeFind()
 {
-
+	
 }
 
 uint16 DRAGON_fgetc(DRAGON_FILE *df)

@@ -3173,7 +3173,7 @@ void initProgram()
 	findDataDirectory();
 	makeDirectories();
 	
-	if(DRAGON_FileExists("DSOrganize") != FE_DIR)
+	if(DRAGON_FileExists("DSOrganize") != FT_DIR)
 	{
 		setMode(DISPLAYCOW);
 		
@@ -3220,43 +3220,43 @@ void initProgram()
 	
 	DRAGON_chdir(d_base);	//DRAGON_chdir(getfatfsPath(d_base)) format incorrect, use DRAGON_chdir("/DSOrganize"); for chdir
 	
-	if(DRAGON_FileExists("DAY") != FE_DIR)
+	if(DRAGON_FileExists("DAY") != FT_DIR)
 	{
 		DRAGON_mkdir("DAY");
 	}
-	if(DRAGON_FileExists("HELP") != FE_DIR)
+	if(DRAGON_FileExists("HELP") != FT_DIR)
 	{
 		DRAGON_mkdir("HELP");
 	}
-	if(DRAGON_FileExists("LANG") != FE_DIR)
+	if(DRAGON_FileExists("LANG") != FT_DIR)
 	{
 		DRAGON_mkdir("LANG");
 	}
-	if(DRAGON_FileExists("REMINDER") != FE_DIR)
+	if(DRAGON_FileExists("REMINDER") != FT_DIR)
 	{
 		DRAGON_mkdir("REMINDER");
 	}
-	if(DRAGON_FileExists("SCRIBBLE") != FE_DIR)
+	if(DRAGON_FileExists("SCRIBBLE") != FT_DIR)
 	{
 		DRAGON_mkdir("SCRIBBLE");
 	}
-	if(DRAGON_FileExists("TODO") != FE_DIR)
+	if(DRAGON_FileExists("TODO") != FT_DIR)
 	{
 		DRAGON_mkdir("TODO");
 	}
-	if(DRAGON_FileExists("VCARD") != FE_DIR)
+	if(DRAGON_FileExists("VCARD") != FT_DIR)
 	{
 		DRAGON_mkdir("VCARD");
 	}
-	if(DRAGON_FileExists("ICONS") != FE_DIR)
+	if(DRAGON_FileExists("ICONS") != FT_DIR)
 	{
 		DRAGON_mkdir("ICONS");
 	}
-	if(DRAGON_FileExists("CACHE") != FE_DIR)
+	if(DRAGON_FileExists("CACHE") != FT_DIR)
 	{
 		DRAGON_mkdir("CACHE");
 	}
-	if(DRAGON_FileExists("HOME") != FE_DIR)
+	if(DRAGON_FileExists("HOME") != FT_DIR)
 	{
 		DRAGON_mkdir("HOME");
 	}
@@ -3276,7 +3276,7 @@ void initProgram()
 	std::string PathFix = std::string(getfatfsPath(""));
 	PathFix.erase(PathFix.length()-1);
 	std::string FullPath = (PathFix + string(d_base) + string("/") + string("startup.wav"));
-	if(DRAGON_FileExists(FullPath.c_str()) == FE_FILE)
+	if(DRAGON_FileExists(FullPath.c_str()) == FT_FILE)
 	{
 		
 		char tStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
@@ -3289,13 +3289,17 @@ void initProgram()
 
 void drawCurrentApp()
 {
+	//printfDebugger("drawCurrentApp() Mode:%d",getMode());	//while(1==1){} inside
+	
 	switch(getMode())
 	{
 		case SOUNDPLAYER:
 			// we draw later
 			break;
-		case HOME:
+		case HOME:	//4
 			drawSplash();
+			printfDebugger("drawSplash() OK");	//while(1==1){} inside
+			
 			drawHomeScreen();
 			break;
 		case HOMEMORE:
@@ -3478,6 +3482,7 @@ int main(int _argc, sint8 **_argv) {
 	while(1) 
 	{
 		updateStreamLoop();
+		
 		if(!checkHelp())
 		{
 			int oldMode = 0;

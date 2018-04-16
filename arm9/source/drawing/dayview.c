@@ -77,7 +77,7 @@ bool dayViewCursorMove(int curT, int curC)
 
 void loadFileStream(char *tFile, DV_DYNAMIC *dvFile, int wType)
 {
-	if(DRAGON_FileExists(tFile) == FE_FILE)
+	if(DRAGON_FileExists(tFile) == FT_FILE)
 	{
 		// we can load, it exists		
 		DRAGON_FILE *fFile = DRAGON_fopen(tFile, "r");
@@ -159,7 +159,7 @@ void saveFile(char *fName, DV_DYNAMIC *dvFile)
 	{
 		// delete the file because data is not present
 		
-		if(DRAGON_FileExists(fName) == FE_FILE)
+		if(DRAGON_FileExists(fName) == FT_FILE)
 		{
 			//delete file, nothing in it!
 			DRAGON_remove(fName);			
