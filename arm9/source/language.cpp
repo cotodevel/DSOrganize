@@ -28,6 +28,7 @@
 #include "fatwrapper.h"
 #include "globals.h"
 #include "general.h"
+#include "resources.h"
 
 char l_days[14][30];
 char l_months[24][30];
@@ -173,7 +174,6 @@ char l_keyclick[60];
 char l_click[60];
 char l_silent[60];
 
-char l_title[60];
 char l_artist[60];
 char l_album[60];
 char l_genre[60];
@@ -185,7 +185,6 @@ char l_buffer[60];
 char l_status[60];
 char l_notconnected[60];
 char l_associating[60];
-char l_connecting[60];
 char l_errorconnecting[60];
 char l_streaming[60];
 char l_buffering[60];
@@ -1699,24 +1698,24 @@ void initLanguage()
 	strcpy(l_imagesettings, "Image Viewer Settings");
 }
 
+//only english fixed, other languages might cause whitescreens, to do
 void loadLanguage(char *filename)
-{	
-	char fName[256];
-	char tName[256];
-	
+{
 	strcpy(curLang,filename);
 	
-	strcpy(tName,filename);
-	strlwr(tName);
-	if(strcmp(tName,"english") != 0)	
-		sprintf(fName, "%s%s.lng", d_lang, tName);
+	std::string PathFix = std::string(getfatfsPath(""));
+	PathFix.erase(PathFix.length()-1);
+	std::string FullPath = (PathFix + string(d_base) + string("/") + string(filename) + string(".lng"));
+	
+	if( DRAGON_FileExists((char*)FullPath.c_str()) && (strcmp(FullPath.c_str(),"english") != 0)){
+		loadConfig((char*)FullPath.c_str(), setLangString);
+	}
 	else
 	{
+		//ENGLISH detected. Loading from internal
 		initLanguage();
 		return;
 	}
-	
-	loadConfig(fName, setLangString);
 	
 	// check lengths for keyboard stuff
 	

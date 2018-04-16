@@ -46,6 +46,7 @@
 #include "../language.h"
 #include "../controls.h"
 #include "specific_shared.h"
+#include "resources.h"
 
 #define HEIGHT_ADJUST 10
 
@@ -1122,13 +1123,13 @@ void volumeDown()
 
 void loadSoundMode()
 {
-	char sStr[256];
-	
 	DRAGON_chdir("/");
-	sprintf(sStr, "%ssound.dat", d_base);	
 	
-	DRAGON_FILE *fp = DRAGON_fopen(sStr, "r");
+	std::string PathFix = std::string(getfatfsPath(""));
+	PathFix.erase(PathFix.length()-1);
+	std::string FullPath = (PathFix + string(d_base) + string("/") + string("sound.dat"));
 	
+	DRAGON_FILE *fp = DRAGON_fopen(FullPath.c_str(), "r");
 	soundMode = DRAGON_fgetc(fp) - '0';
 	DRAGON_fclose(fp);
 	

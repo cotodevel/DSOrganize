@@ -3267,25 +3267,23 @@ void initProgram()
 	//-------------------------------------------
 	//how about we load the settings for them eh?
 	//-------------------------------------------
-	loadSettings();	//segfault here
-	
-	printfDebugger("loadSettings() OK");	//while(1==1){} inside
-	
-	
+	loadSettings();
 	fb_setBGColor(genericFillColor);
 	bg_setBGColor(genericFillColor);
 	
 	DRAGON_chdir(d_base);
 	
-	if(DRAGON_FileExists("startup.wav") == FE_FILE)
+	std::string PathFix = std::string(getfatfsPath(""));
+	PathFix.erase(PathFix.length()-1);
+	std::string FullPath = (PathFix + string(d_base) + string("/") + string("startup.wav"));
+	if(DRAGON_FileExists(FullPath.c_str()) == FE_FILE)
 	{
-		char tStr[256];
 		
-		sprintf(tStr, "%sstartup.wav", d_base);
+		char tStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
+		sprintf(tStr, "%s", FullPath.c_str());
 		loadWavToMemory();
 		loadSound(tStr);
 	}
-	
 	DRAGON_chdir("/");
 }
 
@@ -3464,6 +3462,9 @@ int main(int _argc, sint8 **_argv) {
 		printf("FS Init error.");
 	}
 	*/
+	
+	//printfDebugger("initProgram() OK");	//while(1==1){} inside
+	
 	#ifdef PROFILING
 	int counter = 0;
 	

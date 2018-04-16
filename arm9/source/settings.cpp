@@ -40,6 +40,7 @@
 #include "irc.h"
 #include "configuration.h"
 #include "soundplayer.h"
+#include "fsfatlayerTGDSLegacy.h"
 #include "fsfatlayerTGDSNew.h"
 
 
@@ -364,19 +365,19 @@ void setLocations(char *str)
 
 void loadExternalDLDI()
 {
-	char tmpFile[256];
-	int fType;
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	int fType = 0;
 	
-	memset(dldiFile, 0, 256);
+	memset(dldiFile, 0, MAX_TGDSFILENAME_LENGTH+1);
 	
 	DRAGON_chdir(d_res);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
-	while(fType != FE_NONE)
+	while(fType != FT_NONE)
 	{
-		if(fType == FE_FILE)
+		if(fType == FT_FILE)
 		{
-			char ext[256];
+			char ext[MAX_TGDSFILENAME_LENGTH+1] = {0};
 			
 			separateExtension(tmpFile, ext);
 			strlwr(ext);
@@ -401,15 +402,21 @@ void loadExternalDLDI()
 
 void loadSettings()
 {
-	char sStr[256] = {0};
-	
 	defaultLocations();
+	char sStr[512] = {0};
+	std::string PathFix = std::string(getfatfsPath(""));
+	PathFix.erase(PathFix.length()-1);
+	std::string FullPath = (PathFix + string(d_base) + string("/") + string("config.ini"));
 	
-	sprintf(sStr, "%sconfig.ini", d_base);	
-	
-	if(DRAGON_FileExists(sStr) != FE_FILE){
+	if(DRAGON_FileExists(FullPath.c_str()) != FE_FILE){
+		//default settings
 		makeDefaultSettings();
 	}
+	else{
+		//read from config.ini
+	}
+	
+	sprintf(sStr,"%s",FullPath.c_str());
 	setIniFile(sStr);
 	
 	if(getSetting("HomeScreen", "Order", sStr))
@@ -640,7 +647,9 @@ void loadSettings()
 	loadColors();
 	loadSoundMode();
 	loadExternalDLDI();
+	
 	loadWifi();
+	
 	
 	// must be last so it doesn't fuck up the rest
 	

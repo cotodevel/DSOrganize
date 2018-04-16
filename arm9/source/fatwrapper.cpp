@@ -85,16 +85,14 @@ char *DRAGON_tryingInterface()
 
 bool DRAGON_chdir(const char* path)
 {
-	//update d_base always so you can use /FolderName in DRAGON_FileExists/DRAGON_mkdir
-	sprintf(d_base,"%s",path);
 	return chdir(path);
 }
 
 //coto: assume full permision always
 int DRAGON_mkdir(const char* path)
 {
-	std::string PathFix = (string(d_base) + string("/") + string(path) + string("/"));
-	int ret = mkdir(path,777);
+	std::string PathFix = (string(d_base) + string("/") + string(path));	//              /dir/path1 == mkdir OK
+	int ret = mkdir(PathFix.c_str(),777);
 	//printfDebugger("mkdir:%s:%d",PathFix.c_str(),ret);	//while(1==1){} inside
 	return ret;
 }
