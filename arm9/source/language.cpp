@@ -1772,7 +1772,7 @@ int compareLanguage(const void * a, const void * b)
 
 int listLanguages(LANG_LIST buffer[])
 {
-	char tmpFile[256];
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType;
 	
 	strcpy(buffer[0].langURL,"English");

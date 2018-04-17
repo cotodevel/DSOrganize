@@ -8,6 +8,8 @@
 #include "vcard.h"
 #include "fatwrapper.h"
 #include "extras.h"
+#include "fsfatlayerTGDSLegacy.h"
+#include "fsfatlayerTGDSNew.h"
 
 extern char l_unknown[60];
 extern bool firstLast;
@@ -866,7 +868,7 @@ bool isVCard(char *file)
 
 void separateMultiples(char *dir)
 {
-	char tmpFile[256];
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	bool repeat = true;
 	int fType;
 	
@@ -875,7 +877,6 @@ void separateMultiples(char *dir)
 		repeat = false;
 		DRAGON_chdir(dir);
 		fType = DRAGON_FindFirstFile(tmpFile);
-		
 		while(fType != FT_NONE)
 		{
 			if(fType == FT_FILE)

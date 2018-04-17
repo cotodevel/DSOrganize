@@ -170,7 +170,8 @@ void drawAddressList()
 	if(!a_isPop)
 	{
 		separateMultiples(d_vcard);
-		addressEntries = populateList(d_vcard);
+		addressEntries = populateList(d_vcard);	//segfaults
+		
 		a_isPop = true;
 		
 		if(strlen(fileName) > 0) // we have to jump to a specific one		
@@ -186,9 +187,10 @@ void drawAddressList()
 		}
 	}
 	
-	if(getCursor() > addressEntries - 1)
+	if(getCursor() > addressEntries - 1){
 		resetCursor();
-	
+	}
+		
 	switch(addressMode)
 	{
 		case 0:
@@ -206,6 +208,7 @@ void drawAddressList()
 	
 	drawListBox(list_left, LIST_TOP, list_right, LIST_BOTTOM, getCursor(), addressEntries, l_novcard, addressListCallback);
 	drawScrollBar(getCursor(), addressEntries, default_scroll_left, DEFAULT_SCROLL_TOP, DEFAULT_SCROLL_WIDTH, DEFAULT_SCROLL_HEIGHT);
+	
 }
 
 void drawCurrentAddress()

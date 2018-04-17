@@ -189,32 +189,32 @@ void makeDirectories() // for creating the right paths to the data dir
 	if(useDataDir)
 	{
 		strcpy(d_base, "/data/DSOrganize");
-		strcpy(d_day, "/data/DSOrganize/day");
-		strcpy(d_help, "/data/DSOrganize/help");
-		strcpy(d_lang, "/data/DSOrganize/lang");
-		strcpy(d_reminder, "/data/DSOrganize/reminder");
-		strcpy(d_scribble, "/data/DSOrganize/scribble");
-		strcpy(d_todo, "/data/DSOrganize/todo");
-		strcpy(d_vcard, "/data/DSOrganize/vcard");
-		strcpy(d_icons, "/data/DSOrganize/icons");
-		strcpy(d_res, "/data/DSOrganize/resources");
-		strcpy(d_cache, "/data/DSOrganize/cache");
-		strcpy(d_home, "/data/DSOrganize/home");
+		strcpy(d_day, "/data/DSOrganize/DAY");
+		strcpy(d_help, "/data/DSOrganize/HELP");
+		strcpy(d_lang, "/data/DSOrganize/LANG");
+		strcpy(d_reminder, "/data/DSOrganize/REMINDER");
+		strcpy(d_scribble, "/data/DSOrganize/SCRIBBLE");
+		strcpy(d_todo, "/data/DSOrganize/TODO");
+		strcpy(d_vcard, "/data/DSOrganize/VCARD");
+		strcpy(d_icons, "/data/DSOrganize/ICONS");
+		strcpy(d_res, "/data/DSOrganize/RESOURCES");
+		strcpy(d_cache, "/data/DSOrganize/CACHE");
+		strcpy(d_home, "/data/DSOrganize/HOME");
 	}
 	else
 	{
 		strcpy(d_base, "/DSOrganize");
-		strcpy(d_day, "/DSOrganize/day");
-		strcpy(d_help, "/DSOrganize/help");
-		strcpy(d_lang, "/DSOrganize/lang");
-		strcpy(d_reminder, "/DSOrganize/reminder");
-		strcpy(d_scribble, "/DSOrganize/scribble");
-		strcpy(d_todo, "/DSOrganize/todo");
-		strcpy(d_vcard, "/DSOrganize/vcard");
-		strcpy(d_icons, "/DSOrganize/icons");
-		strcpy(d_res, "/DSOrganize/resources");
-		strcpy(d_cache, "/DSOrganize/cache");
-		strcpy(d_home, "/DSOrganize/home");
+		strcpy(d_day, "/DSOrganize/DAT");
+		strcpy(d_help, "/DSOrganize/HELP");
+		strcpy(d_lang, "/DSOrganize/LANG");
+		strcpy(d_reminder, "/DSOrganize/REMINDER");
+		strcpy(d_scribble, "/DSOrganize/SCRIBBLE");
+		strcpy(d_todo, "/DSOrganize/TODO");
+		strcpy(d_vcard, "/DSOrganize/VCARD");
+		strcpy(d_icons, "/DSOrganize/ICONS");
+		strcpy(d_res, "/DSOrganize/RESOURCES");
+		strcpy(d_cache, "/DSOrganize/CACHE");
+		strcpy(d_home, "/DSOrganize/HOME");
 	}
 }
 

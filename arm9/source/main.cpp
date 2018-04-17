@@ -3296,11 +3296,11 @@ void drawCurrentApp()
 		case SOUNDPLAYER:
 			// we draw later
 			break;
-		case HOME:	//4
+		case HOME:	//4 : OK
 			drawSplash();
 			drawHomeScreen();
 			break;
-		case HOMEMORE:
+		case HOMEMORE:	
 			drawSplash();
 			drawHomeScreenMore();
 			break;
@@ -3308,35 +3308,35 @@ void drawCurrentApp()
 			drawSplash();
 			drawHomeScreenShortcuts();					
 			break;
-		case CALENDAR:
+		case CALENDAR:	//0 : OK
 			drawTimeDate();
 			drawReminders();
 			drawCalendar();
 			break;
-		case EDITREMINDER:
+		case EDITREMINDER:	//todo
 			drawTimeDate();
 			drawReminder();
 			drawEditReminder();
 			break;
-		case DAYVIEW:
+		case DAYVIEW:	//2 : OK
 			drawTimeDate();
 			drawCurrentEvent();
-			drawDayView();	
+			drawDayView();
 			break;			
-		case EDITDAYVIEW:
+		case EDITDAYVIEW://3 : OK
 			drawTimeDate();
 			drawEditDayView();
 			drawEditCurrentEvent();
 			break;
-		case ADDRESS:
+		case ADDRESS:	//5 : OK
 			drawAddressList();
 			drawCurrentAddress();
 			break;		
-		case EDITADDRESS:
+		case EDITADDRESS: //6 : todo
 			drawCurrentAddress();
 			drawEditAddress();
 			break;		
-		case CONFIGURATION:	
+		case CONFIGURATION:	//7 : OK	//bugs could arise when read/writing system config files
 			drawTopConfiguration();
 			drawConfiguration();
 			break;

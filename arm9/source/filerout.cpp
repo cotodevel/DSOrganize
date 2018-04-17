@@ -34,6 +34,8 @@
 #include "todo.h"
 #include "address.h"
 #include "resources.h"
+#include "fsfatlayerTGDSLegacy.h"
+#include "fsfatlayerTGDSNew.h"
 
 extern bool showHidden;
 
@@ -157,7 +159,7 @@ void sortDirList(int pos)
 
 uint16 populateList(char *dir)
 {
-	char tmpFile[256];
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType;
 	uint16 pos = 0;
 	
@@ -186,14 +188,17 @@ uint16 populateList(char *dir)
 				}
 				
 				loadVCard(tmpFile, &fileList[pos-1]);
-			}			
+			}
+			else{
+				//not vcard
+			}
 		}
 		
 		fType = DRAGON_FindNextFile(tmpFile);		
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");		
+	DRAGON_chdir("/");
 	sortList(pos);
 	
 	return pos;

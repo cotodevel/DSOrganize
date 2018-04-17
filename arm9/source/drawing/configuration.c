@@ -49,6 +49,7 @@
 #include "../sound.h"
 #include "scribble.h"
 #include "irc.h"
+#include "fsfatlayerTGDSLegacy.h"
 
 LANG_LIST *aLanguages = NULL;
 ICON_LIST *cIcons = NULL;
@@ -796,8 +797,7 @@ void drawSetting(int settingPosition, const char *settingTitle, const char *sett
 
 void drawConfiguration()
 {	
-	char str[256];
-	
+	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	if(!(configCursor >= PAGE10 && (wifiState == WIFI_EDITPROFILE || wifiState == WIFI_EDITSETTING)))
 	{
 		displayTabs();
@@ -805,7 +805,7 @@ void drawConfiguration()
 	
 	if(configCursor < PAGE2) // page 1
 	{
-		char modes[MAX_MODES][60];
+		char modes[MAX_MODES][60] = {0};
 		
 		strcpy(modes[0], l_home);
 		strcpy(modes[1], l_calendar);
@@ -901,6 +901,7 @@ void drawConfiguration()
 		
 		drawTextBox(13, Y_THIRD + 8, 115, Y_THIRD + 23, milTime ? "24h" : "12h", true, configCursor == TIMEFORMAT, false);
 		
+		
 		if(firstLast)
 		{	
 			strcpy(str, l_first);
@@ -920,6 +921,7 @@ void drawConfiguration()
 		bg_dispCustomSprite(118, Y_THIRD + 3 + 8, spr_right, 31775, configurationArrowColor);	
 		bg_dispCustomSprite(133, Y_THIRD + 3 + 8, spr_left, 31775, configurationArrowColor);
 		bg_dispCustomSprite(245, Y_THIRD + 3 + 8, spr_right, 31775, configurationArrowColor);
+		
 	}
 	else if(configCursor >= PAGE2 && configCursor < PAGE3) // page 2
 	{		
@@ -929,7 +931,7 @@ void drawConfiguration()
 		drawSetting(Y_FOURTH, l_keyclick, keyClickEnabled() ? l_click : l_silent, configCursor == KEYCLICK, true, false);
 	}
 	else if(configCursor >= PAGE3 && configCursor < PAGE4) // page 3
-	{		
+	{
 		setSprites(); // set up sprite order
 		
 		int x = 16;
