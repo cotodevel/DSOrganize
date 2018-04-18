@@ -103,27 +103,7 @@ int DRAGON_mkdir(const char* path)
 
 int DRAGON_FileExists(const char* filename)
 {
-	int ret = -1;
-	FILE* fil = fopen(filename,"r");
-	if(!fil){
-		DIR * dirOpen = fatfs_opendir((const sint8 *)filename);
-		if(!dirOpen){
-			ret = FT_NONE;
-		}
-		else{
-			ret = FT_DIR;
-		}
-		if(dirOpen){
-			fatfs_closedir(dirOpen);
-		}
-	}
-	else{
-		ret = FT_FILE;
-	}
-	if(fil){
-		fclose(fil);
-	}
-	return ret;
+	return FAT_FileExists((char*)filename);
 }
 
 DRAGON_FILE* DRAGON_fopen(const char* path, const char* mode)
