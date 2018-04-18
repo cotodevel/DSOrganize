@@ -47,6 +47,7 @@
 #include "../globals.h"
 #include "../language.h"
 #include "../controls.h"
+#include "fsfatlayerTGDSLegacy.h"
 
 static bool dir_create = false;
 static bool copyFlag = false;
@@ -1501,7 +1502,7 @@ void deleteFAT(char *entry, bool deleteFinal)
 	
 	// type is FT_DIR, make sure it's empty
 	
-	char toDelete[256];
+	char toDelete[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	char done = false;
 	int type;
 	

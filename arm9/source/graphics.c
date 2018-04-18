@@ -32,6 +32,7 @@
 #include "general.h"
 #include "globals.h"
 #include "resources.h"
+#include "fsfatlayerTGDSLegacy.h"
 
 extern char cIconSet[ICON_SIZE];
 
@@ -516,8 +517,8 @@ int compareIcons(const void * a, const void * b)
 
 int listIconSets(ICON_LIST buffer[])
 {
-	char tmpFile[256];
-	int fType;
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	int fType = 0;
 	
 	strcpy(buffer[0].iconURL,"Default");
 	uint16 pos = 1;

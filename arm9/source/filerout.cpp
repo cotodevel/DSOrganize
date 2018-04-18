@@ -300,7 +300,7 @@ char *getLastDir()
 
 uint16 populateDirList(char *dir)
 {
-	char tmpFile[256];
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType;
 	
 	appendSlash(dir);
@@ -828,7 +828,7 @@ int compareTodo(const void * a, const void * b)
 
 uint16 populateTodoList(char *dir)
 {
-	char tmpFile[512];
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType;
 	
 	uint16 pos = 0;
@@ -962,7 +962,7 @@ int compareScribble(const void * a, const void * b)
 
 uint16 populateScribbleList(char *dir)
 {
-	char tmpFile[256];
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType;
 	
 	uint16 pos = 0;
@@ -983,7 +983,7 @@ uint16 populateScribbleList(char *dir)
 		{
 			scribbleList = (SCRIBBLE_FILE *)trackRealloc(scribbleList, (sizeof(SCRIBBLE_FILE)) * (pos + 2));
 			
-			char str[256];
+			char str[MAX_TGDSFILENAME_LENGTH +1] = {0};
 			
 			strcpy(str, dir);
 			
@@ -996,7 +996,7 @@ uint16 populateScribbleList(char *dir)
 			strcat(str, tmpFile);			
 			strcpy(scribbleList[pos].fileName, str);
 			
-			char ext[256];
+			char ext[MAX_TGDSFILENAME_LENGTH+1] = {0};
 			
 			separateExtension(tmpFile,ext);			
 			strcpy(scribbleList[pos].shortName, tmpFile);

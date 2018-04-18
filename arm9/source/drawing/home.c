@@ -43,6 +43,7 @@
 #include "../keyboard.h"
 #include "../controls.h"
 #include "usrsettingsTGDS.h"
+#include "fsfatlayerTGDSLegacy.h"
 
 extern bool milTime;
 extern char lLanguage[LANG_SIZE];
@@ -438,8 +439,8 @@ void drawHomeScreenShortcuts()
 	{
 		// load shortcuts
 		
-		char tmpFile[256];
-		char tStr[6][256];
+		char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+		char tStr[6][MAX_TGDSFILENAME_LENGTH+1] = {0};
 		int fType;
 		
 		DRAGON_chdir(d_home);
