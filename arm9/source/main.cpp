@@ -127,6 +127,7 @@ USA
 #include "about.h"
 #include "powerTGDS.h"
 #include "general.h"
+#include "fatwrapper.h"
 
 // internals
 int yThreshold = 0;
@@ -138,6 +139,511 @@ char lChar = 0;
 char kChar = 0;
 uint16 repeatCount = 0;
 uint16 editField = 0;
+
+
+
+//-------------
+// main program
+//-------------
+
+TransferSound Snd;
+TransferSoundData SndDat =		{ (void *)0 , 0, 11025, 64, 64, 1 };
+ 
+//---------------------------------------------------------------------------------
+void setGenericSound( u32 rate, u8 vol, u8 pan, u8 format) {
+//---------------------------------------------------------------------------------
+ 
+	SndDat.rate		= rate;
+	SndDat.vol		= vol;
+	SndDat.pan		= pan;
+	SndDat.format	= format;
+ }
+ 
+void initProgram()
+{
+	//------------------------
+	// start initializing code
+	//------------------------
+	
+	powerON(POWER_2D_A | POWER_2D_B | POWER_SWAP_LCDS);	// turn on everything
+	
+	#ifndef DEBUG_MODE
+	fb_init(); // initialize top screen video
+	#else
+	debugInit();
+	#endif
+	bg_init(); // initialize bottom screen video
+	
+	setNewOrientation(ORIENTATION_0);
+	
+	// set up extra vram banks to be scratch memory	
+	//vramSetBankE(VRAM_E_LCD);
+	VRAMBLOCK_SETBANK_E(VRAM_E_LCDC_MODE);
+	
+	//vramSetBankF(VRAM_F_LCD);
+	VRAMBLOCK_SETBANK_F(VRAM_F_LCDC_MODE);
+	
+	//vramSetBankG(VRAM_G_LCD);
+	VRAMBLOCK_SETBANK_G(VRAM_G_LCDC_MODE);
+	
+	//vramSetBankH(VRAM_H_LCD);
+	VRAMBLOCK_SETBANK_H(VRAM_H_LCDC_MODE);
+	
+	//vramSetBankI(VRAM_I_LCD);
+	VRAMBLOCK_SETBANK_I(VRAM_I_LCDC_MODE);
+	
+	//custom Handler
+	setupCustomExceptionHandler((uint32*)&CustomDebugHandler);
+	
+	fb_setBGColor(30653);	
+	bg_setBGColor(0);
+	drawStartSplash();
+	
+	SET_MAIN_TOP_LCD();	 // set fb to top screen
+	fb_swapBuffers();
+	bg_swapBuffers();
+	
+	// out of order for competition
+	//irqInit(); // initialize irqs
+	enableVBlank(); // initialize vblank irq
+	
+	setMode(INITFAT);
+	setSoundInterrupt(); // initialize fifo irq
+	invalidateHomeLoaded();
+	
+	setGenericSound(11025, 127, 64, 1);
+	waitForInit();			//  wait until arm7 has loaded and gone to sleep
+	
+	initComplexSound(); // initialize sound variables
+	initWifi();
+	fixGautami();
+	
+	setCursorProperties(0, 2, 0, 0);
+	initCalc();
+	initScribble();
+	initCapture();
+	initClipboard();
+	
+	// set defaults to english in case we can't load the langauge file for some reason
+	// also takes care of partial translations.	
+	initLanguage();
+	initRandomList();
+	fixAndTags();
+	resetKeyboard();
+	
+	curDay = getDay();
+	curMonth = getMonth();
+	curYear = getYear();
+	
+	oldDay = 0;
+	oldYear = 0;
+	oldMonth = 0;
+	
+	if(DRAGON_InitFiles() == false)
+	{
+		// oops, no cf card!
+		setMode(DISPLAYCOW);
+		
+		setFont((uint16 **)font_arial_11);
+		setColor(0xFFFF);
+		
+		bg_dispSprite(96, 5, errmsg, 0);
+		bg_setClipping(5,25,250,181);
+		bg_dispString(0,0,l_nofat);
+		bg_swapBuffers();
+		
+		while(1)
+		{
+			// wee, la la la!
+		}
+	}
+	//otherwise card init correctly.
+	else{
+		
+	}
+	//--------------------------------------------------------------------
+	//finished init, now check to make sure the DSOrganize dir is there...
+	//--------------------------------------------------------------------
+	
+	findDataDirectory();
+	makeDirectories();
+	
+	if(DRAGON_FileExists("DSOrganize") != FT_DIR)
+	{
+		setMode(DISPLAYCOW);
+		
+		// oops, not there, we must create!
+		DRAGON_mkdir("DSOrganize");
+		DRAGON_chdir("DSOrganize");
+		DRAGON_mkdir("DAY");
+		DRAGON_mkdir("HELP");
+		DRAGON_mkdir("LANG");
+		DRAGON_mkdir("RESOURCES");
+		DRAGON_mkdir("REMINDER");
+		DRAGON_mkdir("SCRIBBLE");
+		DRAGON_mkdir("TODO");
+		DRAGON_mkdir("VCARD");
+		DRAGON_mkdir("ICONS");
+		DRAGON_mkdir("CACHE");
+		DRAGON_mkdir("HOME");
+		DRAGON_chdir("/");
+		
+		makeDefaultSettings();
+		
+		setFont((uint16 **)font_arial_11);
+		setColor(0xFFFF);
+		
+		bg_dispSprite(96, 5, errmsg, 0);
+		bg_setClipping(5,25,250,181);
+		bg_dispString(0,0, l_createdir);
+		bg_swapBuffers();
+		
+		//while(!keysPressed())
+		//{
+		//}
+	}
+	else{
+		
+	}
+	setMode(INITPLUGIN);
+	
+	//-------------------------------------------------------------------
+	//finished creating dirs, now check to make sure if they extracted it
+	//did their extracting program actually get all the dirs?
+	//-------------------------------------------------------------------	
+	
+	
+	DRAGON_chdir(d_base);	//DRAGON_chdir(getfatfsPath(d_base)) format incorrect, use DRAGON_chdir("/DSOrganize"); for chdir
+	
+	if(DRAGON_FileExists("DAY") != FT_DIR)
+	{
+		DRAGON_mkdir("DAY");
+	}
+	if(DRAGON_FileExists("HELP") != FT_DIR)
+	{
+		DRAGON_mkdir("HELP");
+	}
+	if(DRAGON_FileExists("LANG") != FT_DIR)
+	{
+		DRAGON_mkdir("LANG");
+	}
+	if(DRAGON_FileExists("REMINDER") != FT_DIR)
+	{
+		DRAGON_mkdir("REMINDER");
+	}
+	if(DRAGON_FileExists("SCRIBBLE") != FT_DIR)
+	{
+		DRAGON_mkdir("SCRIBBLE");
+	}
+	if(DRAGON_FileExists("TODO") != FT_DIR)
+	{
+		DRAGON_mkdir("TODO");
+	}
+	if(DRAGON_FileExists("VCARD") != FT_DIR)
+	{
+		DRAGON_mkdir("VCARD");
+	}
+	if(DRAGON_FileExists("ICONS") != FT_DIR)
+	{
+		DRAGON_mkdir("ICONS");
+	}
+	if(DRAGON_FileExists("CACHE") != FT_DIR)
+	{
+		DRAGON_mkdir("CACHE");
+	}
+	if(DRAGON_FileExists("HOME") != FT_DIR)
+	{
+		DRAGON_mkdir("HOME");
+	}
+	
+	DRAGON_chdir("/");
+	
+	
+	//-------------------------------------------
+	//how about we load the settings for them eh?
+	//-------------------------------------------
+	loadSettings();
+	fb_setBGColor(genericFillColor);
+	bg_setBGColor(genericFillColor);
+	
+	DRAGON_chdir(d_base);
+	
+	std::string PathFix = std::string(getfatfsPath(""));
+	PathFix.erase(PathFix.length()-1);
+	
+	std::string FullPath = (PathFix + string(d_base) + string("/") + string("startup.wav"));
+	if(DRAGON_FileExists(FullPath.c_str()) == FT_FILE)
+	{
+		
+		char tStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
+		sprintf(tStr, "%s", FullPath.c_str());
+		loadWavToMemory();
+		loadSound(tStr);
+	}
+	DRAGON_chdir("/");
+}
+
+void drawCurrentApp()
+{
+	//printfDebugger("drawCurrentApp() Mode:%d",getMode());	//while(1==1){} inside
+	
+	switch(getMode())
+	{
+		case SOUNDPLAYER:
+			// we draw later
+			break;
+		case HOME:	//4 : OK
+			drawSplash();
+			drawHomeScreen();
+			break;
+		case HOMEMORE:	
+			drawSplash();
+			drawHomeScreenMore();
+			break;
+		case HOMESHORTCUTS:
+			drawSplash();
+			drawHomeScreenShortcuts();					
+			break;
+		case CALENDAR:	//0 : OK
+			drawTimeDate();
+			drawReminders();
+			drawCalendar();
+			break;
+		case EDITREMINDER:	//todo
+			drawTimeDate();
+			drawReminder();
+			drawEditReminder();
+			break;
+		case DAYVIEW:	//2 : OK
+			drawTimeDate();
+			drawCurrentEvent();
+			drawDayView();
+			break;			
+		case EDITDAYVIEW://3 : OK
+			drawTimeDate();
+			drawEditDayView();
+			drawEditCurrentEvent();
+			break;
+		case ADDRESS:	//5 : OK
+			drawAddressList();
+			drawCurrentAddress();
+			break;		
+		case EDITADDRESS: //6 : todo
+			drawCurrentAddress();
+			drawEditAddress();
+			break;		
+		case CONFIGURATION:	//7 : OK	//bugs could arise when read/writing system config files
+			drawTopConfiguration();
+			drawConfiguration();
+			break;
+		case BROWSER:
+			drawFileBrowserScreen();
+			drawFileInfoScreen();
+			break;
+		case BROWSERRENAME:
+			drawEditFileName();
+			drawEditFileControls();
+			break;
+		case CALCULATOR:
+			drawAnswerScreen();
+			drawCalculatorButtons();
+			break;
+		case TEXTEDITOR:
+			drawEditScreen();
+			drawEditControls();
+			break;
+		case PICTUREVIEWER:
+			drawPictureScreen();
+			drawZoomScreen();
+			break;
+		case ABOUT:
+			drawAboutScreen();
+			break;
+		case TODOLIST:
+			drawTodoList();
+			drawCurrentTodo();
+			break;	
+		case EDITTODOLIST:
+			drawCurrentTodo();
+			drawEditTodo();
+			break;
+		case SCRIBBLEPAD:
+			drawScribbleList();
+			drawSplash();
+			break;					
+		case EDITSCRIBBLE:		
+			drawScribbleScreen();
+			drawToolsScreen();
+			break;
+		case CHOOSECOLOR:
+			drawColorPicker();
+			drawToolsScreen();
+			break;
+		case SCRIBBLETEXT:
+			drawScribbleText();
+			drawScribbleKeyboard();
+			break;
+		case HOMEBREWDATABASE:
+			drawTopDatabaseScreen();
+			drawBottomDatabaseScreen();
+			break;
+		case VIEWER:
+			drawViewerScreens();
+			break;
+		case SOUNDRECORDER:
+			drawTopRecordScreen();
+			drawBottomRecordScreen();					
+			break;
+		case IRC:
+			drawTopIRCScreen();
+			drawBottomIRCScreen();
+			break;
+		case WEBBROWSER:
+			drawWebBrowserScreens();
+			break;
+	}
+}
+
+void drawSoundScreen(int oldMode)
+{
+	if(getMode() == SOUNDPLAYER) // this is that 'later' thing i was talking about
+	{
+		if(oldMode == BROWSER || wasShortcutLaunched())
+		{
+			updateStreamLoop();
+			bg_swapBuffers();
+			
+			updateStreamLoop();
+			resetShortcutLaunchedFlag();
+		}
+		
+		updateStreamLoop();
+		checkEndSound();
+		
+		updateStreamLoop();
+		drawTopSoundScreen();
+		updateStreamLoop();
+		drawBottomSoundScreen();
+	}	
+}
+
+#ifdef PROFILING
+unsigned int hblanks = 0;
+
+void hblank_handler(void)
+{
+	hblanks++;
+}
+#endif
+
+int main(int _argc, sint8 **_argv) {
+	
+	IRQInit();
+	
+	bool project_specific_console = false;	//set default console or custom console: default console
+	GUI_init(project_specific_console);
+	GUI_clear();
+	
+	initProgram();	//overrides TGDS project console
+	
+	sint32 fwlanguage = (sint32)getLanguage();
+	
+	//initProgram()->DRAGON_InitFiles() does it
+	/*
+	int ret=FS_init();
+	if (ret == 0)
+	{
+		printf("FS Init ok.");
+	}
+	else if(ret == -1)
+	{
+		printf("FS Init error.");
+	}
+	*/
+	
+	//printfDebugger("initProgram() OK");	//while(1==1){} inside
+	
+	#ifdef PROFILING
+	int counter = 0;
+	
+	irqSet(IRQ_HBLANK, hblank_handler);
+	irqEnable(IRQ_HBLANK);
+	
+	cygprofile_begin();
+	cygprofile_enable();
+	#endif
+	
+	while(1) 
+	{
+		updateStreamLoop();
+		
+		if(!checkHelp())
+		{
+			int oldMode = 0;
+			
+			if(getLCDState() == LCD_ON)
+			{
+				updateStreamLoop();
+				clearHelpScreen();
+				
+				updateStreamLoop();
+				drawCurrentApp();
+				
+				// save the current mode before switching modes
+				oldMode = getMode();
+			}
+			//so far here
+			
+			updateStreamLoop();
+			checkKeys();
+			
+			updateStreamLoop();
+			executeKeys();
+			
+			// Split here because the state can change in checkKeys
+			if(getLCDState() == LCD_ON)
+			{
+				
+				// draw sound screen if needed			
+				updateStreamLoop();
+				drawSoundScreen(oldMode);
+				
+				#ifdef SCREENSHOT_MODE
+				takeScreenshot();			
+				#endif
+				
+				updateStreamLoop();
+				handleKeyHighlighting();
+				
+				updateStreamLoop();
+				drawToScreen();
+			}
+			else
+			{	
+				updateStreamLoop();
+				checkEndSound();
+			}
+		}
+		
+		#ifdef PROFILING
+		counter++;
+		
+		if(counter == 700)
+		{
+			cygprofile_disable();
+			cygprofile_end();
+		}
+		#endif
+	}
+	
+	/*
+	while (1)
+	{
+		IRQVBlankWait();
+	}
+	*/
+	
+}
 
 bool isScrolling()
 {
@@ -3045,506 +3551,4 @@ void executeKeys()
 	
 	queuedCommand = -1;
 	queuedData = -1;
-}
-
-//-------------
-// main program
-//-------------
-
-static TransferSound Snd;
-static TransferSoundData SndDat =		{ (void *)0 , 0, 11025, 64, 64, 1 };
- 
- //---------------------------------------------------------------------------------
- static void setGenericSound( u32 rate, u8 vol, u8 pan, u8 format) {
- //---------------------------------------------------------------------------------
- 
-	SndDat.rate		= rate;
-	SndDat.vol		= vol;
-	SndDat.pan		= pan;
-	SndDat.format	= format;
- }
- 
-void initProgram()
-{
-	//------------------------
-	// start initializing code
-	//------------------------
-	
-	powerON(POWER_2D_A | POWER_2D_B | POWER_SWAP_LCDS);	// turn on everything
-	
-	#ifndef DEBUG_MODE
-	fb_init(); // initialize top screen video
-	#else
-	debugInit();
-	#endif
-	bg_init(); // initialize bottom screen video
-	
-	setNewOrientation(ORIENTATION_0);
-	
-	// set up extra vram banks to be scratch memory	
-	//vramSetBankE(VRAM_E_LCD);
-	VRAMBLOCK_SETBANK_E(VRAM_E_LCDC_MODE);
-	
-	//vramSetBankF(VRAM_F_LCD);
-	VRAMBLOCK_SETBANK_F(VRAM_F_LCDC_MODE);
-	
-	//vramSetBankG(VRAM_G_LCD);
-	VRAMBLOCK_SETBANK_G(VRAM_G_LCDC_MODE);
-	
-	//vramSetBankH(VRAM_H_LCD);
-	VRAMBLOCK_SETBANK_H(VRAM_H_LCDC_MODE);
-	
-	//vramSetBankI(VRAM_I_LCD);
-	VRAMBLOCK_SETBANK_I(VRAM_I_LCDC_MODE);
-	
-	//custom Handler
-	setupCustomExceptionHandler((uint32*)&CustomDebugHandler);
-	
-	fb_setBGColor(30653);	
-	bg_setBGColor(0);
-	drawStartSplash();
-	
-	SET_MAIN_TOP_LCD();	 // set fb to top screen
-	fb_swapBuffers();
-	bg_swapBuffers();
-	
-	// out of order for competition
-	//irqInit(); // initialize irqs
-	enableVBlank(); // initialize vblank irq
-	
-	setMode(INITFAT);
-	setSoundInterrupt(); // initialize fifo irq
-	invalidateHomeLoaded();
-	
-	setGenericSound(11025, 127, 64, 1);
-	waitForInit();			//  wait until arm7 has loaded and gone to sleep
-	
-	initComplexSound(); // initialize sound variables
-	initWifi();
-	fixGautami();
-	
-	setCursorProperties(0, 2, 0, 0);
-	initCalc();
-	initScribble();
-	initCapture();
-	initClipboard();
-	
-	// set defaults to english in case we can't load the langauge file for some reason
-	// also takes care of partial translations.	
-	initLanguage();
-	initRandomList();
-	fixAndTags();
-	resetKeyboard();
-	
-	curDay = getDay();
-	curMonth = getMonth();
-	curYear = getYear();
-	
-	oldDay = 0;
-	oldYear = 0;
-	oldMonth = 0;
-	
-	if(DRAGON_InitFiles() == false)
-	{
-		// oops, no cf card!
-		setMode(DISPLAYCOW);
-		
-		setFont((uint16 **)font_arial_11);
-		setColor(0xFFFF);
-		
-		bg_dispSprite(96, 5, errmsg, 0);
-		bg_setClipping(5,25,250,181);
-		bg_dispString(0,0,l_nofat);
-		bg_swapBuffers();
-		
-		while(1)
-		{
-			// wee, la la la!
-		}
-	}
-	//otherwise card init correctly.
-	else{
-		
-	}
-	//--------------------------------------------------------------------
-	//finished init, now check to make sure the DSOrganize dir is there...
-	//--------------------------------------------------------------------
-	
-	findDataDirectory();
-	makeDirectories();
-	
-	if(DRAGON_FileExists("DSOrganize") != FT_DIR)
-	{
-		setMode(DISPLAYCOW);
-		
-		// oops, not there, we must create!
-		DRAGON_mkdir("DSOrganize");
-		DRAGON_chdir("DSOrganize");
-		DRAGON_mkdir("DAY");
-		DRAGON_mkdir("HELP");
-		DRAGON_mkdir("LANG");
-		DRAGON_mkdir("RESOURCES");
-		DRAGON_mkdir("REMINDER");
-		DRAGON_mkdir("SCRIBBLE");
-		DRAGON_mkdir("TODO");
-		DRAGON_mkdir("VCARD");
-		DRAGON_mkdir("ICONS");
-		DRAGON_mkdir("CACHE");
-		DRAGON_mkdir("HOME");
-		DRAGON_chdir("/");
-		
-		makeDefaultSettings();
-		
-		setFont((uint16 **)font_arial_11);
-		setColor(0xFFFF);
-		
-		bg_dispSprite(96, 5, errmsg, 0);
-		bg_setClipping(5,25,250,181);
-		bg_dispString(0,0, l_createdir);
-		bg_swapBuffers();
-		
-		//while(!keysPressed())
-		//{
-		//}
-	}
-	else{
-		
-	}
-	setMode(INITPLUGIN);
-	
-	//-------------------------------------------------------------------
-	//finished creating dirs, now check to make sure if they extracted it
-	//did their extracting program actually get all the dirs?
-	//-------------------------------------------------------------------	
-	
-	
-	DRAGON_chdir(d_base);	//DRAGON_chdir(getfatfsPath(d_base)) format incorrect, use DRAGON_chdir("/DSOrganize"); for chdir
-	
-	if(DRAGON_FileExists("DAY") != FT_DIR)
-	{
-		DRAGON_mkdir("DAY");
-	}
-	if(DRAGON_FileExists("HELP") != FT_DIR)
-	{
-		DRAGON_mkdir("HELP");
-	}
-	if(DRAGON_FileExists("LANG") != FT_DIR)
-	{
-		DRAGON_mkdir("LANG");
-	}
-	if(DRAGON_FileExists("REMINDER") != FT_DIR)
-	{
-		DRAGON_mkdir("REMINDER");
-	}
-	if(DRAGON_FileExists("SCRIBBLE") != FT_DIR)
-	{
-		DRAGON_mkdir("SCRIBBLE");
-	}
-	if(DRAGON_FileExists("TODO") != FT_DIR)
-	{
-		DRAGON_mkdir("TODO");
-	}
-	if(DRAGON_FileExists("VCARD") != FT_DIR)
-	{
-		DRAGON_mkdir("VCARD");
-	}
-	if(DRAGON_FileExists("ICONS") != FT_DIR)
-	{
-		DRAGON_mkdir("ICONS");
-	}
-	if(DRAGON_FileExists("CACHE") != FT_DIR)
-	{
-		DRAGON_mkdir("CACHE");
-	}
-	if(DRAGON_FileExists("HOME") != FT_DIR)
-	{
-		DRAGON_mkdir("HOME");
-	}
-	
-	DRAGON_chdir("/");
-	
-	
-	//-------------------------------------------
-	//how about we load the settings for them eh?
-	//-------------------------------------------
-	loadSettings();
-	fb_setBGColor(genericFillColor);
-	bg_setBGColor(genericFillColor);
-	
-	DRAGON_chdir(d_base);
-	
-	std::string PathFix = std::string(getfatfsPath(""));
-	PathFix.erase(PathFix.length()-1);
-	std::string FullPath = (PathFix + string(d_base) + string("/") + string("startup.wav"));
-	if(DRAGON_FileExists(FullPath.c_str()) == FT_FILE)
-	{
-		
-		char tStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
-		sprintf(tStr, "%s", FullPath.c_str());
-		loadWavToMemory();
-		loadSound(tStr);
-	}
-	DRAGON_chdir("/");
-}
-
-void drawCurrentApp()
-{
-	//printfDebugger("drawCurrentApp() Mode:%d",getMode());	//while(1==1){} inside
-	
-	switch(getMode())
-	{
-		case SOUNDPLAYER:
-			// we draw later
-			break;
-		case HOME:	//4 : OK
-			drawSplash();
-			drawHomeScreen();
-			break;
-		case HOMEMORE:	
-			drawSplash();
-			drawHomeScreenMore();
-			break;
-		case HOMESHORTCUTS:
-			drawSplash();
-			drawHomeScreenShortcuts();					
-			break;
-		case CALENDAR:	//0 : OK
-			drawTimeDate();
-			drawReminders();
-			drawCalendar();
-			break;
-		case EDITREMINDER:	//todo
-			drawTimeDate();
-			drawReminder();
-			drawEditReminder();
-			break;
-		case DAYVIEW:	//2 : OK
-			drawTimeDate();
-			drawCurrentEvent();
-			drawDayView();
-			break;			
-		case EDITDAYVIEW://3 : OK
-			drawTimeDate();
-			drawEditDayView();
-			drawEditCurrentEvent();
-			break;
-		case ADDRESS:	//5 : OK
-			drawAddressList();
-			drawCurrentAddress();
-			break;		
-		case EDITADDRESS: //6 : todo
-			drawCurrentAddress();
-			drawEditAddress();
-			break;		
-		case CONFIGURATION:	//7 : OK	//bugs could arise when read/writing system config files
-			drawTopConfiguration();
-			drawConfiguration();
-			break;
-		case BROWSER:
-			drawFileBrowserScreen();
-			drawFileInfoScreen();
-			break;
-		case BROWSERRENAME:
-			drawEditFileName();
-			drawEditFileControls();
-			break;
-		case CALCULATOR:
-			drawAnswerScreen();
-			drawCalculatorButtons();
-			break;
-		case TEXTEDITOR:
-			drawEditScreen();
-			drawEditControls();
-			break;
-		case PICTUREVIEWER:
-			drawPictureScreen();
-			drawZoomScreen();
-			break;
-		case ABOUT:
-			drawAboutScreen();
-			break;
-		case TODOLIST:
-			drawTodoList();
-			drawCurrentTodo();
-			break;	
-		case EDITTODOLIST:
-			drawCurrentTodo();
-			drawEditTodo();
-			break;
-		case SCRIBBLEPAD:
-			drawScribbleList();
-			drawSplash();
-			break;					
-		case EDITSCRIBBLE:		
-			drawScribbleScreen();
-			drawToolsScreen();
-			break;
-		case CHOOSECOLOR:
-			drawColorPicker();
-			drawToolsScreen();
-			break;
-		case SCRIBBLETEXT:
-			drawScribbleText();
-			drawScribbleKeyboard();
-			break;
-		case HOMEBREWDATABASE:
-			drawTopDatabaseScreen();
-			drawBottomDatabaseScreen();
-			break;
-		case VIEWER:
-			drawViewerScreens();
-			break;
-		case SOUNDRECORDER:
-			drawTopRecordScreen();
-			drawBottomRecordScreen();					
-			break;
-		case IRC:
-			drawTopIRCScreen();
-			drawBottomIRCScreen();
-			break;
-		case WEBBROWSER:
-			drawWebBrowserScreens();
-			break;
-	}
-}
-
-void drawSoundScreen(int oldMode)
-{
-	if(getMode() == SOUNDPLAYER) // this is that 'later' thing i was talking about
-	{
-		if(oldMode == BROWSER || wasShortcutLaunched())
-		{
-			updateStreamLoop();
-			bg_swapBuffers();
-			
-			updateStreamLoop();
-			resetShortcutLaunchedFlag();
-		}
-		
-		updateStreamLoop();
-		checkEndSound();
-		
-		updateStreamLoop();
-		drawTopSoundScreen();
-		updateStreamLoop();
-		drawBottomSoundScreen();
-	}	
-}
-
-#ifdef PROFILING
-unsigned int hblanks = 0;
-
-void hblank_handler(void)
-{
-	hblanks++;
-}
-#endif
-
-int main(int _argc, sint8 **_argv) {
-	
-	IRQInit();
-	
-	bool project_specific_console = false;	//set default console or custom console: default console
-	GUI_init(project_specific_console);
-	GUI_clear();
-	
-	initProgram();	//overrides TGDS project console
-	
-	sint32 fwlanguage = (sint32)getLanguage();
-	
-	//initProgram()->DRAGON_InitFiles() does it
-	/*
-	int ret=FS_init();
-	if (ret == 0)
-	{
-		printf("FS Init ok.");
-	}
-	else if(ret == -1)
-	{
-		printf("FS Init error.");
-	}
-	*/
-	
-	//printfDebugger("initProgram() OK");	//while(1==1){} inside
-	
-	#ifdef PROFILING
-	int counter = 0;
-	
-	irqSet(IRQ_HBLANK, hblank_handler);
-	irqEnable(IRQ_HBLANK);
-	
-	cygprofile_begin();
-	cygprofile_enable();
-	#endif
-	
-	while(1) 
-	{
-		updateStreamLoop();
-		
-		if(!checkHelp())
-		{
-			int oldMode = 0;
-			
-			if(getLCDState() == LCD_ON)
-			{
-				updateStreamLoop();
-				clearHelpScreen();
-				
-				updateStreamLoop();
-				drawCurrentApp();
-				
-				// save the current mode before switching modes
-				oldMode = getMode();
-			}
-			//so far here
-			
-			updateStreamLoop();
-			checkKeys();
-			
-			updateStreamLoop();
-			executeKeys();
-			
-			// Split here because the state can change in checkKeys
-			if(getLCDState() == LCD_ON)
-			{
-				
-				// draw sound screen if needed			
-				updateStreamLoop();
-				drawSoundScreen(oldMode);
-				
-				#ifdef SCREENSHOT_MODE
-				takeScreenshot();			
-				#endif
-				
-				updateStreamLoop();
-				handleKeyHighlighting();
-				
-				updateStreamLoop();
-				drawToScreen();
-			}
-			else
-			{	
-				updateStreamLoop();
-				checkEndSound();
-			}
-		}
-		
-		#ifdef PROFILING
-		counter++;
-		
-		if(counter == 700)
-		{
-			cygprofile_disable();
-			cygprofile_end();
-		}
-		#endif
-	}
-	
-	/*
-	while (1)
-	{
-		IRQVBlankWait();
-	}
-	*/
-	
 }

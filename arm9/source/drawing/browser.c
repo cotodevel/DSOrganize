@@ -475,17 +475,18 @@ void loadFile(int which)
 		strcat(str, dirList[which].longName);
 		
 		char tmpStr[256];
-		DRAGON_FILE *fp = DRAGON_fopen(str, "r");
-		memset(tmpStr, 0, 256);
-		DRAGON_fgets(tmpStr, 255, fp);
-		DRAGON_fclose(fp);
-		
-		setMode(HOMEBREWDATABASE);
-		resetDBMode();
-		resetCursor();
-		
-		customDB(tmpStr);
-		
+		if(debug_FileExists((const char*)str,5) == FT_FILE){
+			DRAGON_FILE *fp = DRAGON_fopen(str, "r");	//debug_FileExists index: 5
+			memset(tmpStr, 0, 256);
+			DRAGON_fgets(tmpStr, 255, fp);
+			DRAGON_fclose(fp);
+			
+			setMode(HOMEBREWDATABASE);
+			resetDBMode();
+			resetCursor();
+			
+			customDB(tmpStr);
+		}
 		return;
 	}	
 	if(dirList[which].fileType == PKGFILE)
@@ -503,16 +504,18 @@ void loadFile(int which)
 		strcat(str, dirList[which].longName);
 		
 		char *tmpStr = (char *)safeMalloc(MAX_CUSTOM_LIST);
-		DRAGON_FILE *fp = DRAGON_fopen(str, "r");
-		DRAGON_fread(tmpStr, MAX_CUSTOM_LIST, 1, fp);
-		DRAGON_fclose(fp);
 		
-		setMode(HOMEBREWDATABASE);
-		resetDBMode();
-		pushCursor();
-		
-		customPackage(tmpStr);
-		
+		if(debug_FileExists((const char*)str,6) == FT_FILE){
+			DRAGON_FILE *fp = DRAGON_fopen(str, "r");	//debug_FileExists index: 6
+			DRAGON_fread(tmpStr, MAX_CUSTOM_LIST, 1, fp);
+			DRAGON_fclose(fp);
+			
+			setMode(HOMEBREWDATABASE);
+			resetDBMode();
+			pushCursor();
+			
+			customPackage(tmpStr);
+		}
 		return;
 	}
 }
@@ -1461,8 +1464,13 @@ void renameFile()
 		
 		if(dir_create)
 			DRAGON_mkdir(fileName);
-		else
-			DRAGON_fclose(DRAGON_fopen(fileName, "w"));
+		else{
+			
+			if(debug_FileExists((const char*)fileName,7) == FT_FILE){
+				DRAGON_FILE * df = DRAGON_fopen(fileName, "w");	//debug_FileExists index: 7
+				DRAGON_fclose(df);
+			}
+		}
 	}
 	else
 	{	
@@ -1746,37 +1754,43 @@ void browserBack()
 				
 				// str now holds the filename from copyfrom
 				DRAGON_chdir(newDir);
-				DRAGON_FILE *dest = DRAGON_fopen(str, "w");
 				
-				DRAGON_chdir("/");
-				DRAGON_FILE *src = DRAGON_fopen(copyFrom, "r");
+				if(debug_FileExists((const char*)str,8) == FT_FILE){
+					DRAGON_FILE *dest = DRAGON_fopen(str, "w");	//debug_FileExists index: 8
 				
-				uint8 *cpyBuffer = (uint8 *)safeMalloc(COPY_SIZE);
-				uint16 cnt;
-				
-				maxSize = DRAGON_flength(src);
-				curSize = 0;
-				
-				copying = true;
-				
-				while(!DRAGON_feof(src))
-				{
-					cnt = DRAGON_fread(cpyBuffer, 1, COPY_SIZE, src);
-					DRAGON_fwrite(cpyBuffer, 1, cnt, dest);
+					DRAGON_chdir("/");
 					
-					curSize += cnt;
+					if(debug_FileExists((const char*)copyFrom,9) == FT_FILE){
+						DRAGON_FILE *src = DRAGON_fopen(copyFrom, "r");	//debug_FileExists index: 9
+						
+						uint8 *cpyBuffer = (uint8 *)safeMalloc(COPY_SIZE);
+						uint16 cnt;
+						
+						maxSize = DRAGON_flength(src);
+						curSize = 0;
+						
+						copying = true;
+						
+						while(!DRAGON_feof(src))
+						{
+							cnt = DRAGON_fread(cpyBuffer, 1, COPY_SIZE, src);
+							DRAGON_fwrite(cpyBuffer, 1, cnt, dest);
+							
+							curSize += cnt;
+						}
+						
+						copying = false;
+						
+						DRAGON_fclose(dest);
+						DRAGON_fclose(src);
+						
+						copyFlag = false;
+						isPopulated = 0;
+						browserMode = 0;
+						
+						free(cpyBuffer);
+					}
 				}
-				
-				copying = false;
-				
-				DRAGON_fclose(dest);
-				DRAGON_fclose(src);
-				
-				copyFlag = false;
-				isPopulated = 0;
-				browserMode = 0;
-				
-				free(cpyBuffer);
 			}
 			break;	
 		}

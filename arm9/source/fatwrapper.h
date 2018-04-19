@@ -138,6 +138,12 @@ extern void 			DRAGON_cacheLoop();
 extern bool 			DRAGON_isCached(DRAGON_FILE *df);
 extern bool 			DRAGON_needsUpdate(DRAGON_FILE *df);
 
+
+extern int debug_FileExists(const char* filename, int indexSource);
+
+extern std::string getPathFix();
+
+
 #ifdef __cplusplus
 }
 #endif

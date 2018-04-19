@@ -1020,7 +1020,9 @@ void checkFile()
 			return;
 		}					
 		
-		downFP = DRAGON_fopen(downFile, "w");
+		if(debug_FileExists((const char*)downFile,15) == FT_FILE){
+			downFP = DRAGON_fopen(downFile, "w");	//debug_FileExists index: 15
+		}
 		
 		getFile(savedURL, tAgent);
 		rCount++;
@@ -1101,7 +1103,9 @@ void checkFile()
 				return;
 			}					
 			
-			downFP = DRAGON_fopen(downFile, "w");
+			if(debug_FileExists((const char*)downFile,16) == FT_FILE){
+				downFP = DRAGON_fopen(downFile, "w");	//debug_FileExists index: 16
+			}
 			
 			getFile(savedURL, tAgent);
 			rCount++;
@@ -1147,7 +1151,9 @@ void checkFile()
 					return;
 				}					
 				
-				downFP = DRAGON_fopen(downFile, "w");
+				if(debug_FileExists((const char*)downFile,17) == FT_FILE){
+					downFP = DRAGON_fopen(downFile, "w");	//debug_FileExists index: 17
+				}
 				
 				getFile(savedURL, tAgent);
 				rCount++;
@@ -1183,7 +1189,9 @@ void checkFile()
 					return;
 				}					
 				
-				downFP = DRAGON_fopen(downFile, "w");
+				if(debug_FileExists((const char*)downFile,18) == FT_FILE){
+					downFP = DRAGON_fopen(downFile, "w");	//debug_FileExists index: 18
+				}
 				
 				getFile(savedURL, tAgent);
 				rCount++;
@@ -1384,7 +1392,9 @@ void checkFile()
 					if(DRAGON_FileExists(downFile) != FT_NONE)
 						DRAGON_remove(downFile);
 					
-					downFP = DRAGON_fopen(downFile, "w");
+					if(debug_FileExists((const char*)downFile,19) == FT_FILE){
+						downFP = DRAGON_fopen(downFile, "w");	//debug_FileExists index: 19
+					}
 					
 					char tData[URL_SIZE];
 					memset(tData, 0, URL_SIZE);					
@@ -1830,8 +1840,9 @@ void drawTopDatabaseScreen()
 					if(DRAGON_FileExists(downFile) != FT_NONE)
 						DRAGON_remove(downFile);
 					
-					downFP = DRAGON_fopen(downFile, "w");
-					
+					if(debug_FileExists((const char*)downFile,20) == FT_FILE){
+						downFP = DRAGON_fopen(downFile, "w");	//debug_FileExists index: 20
+					}
 					rCount = 0;
 					getFile(downURL, res_uAgent);
 					dbMode = DB_GETTINGFILE;

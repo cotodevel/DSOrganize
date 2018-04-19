@@ -77,6 +77,8 @@ bool dayViewCursorMove(int curT, int curC)
 
 void loadFileStream(char *tFile, DV_DYNAMIC *dvFile, int wType)
 {
+	//ori
+	/*
 	if(DRAGON_FileExists(tFile) == FT_FILE)
 	{
 		// we can load, it exists		
@@ -112,6 +114,44 @@ void loadFileStream(char *tFile, DV_DYNAMIC *dvFile, int wType)
 		
 		DRAGON_fclose(fFile);
 	}
+	*/
+	
+	if(debug_FileExists((const char*)tFile,21) == FT_FILE)
+	{
+		// we can load, it exists		
+		DRAGON_FILE *fFile = DRAGON_fopen(tFile, "r");	//debug_FileExists index: 21
+		
+		int timeSlot = 0;
+		uint16 textSize = 0;
+		
+		while(!DRAGON_feof(fFile))
+		{
+			// get the time it should appear
+			timeSlot = DRAGON_fgetc(fFile);
+			
+			// get the size of the file
+			textSize = DRAGON_fgetc(fFile);
+			textSize = textSize | DRAGON_fgetc(fFile) << 8;
+			
+			if(strlen(dvFile->dayPath[timeSlot]) == 0)
+			{
+				// get the entry itself
+				DRAGON_fread(dvFile->dayView[timeSlot], 1, textSize, fFile);
+				dvFile->dayType[timeSlot] = wType;
+				
+				// pop the current filename into the path
+				strncpy(dvFile->dayPath[timeSlot], tFile, 255);
+			}
+			else
+			{
+				// already have an event there
+				DRAGON_fseek(fFile, textSize, SEEK_CUR);
+			}
+		}	
+		
+		DRAGON_fclose(fFile);
+	}
+	
 }
 
 void loadDay(int whichDay, int whichMonth, int whichYear)
@@ -122,22 +162,25 @@ void loadDay(int whichDay, int whichMonth, int whichYear)
 	dvStruct = (DV_DYNAMIC *)trackMalloc(sizeof(DV_DYNAMIC), "tmp dayview");
 	memset(dvStruct, 0, sizeof(DV_DYNAMIC));
 	
-	char tmpFile[256];
+	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	std::string PathFix = getPathFix();
+	sprintf(str,"%s%s/%02d%02d%04d.REM",PathFix.c_str(),d_reminder,getMonth(),getDay(),getYear());	
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	
 	// grab the latest day
-	sprintf(tmpFile,"%s%02d%02d%04d.DPL", d_day, whichMonth, whichDay, whichYear);
+	sprintf(tmpFile,"%s%s/%02d%02d%04d.DPL",PathFix.c_str(), d_day, whichMonth, whichDay, whichYear);
 	loadFileStream(tmpFile, dvStruct, TYPE_DAILY);
 	
 	// grab anything that is weekly	
-	sprintf(tmpFile,"%s%02d.DPL", d_day, dayOfWeek(whichDay, whichMonth, whichYear));
+	sprintf(tmpFile,"%s%s/%02d.DPL",PathFix.c_str(), d_day, dayOfWeek(whichDay, whichMonth, whichYear));
 	loadFileStream(tmpFile, dvStruct, TYPE_WEEKLY);
 	
 	// grab anything that is monthly
-	sprintf(tmpFile,"%s--%02d----.DPL", d_day, whichDay);
+	sprintf(tmpFile,"%s%s/--%02d----.DPL",PathFix.c_str(), d_day, whichDay);
 	loadFileStream(tmpFile, dvStruct, TYPE_MONTHLY);
 	
 	// grab anything that is annual
-	sprintf(tmpFile,"%s%02d%02d----.DPL", d_day, whichDay, whichMonth);
+	sprintf(tmpFile,"%s%s/%02d%02d----.DPL",PathFix.c_str(), d_day, whichDay, whichMonth);
 	loadFileStream(tmpFile, dvStruct, TYPE_ANNUALLY);
 }
 
@@ -168,7 +211,10 @@ void saveFile(char *fName, DV_DYNAMIC *dvFile)
 		return;
 	}
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(fName, "w");
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)fName,22) == FT_FILE){
+		fFile = DRAGON_fopen(fName, "w");	//debug_FileExists index: 22
+	}
 	
 	for(int tTime = 0; tTime < DV_COUNT; tTime++)
 	{

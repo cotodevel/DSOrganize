@@ -2287,7 +2287,10 @@ void parseScriptFile(char *fName)
 		return;
 	}
 	
-	DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)fName,23) == FT_FILE){
+		fp = DRAGON_fopen(fName, "r");	//debug_FileExists index: 23
+	}
 	
 	if(fp == NULL)
 	{

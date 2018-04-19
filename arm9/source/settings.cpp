@@ -404,8 +404,7 @@ void loadSettings()
 {
 	defaultLocations();
 	char sStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
-	std::string PathFix = std::string(getfatfsPath(""));
-	PathFix.erase(PathFix.length()-1);
+	std::string PathFix = getPathFix();
 	std::string FullPath = (PathFix + string(d_base) + string("/") + string("config.ini"));
 	
 	if(DRAGON_FileExists(FullPath.c_str()) != FT_FILE){

@@ -23,6 +23,7 @@ USA
 
 #include "typedefsTGDS.h"
 #include "dsregs.h"
+#include "specific_shared.h"
 
 #endif
 
@@ -67,6 +68,10 @@ extern void checkKeys();
 extern void queueUpCommand(int qc, int qd);
 extern void checkJustKeys();
 extern void executeKeys();
+
+extern TransferSound Snd;
+extern TransferSoundData SndDat;
+extern void setGenericSound( u32 rate, u8 vol, u8 pan, u8 format);
 extern void initProgram();
 extern void drawCurrentApp();
 extern void drawSoundScreen(int oldMode);
@@ -76,8 +81,8 @@ unsigned int hblanks;
 extern void hblank_handler(void);
 #endif
 
-extern int main(int _argc, sint8 **_argv);
-
 #ifdef __cplusplus
 }
 #endif
+
+extern int main(int _argc, sint8 **_argv);

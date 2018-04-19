@@ -82,45 +82,47 @@ void startRecording()
 	if(DRAGON_FileExists(fileName) != FT_NONE)
 		DRAGON_remove(fileName);
 	
-	recFile = DRAGON_fopen(fileName, "w");
-	
-	// write header	
-	char header[12];
-	strncpy(header, "RIFF    WAVE", 12);
-	DRAGON_fwrite(header, 1, 12, recFile);
-	
-	// write fmt tag
-	wavFormatChunk headerChunk;
-	
-	strncpy(headerChunk.chunkID, "fmt ", 4);
-	headerChunk.chunkSize = 16; // unknown now
-	headerChunk.wFormatTag = 1;
-	headerChunk.wChannels = 1;
-	headerChunk.wBitsPerSample = 8;
-	headerChunk.dwSamplesPerSec = REC_FREQ;
-	headerChunk.wBlockAlign = 1;
-	headerChunk.dwAvgBytesPerSec = REC_FREQ;
-	
-	DRAGON_fwrite(&headerChunk, sizeof(wavFormatChunk), 1, recFile);
-	
-	char data[8];
-	strncpy(data, "data    ", 8);
-	DRAGON_fwrite(data, 1, 8, recFile);
-	
-	getsIPCSharedTGDSSpecific()->sndregioninst.arm9L = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
-	getsIPCSharedTGDSSpecific()->sndregioninst.arm9R = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
-	getsIPCSharedTGDSSpecific()->sndregioninst.interlaced = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
+	if(debug_FileExists((const char*)fileName,26) == FT_FILE){
+		recFile = DRAGON_fopen(fileName, "w");	//debug_FileExists index: 26
+		
+		// write header	
+		char header[12];
+		strncpy(header, "RIFF    WAVE", 12);
+		DRAGON_fwrite(header, 1, 12, recFile);
+		
+		// write fmt tag
+		wavFormatChunk headerChunk;
+		
+		strncpy(headerChunk.chunkID, "fmt ", 4);
+		headerChunk.chunkSize = 16; // unknown now
+		headerChunk.wFormatTag = 1;
+		headerChunk.wChannels = 1;
+		headerChunk.wBitsPerSample = 8;
+		headerChunk.dwSamplesPerSec = REC_FREQ;
+		headerChunk.wBlockAlign = 1;
+		headerChunk.dwAvgBytesPerSec = REC_FREQ;
+		
+		DRAGON_fwrite(&headerChunk, sizeof(wavFormatChunk), 1, recFile);
+		
+		char data[8];
+		strncpy(data, "data    ", 8);
+		DRAGON_fwrite(data, 1, 8, recFile);
+		
+		getsIPCSharedTGDSSpecific()->sndregioninst.arm9L = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
+		getsIPCSharedTGDSSpecific()->sndregioninst.arm9R = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
+		getsIPCSharedTGDSSpecific()->sndregioninst.interlaced = (s16 *)trackMalloc(REC_BLOCK_SIZE, "record block");
 
-	memset(getsIPCSharedTGDSSpecific()->sndregioninst.arm9L, 0, REC_BLOCK_SIZE);
-	memset(getsIPCSharedTGDSSpecific()->sndregioninst.arm9R, 0, REC_BLOCK_SIZE);
-	memset(getsIPCSharedTGDSSpecific()->sndregioninst.interlaced, 0, REC_BLOCK_SIZE);
-	
-	setSoundFrequency(REC_FREQ);	
-	setSoundLength(REC_BLOCK_SIZE);
-	SendArm7Command(ARM7COMMAND_START_RECORDING, 0);
-	
-	ticCount = 0;
-	isRecording = true;
+		memset(getsIPCSharedTGDSSpecific()->sndregioninst.arm9L, 0, REC_BLOCK_SIZE);
+		memset(getsIPCSharedTGDSSpecific()->sndregioninst.arm9R, 0, REC_BLOCK_SIZE);
+		memset(getsIPCSharedTGDSSpecific()->sndregioninst.interlaced, 0, REC_BLOCK_SIZE);
+		
+		setSoundFrequency(REC_FREQ);	
+		setSoundLength(REC_BLOCK_SIZE);
+		SendArm7Command(ARM7COMMAND_START_RECORDING, 0);
+		
+		ticCount = 0;
+		isRecording = true;
+	}
 }
 
 void endRecording()
@@ -154,123 +156,127 @@ void getWavInformation(char *fName, WAV_INFO *wavInfo)
 	wavFormatChunk headerChunk;
 	char header[13];
 	
-	DRAGON_FILE *fp = DRAGON_fopen(fName, "r");	
-	DRAGON_fread(header, 1, 12, fp);
-	
-	header[12] = 0;
-	header[4] = ' ';
-	header[5] = ' ';
-	header[6] = ' ';
-	header[7] = ' ';
-	
-	if(strcmp(header, "RIFF    WAVE") != 0)
-	{
-		// wrong header
+	if(debug_FileExists((const char*)fName,27) == FT_FILE){
+		DRAGON_FILE *fp = DRAGON_fopen(fName, "r");		//debug_FileExists index: 27
+		DRAGON_fread(header, 1, 12, fp);
+		
+		header[12] = 0;
+		header[4] = ' ';
+		header[5] = ' ';
+		header[6] = ' ';
+		header[7] = ' ';
+		
+		if(strcmp(header, "RIFF    WAVE") != 0)
+		{
+			// wrong header
+			
+			DRAGON_fclose(fp);
+			wavInfo->validWav = false;
+			return;
+		}
+		
+		DRAGON_fread(&headerChunk, sizeof(wavFormatChunk), 1, fp);
+		
+		if(strncmp(headerChunk.chunkID, "fmt ", 4) != 0)
+		{
+			// wrong chunk at beginning
+			
+			DRAGON_fclose(fp);
+			wavInfo->validWav = false;
+			return;
+		}
+		
+		if(headerChunk.wFormatTag != 1)
+		{
+			// compression used, hell no to loading this
+			
+			DRAGON_fclose(fp);
+			wavInfo->validWav = false;
+			return;
+		}
+		
+		if(headerChunk.wChannels > 2)
+		{
+			// more than 2 channels.... uh no!
+			
+			DRAGON_fclose(fp);
+			wavInfo->validWav = false;
+			return;
+		}
+		else
+		{
+			wavInfo->channels = headerChunk.wChannels;
+		}
+		
+		if(headerChunk.wBitsPerSample <= 8)
+			wavInfo->significantBits = 8;
+		else if(headerChunk.wBitsPerSample <= 16)
+			wavInfo->significantBits = 16;
+		else
+		{
+			// more than 16bit sound, not supported
+			
+			DRAGON_fclose(fp);
+			wavInfo->validWav = false;
+			return;	
+		}
+		
+		DRAGON_fseek(fp, (headerChunk.chunkSize + 8) + 12, 0); // seek to next chunk
+		
+		char fmtHeader[5];
+		
+		DRAGON_fread(fmtHeader, 1, 4, fp);
+		fmtHeader[4] = 0;
+		
+		if(strcmp(fmtHeader, "data") != 0)
+		{
+			// wrong chunk next, sorry, doing strict only
+			
+			DRAGON_fclose(fp);
+			wavInfo->validWav = false;
+			return;
+		}
+		
+		uint len = 0;
+		DRAGON_fread(&len, 4, 1, fp);
+		
+		wavInfo->length = len;
+		wavInfo->frequency = headerChunk.dwSamplesPerSec;
+		wavInfo->seconds = ((wavInfo->length / wavInfo->channels) / (wavInfo->significantBits >> 3)) / wavInfo->frequency;
+		wavInfo->validWav = true;
 		
 		DRAGON_fclose(fp);
-		wavInfo->validWav = false;
-		return;
 	}
-	
-	DRAGON_fread(&headerChunk, sizeof(wavFormatChunk), 1, fp);
-	
-	if(strncmp(headerChunk.chunkID, "fmt ", 4) != 0)
-	{
-		// wrong chunk at beginning
-		
-		DRAGON_fclose(fp);
-		wavInfo->validWav = false;
-		return;
-	}
-	
-	if(headerChunk.wFormatTag != 1)
-	{
-		// compression used, hell no to loading this
-		
-		DRAGON_fclose(fp);
-		wavInfo->validWav = false;
-		return;
-	}
-	
-	if(headerChunk.wChannels > 2)
-	{
-		// more than 2 channels.... uh no!
-		
-		DRAGON_fclose(fp);
-		wavInfo->validWav = false;
-		return;
-	}
-	else
-	{
-		wavInfo->channels = headerChunk.wChannels;
-	}
-	
-	if(headerChunk.wBitsPerSample <= 8)
-		wavInfo->significantBits = 8;
-	else if(headerChunk.wBitsPerSample <= 16)
-		wavInfo->significantBits = 16;
-	else
-	{
-		// more than 16bit sound, not supported
-		
-		DRAGON_fclose(fp);
-		wavInfo->validWav = false;
-		return;	
-	}
-	
-	DRAGON_fseek(fp, (headerChunk.chunkSize + 8) + 12, 0); // seek to next chunk
-	
-	char fmtHeader[5];
-	
-	DRAGON_fread(fmtHeader, 1, 4, fp);
-	fmtHeader[4] = 0;
-	
-	if(strcmp(fmtHeader, "data") != 0)
-	{
-		// wrong chunk next, sorry, doing strict only
-		
-		DRAGON_fclose(fp);
-		wavInfo->validWav = false;
-		return;
-	}
-	
-	uint len = 0;
-	DRAGON_fread(&len, 4, 1, fp);
-	
-	wavInfo->length = len;
-	wavInfo->frequency = headerChunk.dwSamplesPerSec;
-	wavInfo->seconds = ((wavInfo->length / wavInfo->channels) / (wavInfo->significantBits >> 3)) / wavInfo->frequency;
-	wavInfo->validWav = true;
-	
-	DRAGON_fclose(fp);
 }
 
 void drawTopRecordScreen()
 {
 	if(!wavLoaded)
 	{
-		DRAGON_FILE *fp = DRAGON_fopen(fileName, "r");
-		memset(&curWav, 0, sizeof(WAV_INFO));
-		
-		if(DRAGON_flength(fp) == 0)
-		{
-			// this file is new
+		if(debug_FileExists((const char*)fileName,28) == FT_FILE){
+			DRAGON_FILE *fp = DRAGON_fopen(fileName, "r");	//debug_FileExists index: 28
+			memset(&curWav, 0, sizeof(WAV_INFO));
 			
-			recordMode = SR_RECORDING;
-			DRAGON_fclose(fp);
-		}
-		else
-		{
-			DRAGON_fclose(fp);
-			getWavInformation(fileName, &curWav);
-			
-			if(!curWav.validWav)
+			if(DRAGON_flength(fp) == 0)
+			{
+				// this file is new
+				
 				recordMode = SR_RECORDING;
+				DRAGON_fclose(fp);
+			}
 			else
-				recordMode = SR_PLAYBACK;
+			{
+				DRAGON_fclose(fp);
+				getWavInformation(fileName, &curWav);
+				
+				if(!curWav.validWav)
+					recordMode = SR_RECORDING;
+				else
+					recordMode = SR_PLAYBACK;
+			}
+			
+			wavLoaded = true;
 		}
-		
-		wavLoaded = true;
 	}
 	
 	drawFileInfoScreen();

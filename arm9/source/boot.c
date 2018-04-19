@@ -70,53 +70,54 @@ void exec(char *command, bool gbaBoot, bool memBoot)
 	DRAGON_chdir("/");
 	char cCommand[256];
 	sprintf(cCommand, "%sexec_stub.bin", d_res);
-	DRAGON_FILE *stub = DRAGON_fopen(cCommand,"r");
-	u32 tLen = DRAGON_flength(stub);
 	
-	long *buffer = (long *)safeMalloc(tLen);
-	
-	DRAGON_fread(buffer,tLen,1,stub) ;
-	DRAGON_fclose(stub) ;
-	
-	dldiPatchLoader((data_t *)buffer, tLen);
-	
-	// we copy wordwise, as bytewise write access to VRAM is a bad idea
-	u32 i ;
-	long *target = (long *)0x6020000 ;
-	for (i=0;i<tLen >> 2;i++) {
-		target[i] = buffer[i] ;
-	} ;
-	
-	if(memBoot)
-	{
-		*(vu32 *)0x0605FFFC = (unsigned int)command;
-	}
-	else
-	{
-		char *exec_filename = (char *)0x0605FC00 ;
-		// don't use str* functions as we can't write bytewise to VRAM
-		for (i=0;i<=(strlen(command)+1)/4;i++) {
-			((vu32 *)exec_filename)[i] = ((vu32 *)command)[i] ;
+	if(debug_FileExists((const char*)cCommand,3) == FT_FILE){
+		DRAGON_FILE *stub = DRAGON_fopen(cCommand,"r");	//debug_FileExists index: 3
+		u32 tLen = DRAGON_flength(stub);
+		
+		long *buffer = (long *)safeMalloc(tLen);
+		
+		DRAGON_fread(buffer,tLen,1,stub) ;
+		DRAGON_fclose(stub) ;
+		
+		dldiPatchLoader((data_t *)buffer, tLen);
+		
+		// we copy wordwise, as bytewise write access to VRAM is a bad idea
+		u32 i ;
+		long *target = (long *)0x6020000 ;
+		for (i=0;i<tLen >> 2;i++) {
+			target[i] = buffer[i] ;
 		} ;
-		*(vu32 *)0x0605FFFC = 0x0605FC00 ;
+		
+		if(memBoot)
+		{
+			*(vu32 *)0x0605FFFC = (unsigned int)command;
+		}
+		else
+		{
+			char *exec_filename = (char *)0x0605FC00 ;
+			// don't use str* functions as we can't write bytewise to VRAM
+			for (i=0;i<=(strlen(command)+1)/4;i++) {
+				((vu32 *)exec_filename)[i] = ((vu32 *)command)[i] ;
+			} ;
+			*(vu32 *)0x0605FFFC = 0x0605FC00 ;
+		}
+
+		u32 tBoot = LF_LOADARM9 | LF_LOADARM7 | LF_CLEARMEM | LF_LOADGBFS;
+		
+		if(memBoot)
+			tBoot |= LF_MEMDIRECT;
+		else
+		{
+			if(gbaBoot)
+				tBoot |= LF_GBABOOT;
+		}
+		
+		*(unsigned long *)0x0605FFF8 = tBoot;
+		
+		typedef void (*stub_type)(void) ;
+
+		stub_type stb = (stub_type)0x06020000 ;
+		stb() ;
 	}
-
-	u32 tBoot = LF_LOADARM9 | LF_LOADARM7 | LF_CLEARMEM | LF_LOADGBFS;
-	
-	if(memBoot)
-		tBoot |= LF_MEMDIRECT;
-	else
-	{
-		if(gbaBoot)
-			tBoot |= LF_GBABOOT;
-	}
-	
-	*(unsigned long *)0x0605FFF8 = tBoot;
-	
-	typedef void (*stub_type)(void) ;
-
-	stub_type stb = (stub_type)0x06020000 ;
-	stb() ;
-	
-} ;
-
+}

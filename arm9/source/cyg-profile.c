@@ -320,8 +320,10 @@ closelogfile (void)
 
 int Sys_FileOpenWrite(char *path)
 {
-	DRAGON_FILE *df = DRAGON_fopen(path, "w");
-	
+	DRAGON_FILE *df = NULL;
+	if(debug_FileExists((const char*)path,4) == FT_FILE){
+		df = DRAGON_fopen(path, "w");	//debug_FileExists index: 4
+	}
 	return (int)df;
 }
 

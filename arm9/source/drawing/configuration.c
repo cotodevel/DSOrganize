@@ -589,15 +589,17 @@ void drawTopConfiguration()
 				sprintf(tmpLocation, "%s%s/config/%s", d_help, curLang, textStrings[configCursor]);
 				sprintf(tmpLocation2, "%s%s/config/%s", d_help, "english", textStrings[configCursor]);
 				
+				//ori
+				/*
 				if(DRAGON_FileExists(tmpLocation) == FT_FILE)
 				{
-					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation, "r");
+					//DRAGON_FILE *fp = DRAGON_fopen(tmpLocation, "r");
 					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
 					DRAGON_fclose(fp);
 				}
 				else if(DRAGON_FileExists(tmpLocation2) == FT_FILE)
 				{
-					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation2, "r");
+					//DRAGON_FILE *fp = DRAGON_fopen(tmpLocation2, "r");
 					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
 					DRAGON_fclose(fp);
 				}				
@@ -605,6 +607,27 @@ void drawTopConfiguration()
 				{
 					strcpy(descText, "");
 				}
+				*/
+				
+				
+				//new
+				if(debug_FileExists((const char*)tmpLocation,13) == FT_FILE)
+				{
+					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation, "r");	//debug_FileExists index: 13
+					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
+					DRAGON_fclose(fp);
+				}
+				else if(debug_FileExists((const char*)tmpLocation2,14) == FT_FILE)
+				{
+					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation2, "r");	//debug_FileExists index: 14
+					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
+					DRAGON_fclose(fp);
+				}				
+				else
+				{
+					strcpy(descText, "");
+				}
+				
 			}
 			
 			lastLoaded = configCursor;

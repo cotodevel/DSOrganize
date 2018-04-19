@@ -204,7 +204,7 @@ void makeDirectories() // for creating the right paths to the data dir
 	else
 	{
 		strcpy(d_base, "/DSOrganize");
-		strcpy(d_day, "/DSOrganize/DAT");
+		strcpy(d_day, "/DSOrganize/DAY");
 		strcpy(d_help, "/DSOrganize/HELP");
 		strcpy(d_lang, "/DSOrganize/LANG");
 		strcpy(d_reminder, "/DSOrganize/REMINDER");

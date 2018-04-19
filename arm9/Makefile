@@ -39,7 +39,7 @@ MAPFILE = $(DIR_ARM9).map
 SHARED_FLAGS	=	-mcpu=arm946e-s	-mthumb-interwork
 AS_ASFLAGS		=	$(SHARED_FLAGS)	-defsym debug=0	-defsym	appver='$(EXECUTABLE_VERSION)'	-defsym ASM_OPCODES='1'	-defsym	ARM9='1'
 CC_ASFLAGS		=	$(SHARED_FLAGS)	-Wall	-DNDS -DASM_OPCODES -DARM9	-fno-common	-mtune=arm946e-s	-marm	-O2 -ffast-math -fomit-frame-pointer	-Ddebug=0	-Dappver='$(EXECUTABLE_VERSION)'	-nostdinc	-DSINGLE_THREADED
-CPP_FLAGS		=	$(SHARED_FLAGS)	-w	-fno-exceptions -fno-rtti	-marm	-MMD -MP	-DARM9	-Ddebug=0	-Dappver='$(EXECUTABLE_VERSION)'	-DNDS -DASM_OPCODES	-nostdinc++	-DSINGLE_THREADED
+CPP_FLAGS		=	$(SHARED_FLAGS)	-w	-O2 -fno-rtti	-marm	-MMD -MP	-DARM9	-Ddebug=0	-Dappver='$(EXECUTABLE_VERSION)'	-DNDS -DASM_OPCODES	-nostdinc++	-DSINGLE_THREADED	-D_GLIBCXX_USE_CXX11_ABI=1
 BUILD			= 	$(BUILD_ARM9)
 DIR_SRC			=	$(DIRS_ARM9_SRC)
 
@@ -102,8 +102,6 @@ $(OBJDIR)/%.o : %.S
 #Special rule: compile crt0 for arm9 entrypoint
 $(TARGET_LIBRARY_CRT0_FILE_9).o:	$(TARGET_LIBRARY_LINKER_FILE_9)
 	-@echo 'S Compile start: crt0s'
-	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.ld $(CURDIR)
-	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.specs $(CURDIR)
 	$(CXX)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $(OBJDIR)/$@ -c $<
 	-@echo 'S Compile end: crt0s'
 
@@ -123,7 +121,7 @@ $(BINSTRIP_RULE_9): $(OBJPROG)
 
 clean:
 	-@echo 'cleanup $(DIR_ARM9)'
-	-@rm -fr $(OBJDIR)	$(BINSTRIP_RULE_9)	$(MAPFILE)	$(CURDIR)/nds_arm9_ld.specs	$(CURDIR)/nds_arm9_ld.ld
+	-@rm -fr $(OBJDIR)	$(BINSTRIP_RULE_9)	$(MAPFILE)
 	
 debug:
 	-@echo '$(OBJDIR)';

@@ -1703,8 +1703,7 @@ void loadLanguage(char *filename)
 {
 	strcpy(curLang,filename);
 	
-	std::string PathFix = std::string(getfatfsPath(""));
-	PathFix.erase(PathFix.length()-1);
+	std::string PathFix = getPathFix();
 	std::string FullPath = (PathFix + string(d_base) + string("/") + string(filename) + string(".lng"));
 	
 	if( DRAGON_FileExists((char*)FullPath.c_str()) && (strcmp(FullPath.c_str(),"english") != 0)){
