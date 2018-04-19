@@ -69,7 +69,7 @@ int wifiMode = WIFI_FIRMWARE;
 
 static WIFI_PROFILE *dsoProfiles = NULL;
 static char proxy[256];
-static char dldiFile[256];
+static char dldiFileName[256];
 static char homePage[256];
 static char downloadLocation[256];
 static int mode = HOME;
@@ -189,7 +189,7 @@ char *getProxy()
 
 char *getDLDI()
 {
-	return dldiFile;
+	return dldiFileName;
 }
 
 char *getHomePage()
@@ -368,7 +368,7 @@ void loadExternalDLDI()
 	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType = 0;
 	
-	memset(dldiFile, 0, MAX_TGDSFILENAME_LENGTH+1);
+	memset(dldiFileName, 0, MAX_TGDSFILENAME_LENGTH+1);
 	
 	DRAGON_chdir(d_res);
 	fType = DRAGON_FindFirstFile(tmpFile);
@@ -386,8 +386,8 @@ void loadExternalDLDI()
 			{
 				// dldi file
 				
-				strcpy(dldiFile, tmpFile);
-				strcat(dldiFile, ext);
+				strcpy(dldiFileName, tmpFile);
+				strcat(dldiFileName, ext);
 				
 				break;
 			}
