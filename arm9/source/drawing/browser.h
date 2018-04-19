@@ -24,6 +24,9 @@
 extern "C" {
 #endif
 
+#include "fsfatlayerTGDSLegacy.h"
+#include "filerout.h"
+
 #define CONFIRMDELETE 5
 #define LOADBIN 4
 #define MAXBROWSERCYCLES 4
@@ -31,37 +34,44 @@ extern "C" {
 #define MAX_CUSTOM_LIST 8192
 #define COPY_SIZE 8192
 
-void loadFile(int which);
-void alternateLoadFile(int which);
-void drawFileInfoScreen();
-void drawFileBrowserScreen();
-void drawEditFileName();
-void drawEditFileControls();
-void editFileNameAction(char c);
-void renameFile();
-void browserForward();
-void browserBack();
-void toggleHidden(int which);
-void browserSetUnPopulated();
-void browserChangeDir(char *dir);
-bool isViewable(char *fName);
-void loadFileWrapper(int which);
-bool setBrowserCursor(char *file);
-void browserResetPos();
-void deleteFAT(char *entry, bool deleteFinal);
-void resetCurDir();
-int getBrowserEntries();
-int getMaxCursorBrowser();
-void resetCopyFlags();
-bool confirmDelete();
-void browserSafeFileName();
+extern void loadFile(int which);
+extern void alternateLoadFile(int which);
+extern void drawFileInfoScreen();
+extern void drawFileBrowserScreen();
+extern void drawEditFileName();
+extern void drawEditFileControls();
+extern void editFileNameAction(char c);
+extern void renameFile();
+extern void browserForward();
+extern void browserBack();
+extern void toggleHidden(int which);
+extern void browserSetUnPopulated();
+extern void browserChangeDir(char *dir);
+extern bool isViewable(char *fName);
+extern void loadFileWrapper(int which);
+extern bool setBrowserCursor(char *file);
+extern void browserResetPos();
+extern void deleteFAT(char *entry, bool deleteFinal);
+extern void resetCurDir();
+extern int getBrowserEntries();
+extern int getMaxCursorBrowser();
+extern void resetCopyFlags();
+extern bool confirmDelete();
+extern void browserSafeFileName();
 
 // for menu
-void startPullUp();
-void trackPullUp(int px, int py);
-bool testPullUp(int px, int py);
-void destroyPullUp();
-bool isPullUp();
+extern void startPullUp();
+extern void trackPullUp(int px, int py);
+extern bool testPullUp(int px, int py);
+extern void destroyPullUp();
+extern bool isPullUp();
+
+//Browser opens N APPs, so the "global" fileName loads here and it's shared
+extern FILE_INFO curFile;
+extern uint16 browserMode;
+extern char curDir[MAX_TGDSFILENAME_LENGTH+1];
+extern char copyFrom[MAX_TGDSFILENAME_LENGTH+1];
+extern char fileName[MAX_TGDSFILENAME_LENGTH+1];
 
 #ifdef __cplusplus
 }

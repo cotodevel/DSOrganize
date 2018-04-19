@@ -43,40 +43,30 @@ int default_scroll_left = DEFAULT_SCROLL_LEFT_R;
 int list_left = LIST_LEFT_R;
 int list_right = LIST_RIGHT_R;
 
-extern bool reverseDate;
-extern bool milTime;
-
-// for keyboard drawing
-extern char me_upper[42];
-extern char me_lower[42];
-extern char me_number[42];
-extern char me_upperspecial[42];
-extern char me_lowerspecial[42];
-
-static bool dispScrollHandle = true;
-static char *lButtonPtr = NULL;
-static char *rButtonPtr = NULL;
+bool dispScrollHandle = true;
+char *lButtonPtr = NULL;
+char *rButtonPtr = NULL;
 
 // for testing scroll
-static int scrollTop = 0;
-static int scrollBottom = 0;
-static int scrollLeft = 0;
+int scrollTop = 0;
+int scrollBottom = 0;
+int scrollLeft = 0;
 
 // for testing list
-static int listTop = 0;
-static int listBottom = 0;
-static int listLeft = 0;
-static int listRight = 0;
-static int listCur = 0;
-static int listMax = 0;
+int listTop = 0;
+int listBottom = 0;
+int listLeft = 0;
+int listRight = 0;
+int listCur = 0;
+int listMax = 0;
 
 // for left/right handed
-static int handMode = HAND_RIGHT;
+int handMode = HAND_RIGHT;
 
 // for orientation
-static int curOrientation = -1;
-static int oldOrientations[10];
-static int oldOPosition = 0;
+int curOrientation = -1;
+int oldOrientations[10];
+int oldOPosition = 0;
 
 void pushOrientation(int orientation)
 {

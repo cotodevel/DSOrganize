@@ -41,14 +41,12 @@
 #include "../language.h"
 #include "../controls.h"
 
-static int recordMode = SR_RECORDING;
+int recordMode = SR_RECORDING;
 bool wavLoaded = false;
 bool isRecording = false;
 u32 ticCount = 0;
-static WAV_INFO curWav;
-static DRAGON_FILE *recFile = NULL;
-
-extern char fileName[256];
+WAV_INFO curWav;
+DRAGON_FILE *recFile = NULL;
 
 void copyChunk()
 {

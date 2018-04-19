@@ -20,6 +20,9 @@
 #ifndef _DATABASE_INCLUDED
 #define _DATABASE_INCLUDED
 
+#include "zlib.h"
+#include "fatwrapper.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -114,6 +117,59 @@ void setContentType(int ct);
 bool isDownloading();
 char *getDownStatus();
 void runSpeed();
+
+extern int parseInstructions(char *inst);
+extern int listEntries;
+extern int catEntries;
+extern int pkgEntries;
+extern int tmpPos;
+extern int pos;	
+extern int tCount;
+extern int rCount;
+extern int t_Sock;
+extern int downLength;
+extern u32 fileRecieved;
+extern u32 fileLength;
+extern bool gotHeader;
+extern int lastRecieved;
+extern int lastSecond;
+extern int speed;
+extern char pkgName[64];
+extern int dbMode;
+extern char downStatus[256];
+extern int catSize;
+extern int specialMode;
+extern bool aPressed;
+extern bool hasStarted;
+extern int whichCharset;
+extern int contentType;
+extern char curCat[33];
+extern int whichCat;
+extern bool currentDownload;
+extern bool hasInitialized ;
+extern int tEncoding;
+extern z_stream strm;
+
+extern char tempURL[URL_SIZE];
+extern char downURL[URL_SIZE];
+extern char *referer;
+extern char *postData;
+extern char *tAgent;
+extern char *motd;
+extern char *list;
+extern char *pkgStatus;
+extern char *savedURL;
+extern INST_LIST *instList;
+extern HB_LIST *hbList;
+extern CAT_LIST *catList;
+
+//for generic downloader
+extern char *d_outStr;
+extern int d_len;
+
+extern char downFile[256];
+extern DRAGON_FILE *downFP;
+
 
 #ifdef __cplusplus
 }

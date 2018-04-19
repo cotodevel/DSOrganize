@@ -20,11 +20,13 @@
 #ifndef _GLOBALS_INIT
 #define _GLOBALS_INIT
 
+#include "limitsTGDS.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define FILENAME_SIZE 256
+#define FILENAME_SIZE MAX_TGDSFILENAME_LENGTH	//char fileName[size]
 
 #define SCREEN_WIDTH 256
 #define SCREEN_HEIGHT 192

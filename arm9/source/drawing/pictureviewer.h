@@ -20,23 +20,29 @@
 #ifndef _PICVIEW_INCLUDED
 #define _PICVIEW_INCLUDED
 
+#include "libpicture.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void resetScreen();
-void displayPicture(int offsetX, int offsetY, void *tmpData);
-void drawPictureScreen();
-void movePicture(int x, int y);
-void drawZoomScreen();
-void freePicture();
-void clearBinName();
-void setBinName(char *bN, int x, int y);
-void getPrevPicture();
-void getNextPicture();
-void exitPictureScreen();
+extern void resetScreen();
+extern void displayPicture(int offsetX, int offsetY, void *tmpData);
+extern void drawPictureScreen();
+extern void movePicture(int x, int y);
+extern void drawZoomScreen();
+extern void freePicture();
+extern void clearBinName();
+extern void setBinName(char *bN, int x, int y);
+extern void getPrevPicture();
+extern void getNextPicture();
+extern void exitPictureScreen();
+extern int progressCallBack(int type, u32 set);
 
-int progressCallBack(int type, u32 set);
+extern int loc_X;
+extern int loc_Y;
+extern PICTURE_DATA curPicture;
+extern bool picLoaded;
 
 #ifdef __cplusplus
 }

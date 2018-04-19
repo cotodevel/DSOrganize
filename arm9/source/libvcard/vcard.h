@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "fsfatlayerTGDSLegacy.h"
+
 #define VCARD_UNKNOWN 0
 #define VCARD_HOME 1
 #define VCARD_WORK 2
@@ -26,7 +28,7 @@ typedef struct
 
 typedef struct
 {
-	char fileName[255];
+	char fileName[MAX_TGDSFILENAME_LENGTH+1];	//fileName is at least 256 bytes
 	char firstName[32];
 	char lastName[32];
 	char nickName[82];

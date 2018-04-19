@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+extern bool helpLoaded;
+
 void drawHelpScreen();
 void clearHelpScreen();
 

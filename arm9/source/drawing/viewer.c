@@ -25,18 +25,20 @@
 #include <string.h>
 #include <libfb/libcommon.h>
 #include "viewer.h"
-#include "../fatwrapper.h"
-#include "../colors.h"
-#include "../font_arial_9.h"
-#include "../font_gautami_10.h"
-#include "../font_arial_11.h"
-#include "../general.h"
-#include "../keyboard.h"
-#include "../globals.h"
-#include "../html.h"
-#include "../language.h"
-#include "../controls.h"
-#include "../resources.h"
+#include "fatwrapper.h"
+#include "colors.h"
+#include "font_arial_9.h"
+#include "font_gautami_10.h"
+#include "font_arial_11.h"
+#include "general.h"
+#include "keyboard.h"
+#include "globals.h"
+#include "html.h"
+#include "language.h"
+#include "controls.h"
+#include "resources.h"
+#include "browser.h"
+#include "specific_shared.h"
 
 static uint ptCount = 0;
 static uint bufferLength = 0;
@@ -52,17 +54,6 @@ static int whichBookmark = 0;
 static char bookmarkFile[256];
 static bool hasRendered = false;
 static int pHeight = 0;
-
-extern bool copying;
-extern u32 maxSize;
-extern u32 curSize;
-extern uint16 insert;
-extern char fileName[256];
-extern char curChar;
-extern uint16 caps;
-extern char curDir[256];
-extern bool needsRefresh;
-extern uint16 editCursor;
 
 void initViewer()
 {

@@ -32,17 +32,19 @@ extern "C" {
 #endif
 
 // day stuff
-extern uint16 curDay;
-extern uint16 curMonth;
-extern uint16 curYear;
-extern uint16 curTime;
-extern uint16 oldYear;
-extern uint16 oldDay;
-extern uint16 oldMonth;
 
 // for addresses, text editor and fileViewers
 extern uint16 browserMode;
 // internals
+extern int yThreshold;
+extern int queuedCommand;
+extern int queuedData;
+extern bool hasTouched;
+extern bool held;
+extern char lChar;
+extern char kChar;
+extern uint16 repeatCount;
+
 extern int yThreshold;
 extern int queuedCommand;
 extern int queuedData;

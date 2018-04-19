@@ -47,6 +47,7 @@
 #include "specific_shared.h"
 #include "nds_loader_arm9.h"
 #include "supercard.h"
+#include "soundrecorder.h"
 #include "autopatch.h"
 #include "splash.h"
 #include "font_arial_11.h"
@@ -80,42 +81,22 @@ bool loading = false;
 bool rendering = false;
 u32 maxSize;
 u32 curSize;
-uint16 homePage = HOME;
+uint16 homePageGeneral = HOME;
 uint16 homeMode = 0;
 int vblCount = 0;
 int locations[13];
 bool allowSwapBuffer = true;
 
-static bool foundCursor = false;
-static int tCursor = 0;
-static int cowAnim = 0;
-static int cowCount = 0;
-static int direction = 1;
-static u32 webAniHeartBeat = 0;
-static bool haltOnOutOfMem = true;
-static int repCount = 0;
-static bool useDataDir;
-static u32 globalError = 0;
-
-extern bool working;
-extern uint16 curTime;
-extern char fileName[256];
-extern uint16 browserMode;
-extern bool cLoadedPage1;
-extern char curDir[256];
-extern char *memory;
-extern bool isRecording;
-extern u32 ticCount;
-extern u32 ircCount;
-extern int waitCount;
-extern bool cancelOnWait;
-extern bool swapAB;
-extern int normalBoot;
-extern int altBoot;
-extern bool disablePatching;
-
-extern PICTURE_DATA curPicture;
-extern bool isQueued();
+bool foundCursor = false;
+int tCursor = 0;
+int cowAnim = 0;
+int cowCount = 0;
+int direction = 1;
+u32 webAniHeartBeat = 0;
+bool haltOnOutOfMem = true;
+int repCount = 0;
+bool useDataDir;
+u32 globalError = 0;
 
 #ifdef MALLOC_TRACK
 	static MALLOC_LIST mallocList[100];
@@ -969,14 +950,14 @@ void gotoApplication(int app, bool transPos)
 	if(transPos)
 	{
 		homeMode = getCursor();
-		homePage = getMode();
+		homePageGeneral = getMode();
 		
-		if(homePage != HOME && homePage != HOMEMORE)
+		if(homePageGeneral != HOME && homePageGeneral != HOMEMORE)
 		{
 			if(app < 6)
-				homePage = HOME;
+				homePageGeneral = HOME;
 			else
-				homePage = HOMEMORE;
+				homePageGeneral = HOMEMORE;
 		}
 		
 		whichApp = locations[app]; // in the future allow for editable
@@ -991,12 +972,12 @@ void gotoApplication(int app, bool transPos)
 			{
 				if(x < 6)
 				{
-					homePage = HOME;
+					homePageGeneral = HOME;
 					homeMode = x;
 				}
 				else
 				{
-					homePage = HOMEMORE;
+					homePageGeneral = HOMEMORE;
 					homeMode = x - 6;
 				}
 				
@@ -1106,9 +1087,9 @@ void returnHome()
 			if(locations[x] == 5) // browser
 			{
 				if(x < 6)
-					homePage = HOME;
+					homePageGeneral = HOME;
 				else
-					homePage = HOMEMORE;
+					homePageGeneral = HOMEMORE;
 				
 				if(x < 6)
 					homeMode = x;
@@ -1120,7 +1101,7 @@ void returnHome()
 		}
 	}
 	
-	setMode(homePage);
+	setMode(homePageGeneral);
 	moveCursorAbsolute(homeMode);
 	browserResetPos();
 	

@@ -37,6 +37,7 @@ void loadLanguage(char *filename);
 void loadIRCConfig();
 int listLanguages(LANG_LIST buffer[]);
 
+extern char curLang[256];
 extern char l_days[14][30];
 extern char l_months[24][30];
 extern char l_ampm[2][30];

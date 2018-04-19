@@ -31,105 +31,79 @@
 #include "database.h"
 #include "viewer.h"
 #include "pictureviewer.h"
-#include "../sidetabs.h"
-#include "../resources.h"
-#include "../fatwrapper.h"
-#include "../colors.h"
-#include "../font_arial_9.h"
-#include "../font_gautami_10.h"
-#include "../font_arial_11.h"
-#include "../general.h"
-#include "../keyboard.h"
-#include "../globals.h"
-#include "../graphics.h"
-#include "../html.h"
-#include "../wifi.h"
-#include "../language.h"
-#include "../shortcuts.h"
-#include "../settings.h"
-#include "../controls.h"
-#include "../errors.h"
+#include "sidetabs.h"
+#include "resources.h"
+#include "fatwrapper.h"
+#include "colors.h"
+#include "font_arial_9.h"
+#include "font_gautami_10.h"
+#include "font_arial_11.h"
+#include "general.h"
+#include "keyboard.h"
+#include "globals.h"
+#include "graphics.h"
+#include "html.h"
+#include "wifi.h"
+#include "language.h"
+#include "shortcuts.h"
+#include "settings.h"
+#include "controls.h"
+#include "errors.h"
 #include "specific_shared.h"
 #include "fatwrapper.h"
 
-static HTML_RENDERED htmlPage;
-static u32 bState = WEBSTATE_INIT;
-static int bPosition = 0;
-static bool keyboardShowing = true;
-static bool nextClears = false;
-static bool wbDrag = false;
-static bool ignoreUntilUp = false;
-static bool doURL = false;
-static bool drawURL = false;
-static char *lastURL = NULL;
-static int textLength = 0;
-static bool maskInput = false;
-static bool alreadyCaptured = false;
-static char anchor[64];
-static char lastanchor[64];
-static bool dontScan = false;
-static char curHTMLPage[256];
-static char specialKey[18][8];
-static int curSpecialKey = -1;
-static int specialCountDown = 0;
-static FAVORITE_TYPE *favorites = NULL;
-static FAVORITE_TYPE *ircCaptured = NULL;
-static int listCursor = 0;
-static bool nextForward = false;
-static int dlQueueCount = 0;
-static int dlQueuePos = 0;
-static DLQUEUE_TYPE *dlQueue = NULL;
-static bool loadHomePage = false;
-static bool isImage = false;
-static bool isFileDownload = false;
-static bool temporaryStart = false;
-static char curExtension[MAX_EXT];
-static char curFileName[FILENAME_SIZE];
-static uint16 *htmlRender = NULL;
-static bool oldImageLandscape = false;
-static bool needsRedraw = false;
+HTML_RENDERED htmlPage;
+u32 bState = WEBSTATE_INIT;
+int bPosition = 0;
+bool keyboardShowing = true;
+bool nextClears = false;
+bool wbDrag = false;
+bool ignoreUntilUp = false;
+bool doURL = false;
+bool drawURL = false;
+char *lastURL = NULL;
+int textLength = 0;
+bool maskInput = false;
+bool alreadyCaptured = false;
+char anchor[64];
+char lastanchor[64];
+bool dontScan = false;
+char curHTMLPage[256];
+char specialKey[18][8];
+int curSpecialKey = -1;
+int specialCountDown = 0;
+FAVORITE_TYPE *favorites = NULL;
+FAVORITE_TYPE *ircCaptured = NULL;
+int listCursorIrc = 0;
+bool nextForward = false;
+int dlQueueCount = 0;
+int dlQueuePos = 0;
+DLQUEUE_TYPE *dlQueue = NULL;
+bool loadHomePage = false;
+bool isImage = false;
+bool isFileDownload = false;
+bool temporaryStart = false;
+char curExtension[MAX_EXT];
+char curFileName[FILENAME_SIZE];
+uint16 *htmlRender = NULL;
+bool oldImageLandscape = false;
+bool needsRedraw = false;
 
-static char unreachable[] = { "<html><head><title>Server Unreachable</title></head><body><p>The server was unreachable! This could be due to one of the following reasons:<br /><ul><li>The server is down</li><li>You misspelled the URL</li><li>The WIFI connection is flaky</li></ul></p></body></html>" };
-static char incomplete[] = { "<html><head><title>Incomplete Download</title></head><body><p>The server sent an incomplete reply back.  This can usually be fixed by simply refreshing the page.  This can also be caused by file corruption or a bad DLDI driver.</p></body></html>" };
-static char badsearch[] = { "<html><head><title>Bad Search Identifier</title></head><body><p>The search identifier you used is not defined.  Please make sure you have correctly configured searchprefs.txt located inside the DSOrganize data directory.</p></body></html>" };
+char unreachable[] = { "<html><head><title>Server Unreachable</title></head><body><p>The server was unreachable! This could be due to one of the following reasons:<br /><ul><li>The server is down</li><li>You misspelled the URL</li><li>The WIFI connection is flaky</li></ul></p></body></html>" };
+char incomplete[] = { "<html><head><title>Incomplete Download</title></head><body><p>The server sent an incomplete reply back.  This can usually be fixed by simply refreshing the page.  This can also be caused by file corruption or a bad DLDI driver.</p></body></html>" };
+char badsearch[] = { "<html><head><title>Bad Search Identifier</title></head><body><p>The search identifier you used is not defined.  Please make sure you have correctly configured searchprefs.txt located inside the DSOrganize data directory.</p></body></html>" };
 
-extern bool copying;
-extern bool rendering;
-extern u32 maxSize;
-extern u32 curSize;
-extern char downFile[256];
-extern DRAGON_FILE *downFP;
-extern char *pointedText;
-extern uint16 mode;
-extern char fileName[256];
 
-extern bool strUpdated;
-extern uint16 insert;
-extern char curChar;
-extern uint16 caps;
-extern uint16 editCursor;
-extern char *inputBuffer;
-extern int textBlock;
-
-// for history
-static int historyPos = -1;
-static int historyMaxFake = 0;
-static int historyMax = 0;
-static HISTORY_TYPE *history = NULL;
+// for historywebpage
+int historyPos = -1;
+int historyMaxFake = 0;
+int historyMax = 0;
+HISTORY_TYPE *historywebpage = NULL;
 
 // for quicksearch
-static int searchMax = 0;
-static SEARCH_TYPE *searchStrings;
+int searchMax = 0;
+SEARCH_TYPE *searchStrings;
 
-// prototypes
-void loadPage(char *file, bool toHistory);
-void constructValidURL(char *tURL, char *finalURL);
-void escapeIllegals(char *str);
-bool historyIsNext();
-bool historyIsPrev();
-void cancelQueuedDownloads();
-extern void drawScrollBarIRC(int pos, int max);
-void finishFileDownload();
 
 void mallocHtmlRenderer()
 {
@@ -270,9 +244,9 @@ void addToHistory(char *url, char *fName, int content)
 		historyMax = 1;
 		
 		setGlobalError(ERROR_WEB_HISTORY);
-		history = (HISTORY_TYPE *)trackMalloc(sizeof(HISTORY_TYPE), "history struct");
+		historywebpage = (HISTORY_TYPE *)trackMalloc(sizeof(HISTORY_TYPE), "historywebpage struct");
 		setGlobalError(ERROR_NONE);
-		memset(&history[0], 0, sizeof(HISTORY_TYPE)); // just to get the point across
+		memset(&historywebpage[0], 0, sizeof(HISTORY_TYPE)); // just to get the point across
 	}
 	else
 	{
@@ -281,16 +255,16 @@ void addToHistory(char *url, char *fName, int content)
 		if(historyPos == historyMax)
 		{
 			historyMax++;
-			history = (HISTORY_TYPE *)trackRealloc(history, sizeof(HISTORY_TYPE) * historyMax);
+			historywebpage = (HISTORY_TYPE *)trackRealloc(historywebpage, sizeof(HISTORY_TYPE) * historyMax);
 		}
 		
-		memset(&history[historyPos], 0, sizeof(HISTORY_TYPE));
+		memset(&historywebpage[historyPos], 0, sizeof(HISTORY_TYPE));
 	}	
 	
-	strcpy(history[historyPos].url, url);
-	strcpy(history[historyPos].file, fName);
-	history[historyPos].position = 0;
-	history[historyPos].content = content;
+	strcpy(historywebpage[historyPos].url, url);
+	strcpy(historywebpage[historyPos].file, fName);
+	historywebpage[historyPos].position = 0;
+	historywebpage[historyPos].content = content;
 	
 	historyMaxFake = historyPos+1;
 }
@@ -300,7 +274,7 @@ bool matchesHistory(char *url)
 	if(historyMax == 0)
 		return false;
 	
-	if(strcmp(history[historyPos].url, url) == 0)
+	if(strcmp(historywebpage[historyPos].url, url) == 0)
 		return true;
 	
 	return false;
@@ -311,19 +285,19 @@ void historyBack()
 	if(!historyIsPrev())
 		return;
 	
-	history[historyPos].position = bPosition;
+	historywebpage[historyPos].position = bPosition;
 	
 	historyPos--;
 	
 	memset(inputBuffer, 0, MAX_URL+1);
-	strcpy(inputBuffer, history[historyPos].url);
+	strcpy(inputBuffer, historywebpage[historyPos].url);
 	strcpy(lastURL, inputBuffer);
 	eraseAnchors(lastURL);
 	strUpdated = true;	
 	
-	setContentType(history[historyPos].content);
-	loadPage(history[historyPos].file, false);
-	bPosition = history[historyPos].position;
+	setContentType(historywebpage[historyPos].content);
+	loadPage(historywebpage[historyPos].file, false);
+	bPosition = historywebpage[historyPos].position;
 	
 	clearFocus();					
 	
@@ -336,19 +310,19 @@ void historyForward()
 	if(!historyIsNext())
 		return;
 	
-	history[historyPos].position = bPosition;
+	historywebpage[historyPos].position = bPosition;
 	
 	historyPos++;
 	
 	memset(inputBuffer, 0, MAX_URL+1);
-	strcpy(inputBuffer, history[historyPos].url);
+	strcpy(inputBuffer, historywebpage[historyPos].url);
 	strcpy(lastURL, inputBuffer);
 	eraseAnchors(lastURL);
 	strUpdated = true;	
 	
-	setContentType(history[historyPos].content);
-	loadPage(history[historyPos].file, false);
-	bPosition = history[historyPos].position;
+	setContentType(historywebpage[historyPos].content);
+	loadPage(historywebpage[historyPos].file, false);
+	bPosition = historywebpage[historyPos].position;
 	
 	clearFocus();					
 	
@@ -374,10 +348,10 @@ bool historyIsPrev()
 
 void clearHistory()
 {
-	if(history)
-		trackFree(history);
+	if(historywebpage)
+		trackFree(historywebpage);
 	
-	history = NULL;
+	historywebpage = NULL;
 	historyPos = -1;
 	historyMax = 0;
 	historyMaxFake = 0;
@@ -656,7 +630,7 @@ void initWebBrowser()
 	}
 	
 	dlQueue = NULL;
-	history = NULL;
+	historywebpage = NULL;
 	pointedText = inputBuffer;
 	textLength = MAX_URL;
 	
@@ -1345,11 +1319,11 @@ void resetFileDownload()
 	isFileDownload = false;
 	
 	memset(inputBuffer, 0, MAX_URL+1);
-	strcpy(inputBuffer, history[historyPos].url);
+	strcpy(inputBuffer, historywebpage[historyPos].url);
 	strcpy(lastURL, inputBuffer);
 	strUpdated = true;	
 	
-	setContentType(history[historyPos].content);
+	setContentType(historywebpage[historyPos].content);
 	
 	clearFocus();					
 	
@@ -2319,8 +2293,8 @@ normalRender:
 					break;
 				}
 				
-				drawListBox(list_left + 18, LIST_TOP + 23, list_right, LIST_BOTTOM - 9, listCursor, curList->numEntries, NULL, webListCallback);
-				drawScrollBarIRC(listCursor, curList->numEntries);
+				drawListBox(list_left + 18, LIST_TOP + 23, list_right, LIST_BOTTOM - 9, listCursorIrc, curList->numEntries, NULL, webListCallback);
+				drawScrollBarIRC(listCursorIrc, curList->numEntries);
 			}
 		}
 		
@@ -2372,7 +2346,7 @@ void webBrowserForward()
 				if(!curList->numEntries)
 					return;
 				
-				strcpy(inputBuffer, curList[listCursor].url);
+				strcpy(inputBuffer, curList[listCursorIrc].url);
 				resetCursor();
 				strUpdated = true;
 		}
@@ -2831,7 +2805,7 @@ int getWebBrowserEntries()
 
 void setScrollWeb(int py)
 {
-	listCursor = py;
+	listCursorIrc = py;
 }
 
 void webBrowserClick(int px, int py)
@@ -2916,7 +2890,7 @@ char webHandleClick(int px, int py)
 		if(clickSideTab(px, py)) // if it changed
 		{
 			needsRedraw = true;		
-			listCursor = 0;
+			listCursorIrc = 0;
 		}
 		else
 		{		
@@ -3004,9 +2978,9 @@ char webHandleClick(int px, int py)
 						
 						if(tmpCursor != -1)
 						{
-							if(listCursor == tmpCursor && secondClickAction()) // double click
+							if(listCursorIrc == tmpCursor && secondClickAction()) // double click
 								nextForward = true;
-							listCursor = tmpCursor;
+							listCursorIrc = tmpCursor;
 						}
 					}
 					break;
@@ -3062,8 +3036,8 @@ void moveWebBrowserCursor(int direction)
 					break;
 				case TAB_FAVORITES:
 				case TAB_IRCURLS:
-					if(listCursor > 0)
-						listCursor--;
+					if(listCursorIrc > 0)
+						listCursorIrc--;
 					break;
 			}
 			
@@ -3095,8 +3069,8 @@ void moveWebBrowserCursor(int direction)
 					if(!curList)
 						break;
 					
-					if(listCursor < curList->numEntries - 1)
-						listCursor++;
+					if(listCursorIrc < curList->numEntries - 1)
+						listCursorIrc++;
 					break;
 			}
 			

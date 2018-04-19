@@ -46,39 +46,39 @@
 #include "../controls.h"
 #include "../errors.h"
 
-static char backBuffer[6][MAX_INPUT+1];
-static int backPlace = 0;
-static int ircMode;
-static SCREEN_BUFFER *console = NULL;
-static TAB_ARRAY *tabs = NULL;
-static int tabCount;
-static int activeTab;
-static int ircSocket = 0;
-static bool connected = false;
-static char *serverBuffer = NULL;
-static int connectMode = 0;
-static char curServer[128];
-static char quitMessage[256];
-static bool isTopic = false;
-static char displayNick[NICK_LEN];
-static const uint16 ircColors[16] = { 0xFFFF, 0x0, 0x4000, 0x0240, 0x001F, 0x000F, 0x4C13, 0x01FF, 0x03FF, 0x03E0, 0x4A40, 0x7FE0, 0x7C00, 0x7C1F, 0x3DEF, 0x6B5A };
-static uint16 ircColors2[16] = { 0x0, 0x0, 0x4000, 0x0240, 0x001F, 0x000F, 0x4C13, 0x01FF, 0x03FF, 0x03E0, 0x4A40, 0x7FE0, 0x7C00, 0x7C1F, 0x3DEF, 0x6B5A };
-static char ircModes[10];
-static char ircSymbols[10];
-static bool reconnect = false;
-static char lastServer[60];
-static char myModes[20];
-static char curNetwork[128];
-static bool queuedEnter = false;
-static int maxNickLen = 0;
-static char useNickName[NICK_LEN];
-static char usealtNickName[NICK_LEN];
-static bool toPerform = false;
-static int colorCursor = -1;
-static int colorCursorCount = 0;
-static int listCursor = 0;
-static bool notifyPresent = false;
-static int ircLines = 13;
+char backBuffer[6][MAX_INPUT+1];
+int backPlace = 0;
+int ircMode;
+SCREEN_BUFFER *console = NULL;
+TAB_ARRAY *tabs = NULL;
+int tabCount;
+int activeTab;
+int ircSocket = 0;
+bool connected = false;
+char *serverBuffer = NULL;
+int connectMode = 0;
+char curServer[128];
+char quitMessage[256];
+bool isTopic = false;
+char displayNick[NICK_LEN];
+uint16 ircColors[16] = { 0xFFFF, 0x0, 0x4000, 0x0240, 0x001F, 0x000F, 0x4C13, 0x01FF, 0x03FF, 0x03E0, 0x4A40, 0x7FE0, 0x7C00, 0x7C1F, 0x3DEF, 0x6B5A };
+uint16 ircColors2[16] = { 0x0, 0x0, 0x4000, 0x0240, 0x001F, 0x000F, 0x4C13, 0x01FF, 0x03FF, 0x03E0, 0x4A40, 0x7FE0, 0x7C00, 0x7C1F, 0x3DEF, 0x6B5A };
+char ircModes[10];
+char ircSymbols[10];
+bool reconnect = false;
+char lastServer[60];
+char myModes[20];
+char curNetwork[128];
+bool queuedEnter = false;
+int maxNickLen = 0;
+char useNickName[NICK_LEN];
+char usealtNickName[NICK_LEN];
+bool toPerform = false;
+int colorCursor = -1;
+int colorCursorCount = 0;
+int listCursor = 0;
+bool notifyPresent = false;
+int ircLines = 13;
 
 int waitCount = 0;
 bool cancelOnWait = false;
@@ -88,16 +88,6 @@ bool strUpdated = false;
 int textBlock = 0;
 char *pointedText = NULL;
 
-extern char nickName[NICK_LEN];
-extern char altnickName[NICK_LEN];
-extern char ircServer[60];
-extern bool autoConnect;
-
-bool areEqual(char *a, char *b);
-void closeServerConnection();
-int scrollOffset(int tab);
-void concatTab(int tab, char *toAdd, char *colorAdd, int importance);
-void connectToServer(char *s);
 
 int inputLength()
 {

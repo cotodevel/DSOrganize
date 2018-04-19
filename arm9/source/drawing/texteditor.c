@@ -25,17 +25,18 @@
 #include <string.h>
 #include <libfb/libcommon.h>
 #include "texteditor.h"
-#include "../fatwrapper.h"
-#include "../colors.h"
-#include "../font_arial_9.h"
-#include "../font_gautami_10.h"
-#include "../font_arial_11.h"
-#include "../general.h"
-#include "../keyboard.h"
-#include "../globals.h"
-#include "../language.h"
-#include "../settings.h"
-#include "../controls.h"
+#include "fatwrapper.h"
+#include "colors.h"
+#include "font_arial_9.h"
+#include "font_gautami_10.h"
+#include "font_arial_11.h"
+#include "general.h"
+#include "keyboard.h"
+#include "globals.h"
+#include "language.h"
+#include "settings.h"
+#include "controls.h"
+#include "browser.h"
 
 static uint ptCount = 0;
 static uint bufferLength = 0;
@@ -60,8 +61,6 @@ static bool hasLoaded = false;
 extern bool copying;
 extern u32 maxSize;
 extern u32 curSize;
-extern char fileName[256];
-extern char curDir[256];
 
 void freeText()
 {

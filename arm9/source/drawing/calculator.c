@@ -38,26 +38,26 @@
 char lastKey = 0;
 bool working = false;
 
-static int curKey = -1;
-static M_APM ans;
-static M_APM mem;
-static M_APM stack[10];
-static char stackKey[10];
-static M_APM curNumber;
-static int stackPos = -1;
-static bool belowDecimal = false;
-static char enterKey = 0;
-static char enterBuffer[64];
-static bool clearOnType = false;
-static bool deg = true;
-static int isMore = 0;
-static bool wasLastPress = false;
-static int eraseChar = 0;
+int curKey = -1;
+M_APM ans;
+M_APM mem;
+M_APM stackMAPM[10];
+char stackKey[10];
+M_APM curNumber;
+int stackPos = -1;
+bool belowDecimal = false;
+char enterKey = 0;
+char enterBuffer[64];
+bool clearOnType = false;
+bool deg = true;
+int isMore = 0;
+bool wasLastPress = false;
+int eraseChar = 0;
 
-static char l_rad[] = { "RAD" };
-static char l_deg[] = { "DEG" };
+char l_rad[] = { "RAD" };
+char l_deg[] = { "DEG" };
 
-static char *calcString[NUM_CONTROLS*NUM_SCREENS] = { "sqrt", "^2", 	" ^ ", 	"(", 	")", 	"/", // ^
+char *calculatorString[NUM_CONTROLS*NUM_SCREENS] = { "sqrt", "^2", 	" ^ ", 	"(", 	")", 	"/", // ^
 									"x!",	"sin",	"7",	"8",	"9",	"*",
 									"1/x",	"cos",	"4",	"5",	"6",	"-",
 									"ln",	"tan",	"1",	"2",	"3",	"+",
@@ -71,7 +71,7 @@ static char *calcString[NUM_CONTROLS*NUM_SCREENS] = { "sqrt", "^2", 	" ^ ", 	"("
 									"",		"rand",	"0",	".",	"(-)",	"=",
 									"",		"MS",	"MR",	"MC",	"CE",	"C" };
 
-static uint16 calcColor[NUM_CONTROLS*NUM_SCREENS];
+uint16 calcColor[NUM_CONTROLS*NUM_SCREENS];
 
 char *screen = NULL;
 char *memory = NULL;
@@ -231,7 +231,7 @@ void clearCalc()
 	if(stackPos > -1)
 	{
 		for(int x=stackPos;x>-1;x--)
-			m_apm_free(stack[x]);
+			m_apm_free(stackMAPM[x]);
 	}
 	
 	stackPos = -1;
@@ -256,8 +256,8 @@ void pushCalcStack()
 	if(stackPos > 9)
 		return;
 	stackPos++;
-	stack[stackPos] = m_apm_init();
-	m_apm_copy(stack[stackPos], ans);	
+	stackMAPM[stackPos] = m_apm_init();
+	m_apm_copy(stackMAPM[stackPos], ans);	
 	stackKey[stackPos] = lastKey;
 	lastKey = 0;
 	
@@ -270,10 +270,10 @@ void popCalcStack()
 	if(stackPos < 0)
 		return;
 	performAction();
-	m_apm_copy(ans, stack[stackPos]);		
+	m_apm_copy(ans, stackMAPM[stackPos]);		
 	lastKey = stackKey[stackPos];
 	
-	m_apm_free(stack[stackPos]);
+	m_apm_free(stackMAPM[stackPos]);
 	stackPos--;
 }
 
@@ -1084,7 +1084,7 @@ void drawCalculatorButtons()
 	{
 		for(int x = 0; x < NUM_BUTTONS_X; x++)
 		{
-			if(strlen(calcString[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)]) > 0)
+			if(strlen(calculatorString[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)]) > 0)
 			{
 				if(curKey == (x + (y * NUM_BUTTONS_X)))
 				{
@@ -1095,7 +1095,7 @@ void drawCalculatorButtons()
 					bg_drawFilledRect(11 + (x*39), 20 + (y*27), 11 + (x*39)+35, 20 + (y*27)+23, calculatorButtonBorderColor, calcColor[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)]);
 				}
 				
-				bg_dispString(11 + centerOnPt((x*39) + 17, calcString[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)], (uint16 **)font_gautami_10), 20 + (y*27) + 8, calcString[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)]);
+				bg_dispString(11 + centerOnPt((x*39) + 17, calculatorString[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)], (uint16 **)font_gautami_10), 20 + (y*27) + 8, calculatorString[(x + (y * NUM_BUTTONS_X)) + (isMore * NUM_CONTROLS)]);
 			}
 		}	
 	}

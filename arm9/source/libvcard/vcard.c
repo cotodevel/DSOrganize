@@ -502,14 +502,14 @@ void loadVCard(char *filename, VCARD_FILE *vf)
 
 void saveVCard(VCARD_FILE *vf, char *dir)
 {
-	char filename[255];
-	char listName[70];
+	char filename[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	char listName[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	
 	DRAGON_chdir("/");
 	calculateListName(vf, listName);
 	DRAGON_chdir(dir);
 	
-	DRAGON_FILE *fFile;
+	DRAGON_FILE *fFile = NULL;
 	
 	if(strlen(vf->fileName) == 0)
 	{	// new vcard						

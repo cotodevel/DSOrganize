@@ -28,24 +28,21 @@
 #include "todo.h"
 #include "address.h"
 #include "browser.h"
-#include "../fatwrapper.h"
-#include "../colors.h"
-#include "../filerout.h"
-#include "../general.h"
-#include "../globals.h"
-#include "../graphics.h"
-#include "../settings.h"
-#include "../font_arial_11.h"
-#include "../font_arial_9.h"
-#include "../font_gautami_10.h"
-#include "../keyboard.h"
-#include "../language.h"
-#include "../controls.h"
-
-extern uint16 editField;
-extern char fileName[256];
-extern TODO_FILE *todoList;
-extern bool autoBullet;
+#include "fatwrapper.h"
+#include "colors.h"
+#include "filerout.h"
+#include "general.h"
+#include "globals.h"
+#include "graphics.h"
+#include "settings.h"
+#include "font_arial_11.h"
+#include "font_arial_9.h"
+#include "font_gautami_10.h"
+#include "keyboard.h"
+#include "language.h"
+#include "controls.h"
+#include "main.h"
+#include "specific_shared.h"
 
 static int todoMode = 0;
 static bool t_isPop = false;
@@ -73,25 +70,25 @@ void saveTodo(TODO_FILE *vf, char *dir)
 {
 	DRAGON_chdir("/");
 	
-	char filename[255];	
+	char saveTodofilename[MAX_TGDSFILENAME_LENGTH+1] = {0};	
 	
 	DRAGON_chdir(dir);	
 	
 	if(strlen(vf->fileName) == 0)
 	{	// new todo
 		
-		sprintf(filename, "%s.todo", vf->title);
-		if(DRAGON_FileExists(filename) != FT_NONE)
-			sprintf(filename, "%s%d%d%d%d%d.todo", vf->title, getDay(), getMonth(), getYear(), getHour(true), getMinute());
+		sprintf(saveTodofilename, "%s.todo", vf->title);
+		if(DRAGON_FileExists(saveTodofilename) != FT_NONE)
+			sprintf(saveTodofilename, "%s%d%d%d%d%d.todo", vf->title, getDay(), getMonth(), getYear(), getHour(true), getMinute());
 		
-		safeFileName(filename);
+		safeFileName(saveTodofilename);
 		
-		strcpy(vf->fileName,filename);
+		strcpy(vf->fileName,saveTodofilename);
 	}
 	else
-		strcpy(filename, vf->fileName);
+		strcpy(saveTodofilename, vf->fileName);
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(filename, "w");
+	DRAGON_FILE *fFile = DRAGON_fopen(saveTodofilename, "w");
 
 	uint16 sz;
 	
@@ -187,9 +184,9 @@ uint16 getMaxCursorTodo()
 
 void todoListCallback(int pos, int x, int y)
 {
-	char str[512];
-	
-	strcpy(str, todoList[pos].title);
+	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	int Size = (strlen(todoList[pos].title) > sizeof(str)) ? sizeof(str) : strlen(todoList[pos].title);
+	strncpy(str, todoList[pos].title,Size);
 	abbreviateString(str, list_right - (list_left + 17), (uint16 **)font_arial_9);		
 	
 	bg_dispString(15, 0, str);

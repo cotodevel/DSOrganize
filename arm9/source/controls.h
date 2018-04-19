@@ -175,6 +175,23 @@ extern int default_scroll_left;
 extern int list_left;
 extern int list_right;
 
+extern bool dispScrollHandle;
+extern char *lButtonPtr;
+extern char *rButtonPtr;
+
+// for testing scroll
+extern int scrollTop;
+extern int scrollBottom;
+extern int scrollLeft;
+
+// for testing list
+extern int listTop;
+extern int listBottom;
+extern int listLeft;
+extern int listRight;
+extern int listCur;
+extern int listMax;
+
 #ifdef __cplusplus
 }
 #endif

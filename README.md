@@ -3,6 +3,8 @@ DSorganize for ToolchainGenericDS. Based from version: 3.1129, since it seems to
 Currently it compiles. But it's in heavy development so expect bugs. The SSL driver apparently is cyassl 1.4.0 so I added it and made it compatible with TGDS environment.
 SSL could be used in webbrowser, IRC and others. That will be checked once DSOrganize is stable enough, which is not now.
 
+Branch: cleanup-experimental
+Notes: a cleanup that could cause GUI/behaviour issues. When all original DSOrganize 3.1129 features work, please push back changes here so this is the new standalone.
 
 DSOrganize dependencies:	
 

@@ -2,6 +2,7 @@
 #define _PICTURE_INCLUDED
 
 #include "gif_lib.h"
+#include "fsfatlayerTGDSLegacy.h"
 
 #define PIC_NONE 0
 #define PIC_JPEG 1
@@ -98,8 +99,8 @@ typedef struct
 	int clrCount;
 	PICTURE_ARRAY *aniPointers;	
 	GifFileType *streamFile;
-	char fileName[256];
-	char binName[256];
+	char fileName[MAX_TGDSFILENAME_LENGTH+1];
+	char binName[MAX_TGDSFILENAME_LENGTH+1];
 	uint16 bgColor;
 	int curPA;
 	void (*resetFunction)();

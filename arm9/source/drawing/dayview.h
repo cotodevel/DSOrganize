@@ -55,6 +55,11 @@ bool dayViewCursorMove(int curT, int curC);
 void increaseDuration();
 void decreaseDuration();
 
+extern DV_DYNAMIC *dvStruct;
+extern uint16 colors[12];
+extern bool dvLoaded;
+extern int whatType;
+
 #ifdef __cplusplus
 }
 #endif

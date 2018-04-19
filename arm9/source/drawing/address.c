@@ -26,23 +26,23 @@
 #include <libfb/libcommon.h>
 #include <vcard.h>
 #include "address.h"
-#include "../fatwrapper.h"
-#include "../colors.h"
-#include "../filerout.h"
-#include "../general.h"
-#include "../globals.h"
-#include "../graphics.h"
-#include "../settings.h"
-#include "../font_arial_11.h"
-#include "../font_arial_9.h"
-#include "../font_gautami_10.h"
-#include "../keyboard.h"
-#include "../language.h"
-#include "../controls.h"
+#include "fatwrapper.h"
+#include "colors.h"
+#include "filerout.h"
+#include "general.h"
+#include "globals.h"
+#include "graphics.h"
+#include "settings.h"
+#include "font_arial_11.h"
+#include "font_arial_9.h"
+#include "font_gautami_10.h"
+#include "keyboard.h"
+#include "language.h"
+#include "controls.h"
+#include "fsfatlayerTGDSLegacy.h"
+#include "browser.h"
+#include "main.h"
 
-extern uint16 editField;
-extern char fileName[256];
-extern VCARD_FILE *fileList;
 
 static int addressMode = 0;
 static bool a_isPop = false;

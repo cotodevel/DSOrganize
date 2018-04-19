@@ -39,6 +39,19 @@ bool isReminderEnd(int c);
 void loadCurrentReminder(char **rStr);
 void destroyReminder();
 
+extern char *reminder;
+extern char *dayView;
+extern uint16 reminders[32];
+extern uint16 dayViews[32];
+extern uint16 curDay;
+extern uint16 curMonth;
+extern uint16 curYear;
+extern uint16 curTime;
+extern uint16 oldYear;
+extern uint16 oldDay;
+extern uint16 oldMonth;
+extern bool calLoaded;
+
 #ifdef __cplusplus
 }
 #endif

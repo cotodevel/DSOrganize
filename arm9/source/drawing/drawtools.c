@@ -26,16 +26,15 @@
 #include "../general.h"
 #include "drawtools.h"
 #include "specific_shared.h"
+#include "scribble.h"
 
 bool drawCheckered = false;
-extern uint16 *drawBuffer;
 int penWidth = 1;
 
 // stack
 
-#define STACK_SIZE 49152*2
-static int *stack = NULL;
-static int stackPointer = 0;
+int *stack = NULL;
+int stackPointer = 0;
 
 bool pop(int * x, int * y) 
 { 

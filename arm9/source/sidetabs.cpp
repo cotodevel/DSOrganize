@@ -29,8 +29,8 @@
 
 SIDETAB_TYPE *sideTabs = NULL;
 int numTabs = 0;
-int activeTab = 0;
 int defaultTab = 0;
+extern int activeTab;
 
 void initSideTabs()
 {

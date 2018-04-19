@@ -102,6 +102,34 @@ void toggleSelect();
 void toggleControl();
 void clearPressedChar();
 
+
+extern int downX;
+extern int downY;
+extern int upX;
+extern int upY;
+extern int whichKeyboard;
+extern int isNumbersKeyboard;
+extern uint16 caps;
+extern uint16 shift;
+extern uint16 insert;
+extern uint16 control;
+extern uint16 selectKeyboard;
+extern char curChar;
+extern uint16 special;
+extern int cursor;
+extern uint16 blink;
+extern uint16 bCount;
+extern int oldCursor;
+extern int beginHighlight;
+extern int endHighlight;
+extern int keyboard_Hit[60];
+extern char me_upper[43];
+extern char me_lower[43];
+extern char me_number[43];
+extern char me_lowerspecial[43];
+extern char me_upperspecial[43];
+
+
 #ifdef __cplusplus
 }
 #endif

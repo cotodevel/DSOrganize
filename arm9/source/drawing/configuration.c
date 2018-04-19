@@ -46,10 +46,13 @@
 #include "../tabs.h"
 #include "../wifi.h"
 #include "wifi_shared.h"
+#include "wifi_arm9.h"
 #include "../sound.h"
 #include "scribble.h"
 #include "irc.h"
 #include "fsfatlayerTGDSLegacy.h"
+#include "language.h"
+#include "scribble.h"
 
 LANG_LIST *aLanguages = NULL;
 ICON_LIST *cIcons = NULL;
@@ -59,49 +62,25 @@ int iState = 0;
 int mLanguages = 0;
 int mIcons = 0;
 bool cLoadedPage1 = false;
-
-static bool isCFlipped = false;
-static bool isDragging = false;
-static int dragItem = -1;
-static int lastX = 0;
-static int lastY = 0;
-static int offsetX = 0;
-static int offsetY = 0;
-static int lastLoaded = -1;
-static int lastLoadedWifi = -1;
-static uint16 *sprites[MAXDRAG];
-static int configCursor;
-static int sState = 0;
-static int configInitialized = false;
-static WIFI_PROFILE *wifiInfo = NULL;
-static WIFI_PROFILE *wifiSave = NULL;
-static int wifiState = WIFI_NORMAL;
-static int wifiCursor = 0;
-static int wifiEditProfile = -1;
-static char wifiInput[64];
-
-extern bool milTime;
-extern bool firstLast;
-extern bool showHidden;
-extern uint16 startMode;
-extern int saveFormat;
-extern u32 htmlStyle;
-extern bool reverseDate;
-extern char lLanguage[LANG_SIZE];
-extern char cIconSet[ICON_SIZE];
-extern char defaultSavePath[256];
-extern int locations[12];
-extern char nickName[NICK_LEN];
-extern char altnickName[NICK_LEN];
-extern char ircServer[60];
-extern bool autoConnect;
-extern bool autoBullet;
-extern char curLang[60];
-extern int normalBoot;
-extern int altBoot;
-extern int wifiMode;
-
-extern volatile Wifi_MainStruct * WifiData;
+bool isCFlipped = false;
+bool isDragging = false;
+int dragItem = -1;
+int lastX = 0;
+int lastY = 0;
+int offsetX = 0;
+int offsetY = 0;
+int lastLoaded = -1;
+int lastLoadedWifi = -1;
+uint16 *sprites[MAXDRAG];
+int configCursor;
+int sState = 0;
+int configInitialized = false;
+WIFI_PROFILE *wifiInfo = NULL;
+WIFI_PROFILE *wifiSave = NULL;
+int wifiState = WIFI_NORMAL;
+int wifiCursor = 0;
+int wifiEditProfile = -1;
+char wifiInput[64];
 
 void setSprites()
 {

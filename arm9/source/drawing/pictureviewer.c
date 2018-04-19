@@ -36,21 +36,14 @@
 #include "../keyboard.h"
 #include "../language.h"
 #include "../controls.h"
-
+#include "fsfatlayerTGDSLegacy.h"
 #include "specific_shared.h"
-
-extern uint16 browserMode;
-extern char fileName[256];
-extern int vblCount;
 
 int loc_X = 0;
 int loc_Y = 0;
 
 PICTURE_DATA curPicture;
 bool picLoaded = false;
-
-extern bool loading;
-extern u32 curSize;
 
 // defined functions for picture.c callbacks
 void resetCounter()

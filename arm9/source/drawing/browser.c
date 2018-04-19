@@ -32,22 +32,24 @@
 #include "viewer.h"
 #include "todo.h"
 #include "soundplayer.h"
+#include "soundrecorder.h"
 #include "database.h"
-#include "../fatwrapper.h"
-#include "../colors.h"
-#include "../settings.h"
-#include "../shortcuts.h"
-#include "../general.h"
-#include "../filerout.h"
-#include "../font_arial_9.h"
-#include "../font_gautami_10.h"
-#include "../font_arial_11.h"
-#include "../graphics.h"
-#include "../keyboard.h"
-#include "../globals.h"
-#include "../language.h"
-#include "../controls.h"
+#include "fatwrapper.h"
+#include "colors.h"
+#include "settings.h"
+#include "shortcuts.h"
+#include "general.h"
+#include "filerout.h"
+#include "font_arial_9.h"
+#include "font_gautami_10.h"
+#include "font_arial_11.h"
+#include "graphics.h"
+#include "keyboard.h"
+#include "globals.h"
+#include "language.h"
+#include "controls.h"
 #include "fsfatlayerTGDSLegacy.h"
+#include "calendar.h"
 
 static bool dir_create = false;
 static bool copyFlag = false;
@@ -63,25 +65,12 @@ static u32 bLoc[32];
 static u32 bPos = 0;
 static uint16 browserEntries;
 
+//Browser opens N APPs, so the "global" fileName loads here and it's shared
 FILE_INFO curFile;
 uint16 browserMode = 0;
-char curDir[256];
-char copyFrom[256];
-char fileName[256];
-
-extern bool wavLoaded;
-extern bool showHidden;
-extern uint16 curDay;
-extern uint16 curMonth;
-extern uint16 curYear;
-extern bool copying;
-extern u32 maxSize;
-extern u32 curSize;
-extern bool picLoaded;
-extern bool soundLoaded;
-extern uint16 curTime;
-extern BROWSER_FILE *dirList;
-extern char binName[256];
+char curDir[MAX_TGDSFILENAME_LENGTH+1];
+char copyFrom[MAX_TGDSFILENAME_LENGTH+1];
+char fileName[MAX_TGDSFILENAME_LENGTH+1];
 
 void browserSetUnPopulated()
 {
@@ -1344,13 +1333,13 @@ void editFileNameAction(char c)
 	
 	if(c == CLEAR_KEY)
 	{
-		memset(fileName, 0, FILENAME_SIZE);
+		memset(fileName, 0, sizeof(fileName));
 		getCursor();
 		return;
 	}
 	
-	char tmpBuffer[256];
-	memset(tmpBuffer, 0, FILENAME_SIZE);
+	char tmpBuffer[FILENAME_SIZE] = {0};
+	memset(tmpBuffer, 0, sizeof(tmpBuffer));
 	strcpy(tmpBuffer, fileName);
 	int oldCursor = getCursor();
 	
@@ -1466,8 +1455,8 @@ void renameFile()
 	}
 	else
 	{	
-		char oldFile[256];
-		char newFile[256];
+		char oldFile[MAX_TGDSFILENAME_LENGTH] = {0};
+		char newFile[MAX_TGDSFILENAME_LENGTH] = {0};
 		
 		strcpy(oldFile, copyFrom);
 		strcpy(newFile, fileName);

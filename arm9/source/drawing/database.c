@@ -49,65 +49,60 @@
 #include "zlib.h"
 #include "../errors.h"
 
-extern bool reverseDate;
-extern char defaultSavePath[256];
-extern u32 maxSize;
-extern u32 curSize;
 
-static int listEntries = 0;
-static int catEntries = 0;
-static int pkgEntries = 0;
-static int tmpPos = 0;
-static int pos = 0;	
-static int tCount = 0;
-static int rCount = 0;
-static int t_Sock = 0;
-static int downLength = 0;
-static u32 fileRecieved = 0;
-static u32 fileLength = 0;
-static bool gotHeader = false;
-static int lastRecieved = 0;
-static int lastSecond = 0;
-static int speed = 0;
-static char pkgName[64];
-static int dbMode = DB_DISCONNECTED;
-static char downStatus[256];
-static int catSize = 0;
-static int specialMode = 0;
-static bool aPressed = false;
-static bool hasStarted = false;
-static int whichCharset = CHARSET_ASCII;
-static int contentType = TYPE_HTML;
-static char curCat[33];
-static int whichCat = 0;
-static bool currentDownload = false;
-static bool hasInitialized = false;
-static int tEncoding = ENCODING_RAW;
-static z_stream strm;
+int listEntries = 0;
+int catEntries = 0;
+int pkgEntries = 0;
+int tmpPos = 0;
+int pos = 0;	
+int tCount = 0;
+int rCount = 0;
+int t_Sock = 0;
+int downLength = 0;
+u32 fileRecieved = 0;
+u32 fileLength = 0;
+bool gotHeader = false;
+int lastRecieved = 0;
+int lastSecond = 0;
+int speed = 0;
+char pkgName[64];
+int dbMode = DB_DISCONNECTED;
+char downStatus[256];
+int catSize = 0;
+int specialMode = 0;
+bool aPressed = false;
+bool hasStarted = false;
+int whichCharset = CHARSET_ASCII;
+int contentType = TYPE_HTML;
+char curCat[33];
+int whichCat = 0;
+bool currentDownload = false;
+bool hasInitialized = false;
+int tEncoding = ENCODING_RAW;
+z_stream strm;
 
-static char tempURL[URL_SIZE];
-static char downURL[URL_SIZE];
-static char *referer = NULL;
-static char *postData = NULL;
-static char *tAgent = NULL;
-static char *motd = NULL;
-static char *list = NULL;
-static char *pkgStatus = NULL;
-static char *savedURL = NULL;
-static INST_LIST *instList = NULL;
-static HB_LIST *hbList = NULL;
-static CAT_LIST *catList = NULL;
+char tempURL[URL_SIZE];
+char downURL[URL_SIZE];
+char *referer = NULL;
+char *postData = NULL;
+char *tAgent = NULL;
+char *motd = NULL;
+char *list = NULL;
+char *pkgStatus = NULL;
+char *savedURL = NULL;
+INST_LIST *instList = NULL;
+HB_LIST *hbList = NULL;
+CAT_LIST *catList = NULL;
 
 //for generic downloader
 char *d_outStr = NULL;
+int d_len = 0;
 void (*completeDownload)() = NULL;
 void (*failedDownload)() = NULL;
-int d_len = 0;
 
 char downFile[256];
 DRAGON_FILE *downFP = NULL;
 
-int parseInstructions(char *inst);
 
 bool isDownloading()
 {

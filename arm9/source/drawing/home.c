@@ -45,21 +45,17 @@
 #include "usrsettingsTGDS.h"
 #include "fsfatlayerTGDSLegacy.h"
 
-extern bool milTime;
-extern char lLanguage[LANG_SIZE];
-extern int locations[13];
-
-static char *strings[MAX_MODES];
-static uint16 *sprites[MAX_MODES];
-static bool homeLoaded = false;
-static char *curReminder = NULL;
-static char *curDayPlanner = NULL;
-static char *curTodo = NULL;
-static int scCount = 0;
-static bool shortcutLoaded = false;
-static SHORTCUT homeSC[6];
-static bool shortcutLaunched = false;
-static char naString[] = "N/A";
+char *strings[MAX_MODES];
+uint16 *spritesHOME[MAX_MODES];
+bool homeLoaded = false;
+char *curReminder = NULL;
+char *curDayPlanner = NULL;
+char *curTodo = NULL;
+int scCount = 0;
+bool shortcutLoaded = false;
+SHORTCUT homeSC[6];
+bool shortcutLaunched = false;
+char naString[] = "N/A";
 
 bool wasShortcutLaunched()
 {
@@ -79,48 +75,48 @@ void setStrings()
 		{
 			case 0:		
 				strings[x] = l_calendar;
-				sprites[x] = spr_Cal;
+				spritesHOME[x] = spr_Cal;
 				break;
 			case 1:
 				strings[x] = l_dayview;
-				sprites[x] = spr_Day;
+				spritesHOME[x] = spr_Day;
 				break;
 			case 2:
 				strings[x] = l_addressbook;
-				sprites[x] = spr_Add;
+				spritesHOME[x] = spr_Add;
 				break;
 			case 3:
 				strings[x] = l_todo;
-				sprites[x] = spr_Todo;
+				spritesHOME[x] = spr_Todo;
 				break;
 			case 4:
 				strings[x] = l_scribble;
-				sprites[x] = spr_Scribble;
+				spritesHOME[x] = spr_Scribble;
 				break;
 			case 5:
 				strings[x] = l_browser;
-				sprites[x] = spr_browser;
+				spritesHOME[x] = spr_browser;
 				break;
 			case 6:
 				strings[x] = l_calculator;
-				sprites[x] = spr_calc;
+				spritesHOME[x] = spr_calc;
 				break;
 			case 7:
 				strings[x] = l_irc;
-				sprites[x] = spr_irc;
+				spritesHOME[x] = spr_irc;
 				break;
 			case 8:
 				strings[x] = l_webbrowser;
-				sprites[x] = spr_webbrowser;
+				spritesHOME[x] = spr_webbrowser;
 				break;
 			case 9:
 				strings[x] = l_database;
-				sprites[x] = spr_hbdb;
+				spritesHOME[x] = spr_hbdb;
 				break;
 			case 10:
 			case 11:
 				strings[x] = naString;
-				sprites[x] = spr_unavailable;
+				spritesHOME[x] = spr_unavailable;
 				break;
 		}
 	}
@@ -294,12 +290,12 @@ void drawHomeScreen()
 	if(getCursor() == 6)
 		bg_drawBox(55, 165, 198, 185, homeHighlightColor);
 		
-	bg_dispSprite(27, 27 - 10 + adjust, sprites[0], 31775);
-	bg_dispSprite(102, 27 - 10 + adjust, sprites[1], 31775);
-	bg_dispSprite(177, 27 - 10 + adjust, sprites[2], 31775);
-	bg_dispSprite(27, 102 - 10 + adjust, sprites[3], 31775);
-	bg_dispSprite(102, 102 - 10 + adjust, sprites[4], 31775);
-	bg_dispSprite(177, 102 - 10 + adjust, sprites[5], 31775);
+	bg_dispSprite(27, 27 - 10 + adjust, spritesHOME[0], 31775);
+	bg_dispSprite(102, 27 - 10 + adjust, spritesHOME[1], 31775);
+	bg_dispSprite(177, 27 - 10 + adjust, spritesHOME[2], 31775);
+	bg_dispSprite(27, 102 - 10 + adjust, spritesHOME[3], 31775);
+	bg_dispSprite(102, 102 - 10 + adjust, spritesHOME[4], 31775);
+	bg_dispSprite(177, 102 - 10 + adjust, spritesHOME[5], 31775);
 	
 	bg_dispString((255 - getStringWidth(l_configuration,(uint16 **)font_arial_9))/2, 168, l_configuration);
 	
@@ -397,12 +393,12 @@ void drawHomeScreenMore()
 	if(getCursor() == 6)
 		bg_drawBox(55, 165, 198, 185, homeHighlightColor);
 	
-	bg_dispSprite(27, 27 - 10 + adjust, sprites[6], 31775);
-	bg_dispSprite(102, 27 - 10 + adjust, sprites[7], 31775);
-	bg_dispSprite(177, 27 - 10 + adjust, sprites[8], 31775);
-	bg_dispSprite(27, 102 - 10 + adjust, sprites[9], 31775);
-	bg_dispSprite(102, 102 - 10 + adjust, sprites[10], 31775);
-	bg_dispSprite(177, 102 - 10 + adjust, sprites[11], 31775);
+	bg_dispSprite(27, 27 - 10 + adjust, spritesHOME[6], 31775);
+	bg_dispSprite(102, 27 - 10 + adjust, spritesHOME[7], 31775);
+	bg_dispSprite(177, 27 - 10 + adjust, spritesHOME[8], 31775);
+	bg_dispSprite(27, 102 - 10 + adjust, spritesHOME[9], 31775);
+	bg_dispSprite(102, 102 - 10 + adjust, spritesHOME[10], 31775);
+	bg_dispSprite(177, 102 - 10 + adjust, spritesHOME[11], 31775);
 	
 	bg_dispString((255 - getStringWidth(l_configuration,(uint16 **)font_arial_9))/2, 168, l_configuration);
 	

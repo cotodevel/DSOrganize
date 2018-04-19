@@ -51,32 +51,20 @@
 #define HEIGHT_ADJUST 10
 
 bool soundLoaded = false;
-extern char fileName[256];
-static int sampleWidth = 0;
+int sampleWidth = 0;
 int soundMode = SOUND_ONESHOT;
-static bool plsUpdate = false;
-static bool hold = false;
-static PLS_TYPE curPlaylist;
-static int sndMode = TYPE_NORMAL;
-static int plsPos = 0;
-static bool firstTime = false;
-static bool queued = false;
+bool plsUpdate = false;
+bool hold = false;
+PLS_TYPE curPlaylist;
+int sndMode = TYPE_NORMAL;
+int plsPos = 0;
+bool firstTime = false;
+bool queued = false;
 ID3V1_TYPE id3Data;
-
-extern s16 *lBuffer;
-extern s16 *rBuffer;
-extern char *tmpMeta;
-
-typedef struct
-{
-	char fileName[256];
-	int browserLoc;
-} PLAYLIST_LIST;
-
-static PLAYLIST_LIST *history = NULL;
-static int h_position = 0;
-static int h_count = 0;
-static int h_max = 0;
+PLAYLIST_LIST *history = NULL;
+int h_position = 0;
+int h_count = 0;
+int h_max = 0;
 
 // random playlist history code
 

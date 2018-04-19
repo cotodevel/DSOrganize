@@ -20,13 +20,27 @@
 #ifndef _HOME_INCLUDED
 #define _HOME_INCLUDED
 
+#define MAX_ITEMS 6
+#define MAX_SHORTCUTS 6
+#define MAX_MODES 12
+
+#include "shortcuts.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define MAX_ITEMS 6
-#define MAX_SHORTCUTS 6
-#define MAX_MODES 12
+extern char *strings[MAX_MODES];
+extern uint16 *spritesHOME[MAX_MODES];
+extern bool homeLoaded;
+extern char *curReminder;
+extern char *curDayPlanner;
+extern char *curTodo;
+extern int scCount;
+extern bool shortcutLoaded;
+extern SHORTCUT homeSC[6];
+extern bool shortcutLaunched;
+extern char naString[];
 
 void drawSplash();
 void drawHomeScreen();

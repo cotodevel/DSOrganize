@@ -45,10 +45,11 @@ extern "C" {
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "vcard.h"
 
 typedef struct
 {
-	char longName[256];
+	char longName[MAX_TGDSFILENAME_LENGTH+1];	//at least 256 bytes
 	uint16 fileType;
 	u32 fileSize;
 	bool hidden;
@@ -57,11 +58,11 @@ typedef struct
 
 typedef struct
 {
-	char internalName[256];
-	char formattedName[3][256];
+	char internalName[MAX_TGDSFILENAME_LENGTH+1];	//at least 256 bytes
+	char formattedName[3][MAX_TGDSFILENAME_LENGTH+1];	//[x] at least 256 bytes
 	uint16 iconData[1026];
 	uint16 transColor;
-	char longName[256];
+	char longName[MAX_TGDSFILENAME_LENGTH+1];	//at least 256 bytes
 } FILE_INFO;
 
 typedef struct
@@ -69,12 +70,12 @@ typedef struct
 	char urgency;
 	char title[41];
 	char message[1025];
-	char fileName[256];
+	char fileName[MAX_TGDSFILENAME_LENGTH+1];	//at least 256 bytes
 } TODO_FILE;
 
 typedef struct
 {
-	char fileName[256];
+	char fileName[MAX_TGDSFILENAME_LENGTH+1];	//at least 256 bytes
 	char shortName[64];
 } SCRIBBLE_FILE;
 
@@ -115,6 +116,12 @@ int randFile(char *curFile, int fileType, int numEntries);
 char *getLastDir();
 
 extern bool isScribbleFile(char *tmpFile);
+
+extern TODO_FILE *todoList;
+extern VCARD_FILE *fileList;
+extern BROWSER_FILE *dirList;
+extern SCRIBBLE_FILE *scribbleList;
+
 
 #ifdef __cplusplus
 }

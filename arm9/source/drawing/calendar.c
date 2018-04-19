@@ -37,10 +37,10 @@
 #include "../keyboard.h"
 #include "../language.h"
 #include "../controls.h"
+#include "settings.h"
 
-static char *reminder = NULL;
-static char *dayView = NULL;
-
+char *reminder = NULL;
+char *dayView = NULL;
 uint16 reminders[32];
 uint16 dayViews[32];
 uint16 curDay;
@@ -50,11 +50,7 @@ uint16 curTime;
 uint16 oldYear;
 uint16 oldDay;
 uint16 oldMonth;
-
-static bool calLoaded = false;
-
-extern uint16 dayViews[32];
-extern bool reverseDate;
+bool calLoaded = false;
 
 void destroyDay()
 {

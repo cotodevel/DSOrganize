@@ -20,12 +20,10 @@
 #ifndef _SOUNDRECORDER_INCLUDED
 #define _SOUNDRECORDER_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define SR_RECORDING 0
 #define SR_PLAYBACK 1
+
+#include "fatwrapper.h"
 
 #define REC_FREQ 11025
 #define REC_BLOCK_SIZE 1024
@@ -41,6 +39,12 @@ typedef struct
 	bool validWav; //
 } WAV_INFO;
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 void drawTopRecordScreen();
 void drawBottomRecordScreen();
 void recorderStartPressed();
@@ -49,6 +53,13 @@ void recorderForward();
 void recorderBack();
 void seekRecordSound(int xPos);
 void switchRecordingMode();
+
+extern int recordMode;
+extern bool wavLoaded;
+extern bool isRecording;
+extern u32 ticCount;
+extern WAV_INFO curWav;
+extern DRAGON_FILE *recFile;
 
 #ifdef __cplusplus
 }

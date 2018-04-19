@@ -20,9 +20,7 @@
 #ifndef _WEBBROWSER_INCLUDED
 #define _WEBBROWSER_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "html.h"
 
 #define WEBSTATE_INIT 0
 #define WEBSTATE_CONNECTING 1
@@ -78,49 +76,116 @@ typedef struct
 	char url[512];
 } FAVORITE_TYPE;
 
-void drawWebBrowserScreens();
-void initWebBrowser();
-void webBrowserForward();
-void webBrowserBack();
-void freeWebBrowser();
-void editWebBrowserAction(char c);
-void setWebState(int s);
-bool isShowingKeyboard();
-void webBrowserStop();
-void doRedirect(char *redir);
-void webBrowserXButton();
-bool isFav();
-bool isShowingImage();
-void initCapture();
-void setTemporaryHome(char *tHome);
-char *getCurrentURL();
-void constructValidURL(char *tURL, char *outStr);
-void escapeIllegals(char *str);
-void setPageFile(char *tSearch);
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void drawWebBrowserScreens();
+extern void initWebBrowser();
+extern void webBrowserForward();
+extern void webBrowserBack();
+extern void freeWebBrowser();
+extern void editWebBrowserAction(char c);
+extern void setWebState(int s);
+extern bool isShowingKeyboard();
+extern void webBrowserStop();
+extern void doRedirect(char *redir);
+extern void webBrowserXButton();
+extern bool isFav();
+extern bool isShowingImage();
+extern void initCapture();
+extern void setTemporaryHome(char *tHome);
+extern char *getCurrentURL();
+extern void constructValidURL(char *tURL, char *outStr);
+extern void escapeIllegals(char *str);
+extern void setPageFile(char *tSearch);
 
 // click events
-void webBrowserClick(int px, int py);
-void webBrowserDrag(int px, int py);
-void webBrowserLButton();
-void webBrowserRButton();
-void webBrowserRelease();
-void moveWebBrowserCursor(int direction);
-void recalcTextAreaJump();
-char webHandleClick(int px, int py);
-bool isWebKeyboard();
-void setScrollWeb(int py);
-int getWebBrowserEntries();
-char *getPageExtension();
-void setDownloadFlag();
-bool isDownloadingFile();
+extern void webBrowserClick(int px, int py);
+extern void webBrowserDrag(int px, int py);
+extern void webBrowserLButton();
+extern void webBrowserRButton();
+extern void webBrowserRelease();
+extern void moveWebBrowserCursor(int direction);
+extern void recalcTextAreaJump();
+extern char webHandleClick(int px, int py);
+extern bool isWebKeyboard();
+extern void setScrollWeb(int py);
+extern int getWebBrowserEntries();
+extern char *getPageExtension();
+extern void setDownloadFlag();
+extern bool isDownloadingFile();
 
 // extra
-void strccat(char *str, char c);
-void addURLToCapture(char *url);
-int setWebBrowserCursor(int u, int v, int cCursor, int maxCur);
+extern void strccat(char *str, char c);
+extern void addURLToCapture(char *url);
+extern int setWebBrowserCursor(int u, int v, int cCursor, int maxCur);
+
+// prototypes
+extern void loadPage(char *file, bool toHistory);
+extern void constructValidURL(char *tURL, char *finalURL);
+extern void escapeIllegals(char *str);
+extern bool historyIsNext();
+extern bool historyIsPrev();
+extern void cancelQueuedDownloads();
+extern void finishFileDownload();
+
+
+extern HTML_RENDERED htmlPage;
+extern u32 bState;
+extern int bPosition;
+extern bool keyboardShowing;
+extern bool nextClears;
+extern bool wbDrag;
+extern bool ignoreUntilUp;
+extern bool doURL;
+extern bool drawURL;
+extern char *lastURL;
+extern int textLength;
+extern bool maskInput;
+extern bool alreadyCaptured;
+extern char anchor[64];
+extern char lastanchor[64];
+extern bool dontScan;
+extern char curHTMLPage[256];
+extern char specialKey[18][8];
+extern int curSpecialKey;
+extern int specialCountDown;
+extern FAVORITE_TYPE *favorites;
+extern FAVORITE_TYPE *ircCaptured;
+extern int listCursorIrc;
+extern bool nextForward;
+extern int dlQueueCount;
+extern int dlQueuePos;
+extern DLQUEUE_TYPE *dlQueue;
+extern bool loadHomePage;
+extern bool isImage;
+extern bool isFileDownload;
+extern bool temporaryStart;
+extern char curExtension[MAX_EXT];
+extern char curFileName[FILENAME_SIZE];
+extern uint16 *htmlRender;
+extern bool oldImageLandscape;
+extern bool needsRedraw;
+
+extern char unreachable[];
+extern char incomplete[];
+extern char badsearch[];
+
+
+// for history
+extern int historyPos;
+extern int historyMaxFake;
+extern int historyMax;
+extern HISTORY_TYPE *historywebpage;
+
+// for quicksearch
+extern int searchMax;
+extern SEARCH_TYPE *searchStrings;
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

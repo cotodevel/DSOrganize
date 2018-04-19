@@ -20,9 +20,9 @@
 #ifndef _CONFIG_INCLUDED
 #define _CONFIG_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "language.h"
+#include "graphics.h"
+#include "settings.h"
 
 #define PAGE1 0
 #define PAGE2 6
@@ -120,32 +120,65 @@ extern "C" {
 #define WIFI_EDITPROFILE 1
 #define WIFI_EDITSETTING 2
 
-void drawConfiguration();
-void leftAction();
-void rightAction();
-void configureAction(int px, int py);
-bool configurationDrag(int px, int py);
-void configurationDrop();
-void configurationSwitchPages();
-void drawTopConfiguration();
-bool configFlipped();
-void resetScreenFlip();
-void editConfigAction(char c);
-void resetProxy();
-bool isTextEntryScreen();
-void configDecCursor();
-void configIncCursor();
-void configurationResetCursor();
-void clearHelpMemory();
-void configurationSetLanguages();
-void configurationSetStartMode();
-void destroyConfiguration();
-void configurationForward();
-void configurationBack();
-bool isAPScreen();
-void configurationUp();
-void configurationDown();
-void cloneIfNeeded(void *wTmp);
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern LANG_LIST *aLanguages;
+extern ICON_LIST *cIcons;
+extern char *descText;
+extern int lState;
+extern int iState;
+extern int mLanguages;
+extern int mIcons;
+extern bool cLoadedPage1;
+extern bool isCFlipped;
+extern bool isDragging;
+extern int dragItem;
+extern int lastX;
+extern int lastY;
+extern int offsetX;
+extern int offsetY;
+extern int lastLoaded;
+extern int lastLoadedWifi;
+extern uint16 *sprites[MAXDRAG];
+extern int configCursor;
+extern int sState;
+extern int configInitialized;
+extern WIFI_PROFILE *wifiInfo;
+extern WIFI_PROFILE *wifiSave;
+extern int wifiState;
+extern int wifiCursor;
+extern int wifiEditProfile;
+extern char wifiInput[64];
+
+extern void drawConfiguration();
+extern void leftAction();
+extern void rightAction();
+extern void configureAction(int px, int py);
+extern bool configurationDrag(int px, int py);
+extern void configurationDrop();
+extern void configurationSwitchPages();
+extern void drawTopConfiguration();
+extern bool configFlipped();
+extern void resetScreenFlip();
+extern void editConfigAction(char c);
+extern void resetProxy();
+extern bool isTextEntryScreen();
+extern void configDecCursor();
+extern void configIncCursor();
+extern void configurationResetCursor();
+extern void clearHelpMemory();
+extern void configurationSetLanguages();
+extern void configurationSetStartMode();
+extern void destroyConfiguration();
+extern void configurationForward();
+extern void configurationBack();
+extern bool isAPScreen();
+extern void configurationUp();
+extern void configurationDown();
+extern void cloneIfNeeded(void *wTmp);
 
 #ifdef __cplusplus
 }

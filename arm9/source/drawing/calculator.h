@@ -25,6 +25,8 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+#include <m_apm.h>
+
 
 #define RECIPROCAL 0
 #define FACTORIAL 1
@@ -70,6 +72,30 @@ void toggleMore();
 int getMore();
 bool getDeg();
 void handleKeyHighlighting();
+
+extern char lastKey;
+extern bool working;
+extern int curKey;
+extern M_APM ans;
+extern M_APM mem;
+extern M_APM stack[10];
+extern char stackKey[10];
+extern M_APM curNumber;
+extern int stackPos;
+extern bool belowDecimal;
+extern char enterKey;
+extern char enterBuffer[64];
+extern bool clearOnType;
+extern bool deg;
+extern int isMore;
+extern bool wasLastPress;
+extern int eraseChar;
+extern char l_rad[];
+extern char l_deg[];
+extern char *calculatorString[NUM_CONTROLS*NUM_SCREENS];
+extern uint16 calcColor[NUM_CONTROLS*NUM_SCREENS];
+extern char *screen;
+extern char *memory;
 
 #ifdef __cplusplus
 }

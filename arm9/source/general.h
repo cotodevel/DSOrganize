@@ -76,6 +76,28 @@ extern "C" {
 #else
 //extern void dprintf(const char *d1, ...);
 #endif
+
+extern bool copying;
+extern bool loading;
+extern bool rendering;
+extern u32 maxSize;
+extern u32 curSize;
+extern uint16 homePageGeneral;
+extern uint16 homeMode;
+extern int vblCount;
+extern int locations[13];
+extern bool allowSwapBuffer;
+
+extern bool foundCursor;
+extern int tCursor;
+extern int cowAnim;
+extern int cowCount;
+extern int direction;
+extern u32 webAniHeartBeat;
+extern bool haltOnOutOfMem;
+extern int repCount;
+extern bool useDataDir;
+extern u32 globalError;
 	
 extern void *trackMalloc(u32 length, char *desc);
 extern void trackFree(void *tmp);

@@ -34,27 +34,27 @@
 #include "sound.h"
 #include "settings.h"
 
-static int downX = 0;
-static int downY = 0;
-static int upX = 0;
-static int upY = 0;
-static int whichKeyboard = KB_QWERTY;
-static int isNumbers = 0;
-static uint16 caps;
-static uint16 shift;
-static uint16 insert;
-static uint16 control;
-static uint16 select;
-static char curChar;
-static uint16 special;
-static int cursor = 0;
-static uint16 blink = 0;
-static uint16 bCount = 0;
-static int oldCursor = 0;
-static int beginHighlight = -1;
-static int endHighlight = -1;
+int downX = 0;
+int downY = 0;
+int upX = 0;
+int upY = 0;
+int whichKeyboard = KB_QWERTY;
+int isNumbersKeyboard = 0;
+uint16 caps;
+uint16 shift;
+uint16 insert;
+uint16 control;
+uint16 selectKeyboard;
+char curChar;
+uint16 special;
+int cursor = 0;
+uint16 blink = 0;
+uint16 bCount = 0;
+int oldCursor = 0;
+int beginHighlight = -1;
+int endHighlight = -1;
 
-static const int keyboard_Hit[60] = {	0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
+int keyboard_Hit[60] = {	0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
 											0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  -1, -1,
 											K_C,10, 11, 12, 13, 14, 15, 16, 17, 18, -1, -1,
 											19, 20, 21, 22, 23, 24, 25, 26, 27, 28, -1, -1,
@@ -75,7 +75,7 @@ void resetKeyboard()
 	special = 0;
 	insert = 1;
 	control = 0;
-	select = 0;
+	selectKeyboard = 0;
 	
 	curChar = 0;
 }
@@ -127,7 +127,7 @@ void toggleSpecial()
 
 uint16 isSelect()
 {
-	return select;
+	return selectKeyboard;
 }
 
 void setFakeHighlight()
@@ -164,9 +164,9 @@ void clearFakeHighlight()
 
 void toggleSelect()
 {
-	select = 1 - select;
+	selectKeyboard = 1 - selectKeyboard;
 	
-	if(select == 1)
+	if(selectKeyboard == 1)
 	{
 		// set up selection
 		
@@ -182,7 +182,7 @@ void toggleSelect()
 void clearSelect()
 {
 	clearFakeHighlight();
-	select = 0;
+	selectKeyboard = 0;
 }
 
 uint16 isControl()
@@ -282,7 +282,7 @@ void clickSound()
 
 int activeView()
 {
-	if(isNumbers == 1)
+	if(isNumbersKeyboard == 1)
 		return ACTIVE_NUMBERS;
 	else
 	{
@@ -516,7 +516,7 @@ char executeClick(int px, int py)
 		
 		if(px >= 129 && py >= 64 && px <= 158 && py <= 94) // number toggle
 		{
-			isNumbers = 1 - isNumbers;
+			isNumbersKeyboard = 1 - isNumbersKeyboard;
 			downX = 0;
 			downY = 0;
 		}
@@ -949,7 +949,7 @@ void genericAction(char *tmpBuffer, int size, char c)
 				
 				// reset the edit mode
 				clearFakeHighlight();
-				select = 0; 
+				selectKeyboard = 0; 
 				break;
 			case 'c':// copy
 				// make sure highlight bounds are correct
@@ -968,7 +968,7 @@ void genericAction(char *tmpBuffer, int size, char c)
 				
 				// reset the edit mode
 				clearFakeHighlight();
-				select = 0; 
+				selectKeyboard = 0; 
 				break;
 			case 'v':// paste
 				if(beginHighlight != -1 && endHighlight != -1)
@@ -989,7 +989,7 @@ void genericAction(char *tmpBuffer, int size, char c)
 					removeText(tmpBuffer, size);
 					moveCursorAbsolute(beginHighlight);
 					clearFakeHighlight();
-					select = 0; 
+					selectKeyboard = 0; 
 					
 					// cursor is now where we want to add the new text
 					// we know also that there is enough room, so just insert the text
@@ -1019,7 +1019,7 @@ void genericAction(char *tmpBuffer, int size, char c)
 					}
 					
 					clearFakeHighlight();
-					select = 0; 
+					selectKeyboard = 0; 
 					
 					// add the text
 					char *tAdd = getClipboard();
@@ -1052,7 +1052,7 @@ void genericAction(char *tmpBuffer, int size, char c)
 			
 			// reset the edit mode
 			clearFakeHighlight();
-			select = 0; 
+			selectKeyboard = 0; 
 			
 			if(c == BSP || c == DEL)
 			{

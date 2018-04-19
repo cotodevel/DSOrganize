@@ -45,6 +45,7 @@
 #include "globals.h"
 #include "videoTGDS.h"
 #include "sound.h"
+#include "soundplayer.h"
 
 
 sndData soundData;
@@ -55,38 +56,37 @@ bool updateRequested = false;
 bool seekSpecial = false;
 int sndLen = 0;
 int seekUpdate = -1;
-extern ID3V1_TYPE id3Data;
 
 // sound out
 s16 *lBuffer = NULL;
 s16 *rBuffer = NULL;
 
 // wav
-static bool memoryLoad = false;
-static char *memoryContents = NULL;
-static u32 memoryPos = 0;
-static u32 memorySize = 0;
+bool memoryLoad = false;
+char *memoryContents = NULL;
+u32 memoryPos = 0;
+u32 memorySize = 0;
 	
 // mikmod
-static MODULE *module = NULL;
-static bool madFinished = false;
-static int sCursor = 0;
+MODULE *module = NULL;
+bool madFinished = false;
+int sCursor = 0;
 bool allowEQ = true;
 
 // mp3
 struct mad_stream Stream;
 struct mad_frame Frame;
 struct mad_synth Synth;
-static mad_timer_t Timer;
-static unsigned char *mp3Buf = NULL;
-static int bufCursor;
-static int bytesLeft = 0;
-static s16 *bytesLeftBuf = NULL;
-static int maxBytes = 0;
+mad_timer_t Timer;
+unsigned char *mp3Buf = NULL;
+int bufCursor;
+int bytesLeft = 0;
+s16 *bytesLeftBuf = NULL;
+int maxBytes = 0;
 
 // ogg
-static OggVorbis_File vf;
-static int current_section;
+OggVorbis_File vf;
+int current_section;
 
 // streaming
 URL_TYPE curSite;
@@ -103,54 +103,58 @@ int icyCopy = 0;
 size_t oggStreamLoc = 0;
 ICY_HEADER curIcy;
 bool streamOpened = false;
-static int tmpAmount = 0;
-static int recAmount = 0;
+int tmpAmount = 0;
+int recAmount = 0;
 
 // aac
-static HAACDecoder *hAACDecoder;
-static unsigned char *aacReadBuf = NULL;
-static unsigned char *aacReadPtr = NULL;
-static s16 *aacOutBuf = NULL;
-static AACFrameInfo aacFrameInfo;
-static int aacBytesLeft, aacRead, aacErr, aacEofReached;
-static int aacLength;
-static bool isRawAAC;
-static mp4ff_t *mp4file;
-static mp4ff_callback_t mp4cb;
-static int mp4track;
-static int sampleId;
+HAACDecoder *hAACDecoder;
+unsigned char *aacReadBuf = NULL;
+unsigned char *aacReadPtr = NULL;
+s16 *aacOutBuf = NULL;
+AACFrameInfo aacFrameInfo;
+int aacBytesLeft, aacRead, aacErr, aacEofReached;
+int aacLength;
+bool isRawAAC;
+mp4ff_t *mp4file;
+mp4ff_callback_t mp4cb;
+int mp4track;
+int sampleId;
 
 //flac
-static FLACContext fc;
-static uint8_t *flacInBuf = NULL;
-static int flacBLeft = 0;
-static int32_t *decoded0 = NULL;
-static int32_t *decoded1 = NULL;
-static bool flacFinished = false;
+FLACContext fc;
+uint8_t *flacInBuf = NULL;
+int flacBLeft = 0;
+int32_t *decoded0 = NULL;
+int32_t *decoded1 = NULL;
+bool flacFinished = false;
 
 //sid
-static char *sidfile = NULL;
-static u32 sidLength = 0;
-static unsigned short sid_load_addr, sid_init_addr, sid_play_addr;
-static unsigned char sid_subSongsMax, sid_subSong, sid_song_speed;
-static int nSamplesRendered, nSamplesPerCall, nSamplesToRender;
+char *sidfile = NULL;
+u32 sidLength = 0;
+unsigned short sid_load_addr, sid_init_addr, sid_play_addr;
+unsigned char sid_subSongsMax, sid_subSong, sid_song_speed;
+int nSamplesRendered, nSamplesPerCall, nSamplesToRender;
 
 //nsf
-static uint8_t *nsffile = NULL;
-static u32 nsfLength = 0;
-static volatile bool inTrack = false;
-static volatile bool isSwitching = false;
+uint8_t *nsffile = NULL;
+u32 nsfLength = 0;
+volatile bool inTrack = false;
+volatile bool isSwitching = false;
 
 //spc
-static uint8_t *spcfile = NULL;
-static u32 spcLength = 0;
+uint8_t *spcfile = NULL;
+u32 spcLength = 0;
 
 //sndh
-static uint8_t *sndhfile = NULL;
-static u32 sndhLength = 0;
-static api68_init_t init68;
-static api68_t * sc68 = 0;
-static int sndhTracks = 0;
+uint8_t *sndhfile = NULL;
+u32 sndhLength = 0;
+api68_init_t init68;
+api68_t * sc68 = 0;
+int sndhTracks = 0;
+
+// alternate safemalloc stuff
+int m_SIWRAM = 0;
+int m_size = 0;
 
 // arm7 code, etc
 
@@ -175,9 +179,7 @@ void spcDecode();
 void sndhDecode();
 void (*wavDecode)() = NULL;
 
-// alternate safemalloc stuff
-static int m_SIWRAM = 0;
-static int m_size = 0;
+
 
 void loadWavToMemory()
 {

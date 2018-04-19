@@ -27,6 +27,7 @@ extern "C" {
 #include "typedefsTGDS.h"
 #include "dsregs.h"
 #include "dsregs_asm.h"
+#include "libpicture.h"
 
 #define TOOL_PENCIL 0
 #define TOOL_PEN 1
@@ -84,7 +85,39 @@ void colorPickerMove(int x, int y);
 void colorPickerUp();
 void destroyColorPicker(bool toSaveColor);
 
-bool screensFlipped();
+extern bool screensFlipped();
+
+extern uint16 customColors[27];
+extern uint16 *toolSprites[MAX_TOOLS];
+extern uint16 *drawBuffer;
+extern uint16 *tmpBuffer;
+extern int saveFormat;
+extern uint16 saveColor;
+
+extern int colorCursorscribble;
+extern uint16 curColor;
+extern int toolsCursor;
+extern int curTool;
+extern int queuedTool;
+extern int lastXscribble;
+extern int lastYscribble;
+extern int curX;
+extern int curY;
+extern int slidePosition;
+extern bool dragging;
+extern bool dragging2;
+extern int box_x;
+extern int box_y;
+extern uint16 tmpColor;
+extern char textEntry[SCRIBBLE_LEN];
+extern bool ignoreInput;
+extern int scribbleMode;
+extern bool isFlipped;
+extern bool isHeld;
+extern bool s_isPopulated;
+extern PICTURE_DATA scribblePicture;
+extern uint16 scribbleEntries;
+extern int curScribble;
 
 #ifdef __cplusplus
 }

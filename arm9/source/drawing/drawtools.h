@@ -20,9 +20,17 @@
 #ifndef _DRAWTOOLS_INCLUDED
 #define _DRAWTOOLS_INCLUDED
 
+// stack
+#define STACK_SIZE 49152*2
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern bool drawCheckered;
+extern int penWidth;
+extern int *stack;
+extern int stackPointer;
 
 void s_setPixel(int x, int y, uint16 color);
 void s_drawLine(int x0, int y0, int x1, int y1, uint16 color);

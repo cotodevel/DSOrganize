@@ -20,14 +20,15 @@
 #ifndef _SOUND_INCLUDED
 #define _SOUND_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "fatwrapper.h"
 #include "http.h"
 #include "aacdec.h"
 #include "api68.h"
+#include "id3.h"
+#include "mikmod_internals.h"
+#include "mad.h"
+#include "mp4ff.h"
+#include "flac.h"
 
 enum {
 	SRC_NONE,
@@ -136,6 +137,15 @@ typedef struct
 	int mp3SampleRate;
 } sndData;
 
+#endif
+
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void initComplexSound();
 void waitForInit();
 void setSoundInterrupt();
@@ -191,8 +201,105 @@ extern int sndLen;
 extern int seekUpdate;
 extern void updateStream();
 
+// sound out
+extern s16 *lBuffer;
+extern s16 *rBuffer;
+
+// wav
+extern bool memoryLoad;
+extern char *memoryContents;
+extern u32 memoryPos;
+extern u32 memorySize;
+	
+// mikmod
+extern MODULE *module;
+extern bool madFinished;
+extern int sCursor;
+extern bool allowEQ;
+
+// mp3
+extern struct mad_stream Stream;
+extern struct mad_frame Frame;
+extern struct mad_synth Synth;
+extern mad_timer_t Timer;
+extern unsigned char *mp3Buf;
+extern int bufCursor;
+extern int bytesLeft;
+extern s16 *bytesLeftBuf;
+extern int maxBytes;
+
+// ogg
+extern OggVorbis_File vf;
+extern int current_section;
+
+// streaming
+extern URL_TYPE curSite;
+extern char *tmpMeta;
+extern int streamMode;
+extern int s_socket;
+extern int s_cursor;
+extern int lagCursor;
+extern char *s_buffer;
+extern int s_retries;
+extern int s_count;
+extern int s_metaCount;
+extern int icyCopy;
+extern size_t oggStreamLoc;
+extern ICY_HEADER curIcy;
+extern bool streamOpened;
+extern int tmpAmount;
+extern int recAmount;
+
+// aac
+extern HAACDecoder *hAACDecoder;
+extern unsigned char *aacReadBuf;
+extern unsigned char *aacReadPtr;
+extern s16 *aacOutBuf;
+extern AACFrameInfo aacFrameInfo;
+extern int aacBytesLeft, aacRead, aacErr, aacEofReached;
+extern int aacLength;
+extern bool isRawAAC;
+extern mp4ff_t *mp4file;
+extern mp4ff_callback_t mp4cb;
+extern int mp4track;
+extern int sampleId;
+
+//flac
+extern FLACContext fc;
+extern uint8_t *flacInBuf;
+extern int flacBLeft;
+extern int32_t *decoded0;
+extern int32_t *decoded1;
+extern bool flacFinished;
+
+//sid
+extern char *sidfile;
+extern u32 sidLength;
+extern unsigned short sid_load_addr, sid_init_addr, sid_play_addr;
+extern unsigned char sid_subSongsMax, sid_subSong, sid_song_speed;
+extern int nSamplesRendered, nSamplesPerCall, nSamplesToRender;
+
+//nsf
+extern uint8_t *nsffile;
+extern u32 nsfLength;
+extern volatile bool inTrack;
+extern volatile bool isSwitching;
+
+//spc
+extern uint8_t *spcfile;
+extern u32 spcLength;
+
+//sndh
+extern uint8_t *sndhfile;
+extern u32 sndhLength;
+extern api68_init_t init68;
+extern api68_t * sc68;
+extern int sndhTracks;
+
+// alternate safemalloc stuff
+extern int m_SIWRAM;
+extern int m_size;
+
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -37,18 +37,13 @@
 #include "../keyboard.h"
 #include "../language.h"
 #include "../controls.h"
+#include "calendar.h"
+#include "settings.h"
 
-static DV_DYNAMIC *dvStruct = NULL;
-static uint16 colors[12] = { 0x221F, 0x0200, 0x7C1F, 0x001F, 0x7C00, 0x4210, 0x0318, 0x0360, 0x4010, 0x2D7F, 0x4000, 0x6318 };
-static bool dvLoaded = false;
-static int whatType = TYPE_DAILY;
-
-extern uint16 curDay;
-extern uint16 curMonth;
-extern uint16 curYear;
-extern uint16 curTime;
-extern bool milTime;
-extern bool reverseDate;
+DV_DYNAMIC *dvStruct = NULL;
+uint16 colors[12] = { 0x221F, 0x0200, 0x7C1F, 0x001F, 0x7C00, 0x4210, 0x0318, 0x0360, 0x4010, 0x2D7F, 0x4000, 0x6318 };
+bool dvLoaded = false;
+int whatType = TYPE_DAILY;
 
 void resetDayView()
 {

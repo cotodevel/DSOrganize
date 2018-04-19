@@ -20,10 +20,6 @@
 #ifndef _ID3_INCLUDED
 #define _ID3_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "fatwrapper.h"
 #include "ivorbisfile.h"
 
@@ -41,12 +37,17 @@ typedef struct
     int track;
 }  ID3V1_TYPE;
 
-void getID3V1(DRAGON_FILE *fp, ID3V1_TYPE *id3);
-void getGenre(int g, char *str);
-void getOggInfo(OggVorbis_File *vf, ID3V1_TYPE *id3);
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void getID3V1(DRAGON_FILE *fp, ID3V1_TYPE *id3);
+extern void getGenre(int g, char *str);
+extern void getOggInfo(OggVorbis_File *vf, ID3V1_TYPE *id3);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

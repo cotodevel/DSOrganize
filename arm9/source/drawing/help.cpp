@@ -29,13 +29,10 @@
 #include "html.h"
 #include "general.h"
 #include "globals.h"
+#include "webbrowser.h"
 
-extern char curLang[30];
-extern bool allowSwapBuffer;
-extern u32 htmlStyle;
 
-static bool helpLoaded = false;
-static HTML_RENDERED htmlPage;
+bool helpLoaded = false;
 
 void drawHelpScreen()
 {

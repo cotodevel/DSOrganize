@@ -604,10 +604,10 @@ public:
 
 /* math.h-style functions: */
 
-inline MAPM fabs(const MAPM &m) {return m.abs();}
+//inline MAPM fabs(const MAPM &m) {return m.abs();}
 inline MAPM factorial(const MAPM &m) {return m.factorial();}
-inline MAPM floor(const MAPM &m) {return m.floor();}
-inline MAPM ceil(const MAPM &m) {return m.ceil();}
+//inline MAPM floor(const MAPM &m) {return m.floor();}
+//inline MAPM ceil(const MAPM &m) {return m.ceil();}
 inline MAPM get_random(void) {return MAPM::random();}
 
 /* I got tired of typing the various declarations for a simple 
@@ -618,6 +618,9 @@ inline MAPM get_random(void) {return MAPM::random();}
 	inline MAPM func(const MAPM &m,int toDigits) {return m.func(toDigits);}
 
 /* Define a big block of simple functions: */
+
+//use libm functions
+/*
 	MAPM_1aryFunc(sqrt)
 	MAPM_1aryFunc(cbrt)
 	MAPM_1aryFunc(log)
@@ -635,9 +638,13 @@ inline MAPM get_random(void) {return MAPM::random();}
 	MAPM_1aryFunc(acosh)
 	MAPM_1aryFunc(tanh)
 	MAPM_1aryFunc(atanh)
+*/
+
 #undef MAPM_1aryFunc
 
+//use libm functions
 /* Computes x to the power y */
+/*
 inline MAPM pow(const MAPM &x,const MAPM &y,int toDigits)
 		{return x.pow(y,toDigits);}
 inline MAPM pow(const MAPM &x,const MAPM &y)
@@ -650,6 +657,8 @@ inline MAPM gcd(const MAPM &u,const MAPM &v)
 		{return u.gcd(v);}
 inline MAPM lcm(const MAPM &u,const MAPM &v)
 		{return u.lcm(v);}
+*/
+
 #endif
 #endif
 

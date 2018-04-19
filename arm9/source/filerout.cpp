@@ -36,8 +36,7 @@
 #include "resources.h"
 #include "fsfatlayerTGDSLegacy.h"
 #include "fsfatlayerTGDSNew.h"
-
-extern bool showHidden;
+#include "settings.h"
 
 TODO_FILE *todoList = NULL;
 VCARD_FILE *fileList = NULL;

@@ -116,26 +116,75 @@ typedef struct
 	SCREEN_BUFFER *screen;
 } TAB_ARRAY;
 
-void resetIRCMode();
-void drawTopIRCScreen();
-void drawBottomIRCScreen();
-void ircForward();
-void ircBack();
-void ircLButton();
-void ircRButton();
-void ircActivateTab(int x);
-void editIRCAction(char c);
-int inputLength();
-void ircUp();
-void ircDown();
-void invalidateInput();
-int calcString(char *out);
-char ircHandleClick(int px, int py);
-int getIRCNickCount();
-bool isNicks();
-void setScrollIRC(int py);
-void ircSwapButton();
-bool isIRCKeyboard();
+extern void resetIRCMode();
+extern void drawTopIRCScreen();
+extern void drawBottomIRCScreen();
+extern void ircForward();
+extern void ircBack();
+extern void ircLButton();
+extern void ircRButton();
+extern void ircActivateTab(int x);
+extern void editIRCAction(char c);
+extern int inputLength();
+extern void ircUp();
+extern void ircDown();
+extern void invalidateInput();
+extern int calcString(char *out);
+extern char ircHandleClick(int px, int py);
+extern int getIRCNickCount();
+extern bool isNicks();
+extern void setScrollIRC(int py);
+extern void ircSwapButton();
+extern bool isIRCKeyboard();
+extern bool areEqual(char *a, char *b);
+extern void closeServerConnection();
+extern int scrollOffset(int tab);
+extern void concatTab(int tab, char *toAdd, char *colorAdd, int importance);
+extern void connectToServer(char *s);
+
+
+
+extern char backBuffer[6][MAX_INPUT+1];
+extern int backPlace;
+extern int ircMode;
+extern SCREEN_BUFFER *console;
+extern TAB_ARRAY *tabs;
+extern int tabCount;
+extern int activeTab;
+extern int ircSocket;
+extern bool connected;
+extern char *serverBuffer;
+extern int connectMode;
+extern char curServer[128];
+extern char quitMessage[256];
+extern bool isTopic;
+extern char displayNick[NICK_LEN];
+extern uint16 ircColors[16];
+extern uint16 ircColors2[16];
+extern char ircModes[10];
+extern char ircSymbols[10];
+extern bool reconnect;
+extern char lastServer[60];
+extern char myModes[20];
+extern char curNetwork[128];
+extern bool queuedEnter;
+extern int maxNickLen;
+extern char useNickName[NICK_LEN];
+extern char usealtNickName[NICK_LEN];
+extern bool toPerform;
+extern int colorCursor;
+extern int colorCursorCount;
+extern int listCursor;
+extern bool notifyPresent;
+extern int ircLines;
+
+extern int waitCount;
+extern bool cancelOnWait;
+extern u32 ircCount;
+extern char *inputBuffer;
+extern bool strUpdated;
+extern int textBlock;
+extern char *pointedText;
 
 #ifdef __cplusplus
 }

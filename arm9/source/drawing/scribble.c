@@ -46,49 +46,44 @@
 #include "../language.h"
 #include "../controls.h"
 #include "specific_shared.h"
+#include "browser.h"
+#include "drawtools.h"
 
-extern SCRIBBLE_FILE *scribbleList;
-extern char fileName[256];
-extern char copyFrom[256];
-extern int penWidth;
-extern bool drawCheckered;
-extern bool loading;
-
-static uint16 customColors[27] = { 	0x0000, 0x4210, 0x0010, 0x0110, 0x0210, 0x0200, 0x4A49, 0x4000, 0x4010,
+uint16 customColors[27] = { 	0x0000, 0x4210, 0x0010, 0x0110, 0x0210, 0x0200, 0x4A49, 0x4000, 0x4010,
 										0xFFFF, 0x6318, 0x001F, 0x221F, 0x03FF, 0x03F0, 0x7FE0, 0x7C00, 0x7C1F, 
 										0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF };
 
-static uint16 *toolSprites[MAX_TOOLS] = { tool_pencil, tool_pen, tool_colorgrab, tool_erasor, tool_floodfill, tool_line, tool_thickline, tool_rect, tool_thickrect, tool_circle, tool_thickcircle, tool_spray, tool_replace, tool_text };
+uint16 *toolSprites[MAX_TOOLS] = { tool_pencil, tool_pen, tool_colorgrab, tool_erasor, tool_floodfill, tool_line, tool_thickline, tool_rect, tool_thickrect, tool_circle, tool_thickcircle, tool_spray, tool_replace, tool_text };
 
 uint16 *drawBuffer;
 uint16 *tmpBuffer;
 int saveFormat = SAVE_BMP;
 uint16 saveColor = 0;
 
-static int colorCursor = 0;
-static uint16 curColor = 0;
-static int toolsCursor = 0;
-static int curTool = TOOL_PENCIL;
-static int queuedTool = -1;
-static int lastX = -1;
-static int lastY = -1;
-static int curX = -1;
-static int curY = -1;
-static int slidePosition;
-static bool dragging = false;
-static bool dragging2 = false;
-static int box_x;
-static int box_y;
-static uint16 tmpColor;
-static char textEntry[SCRIBBLE_LEN];
-static bool ignoreInput = false;
-static int scribbleMode = 0;
-static bool isFlipped = false;
-static bool isHeld = false;
-static bool s_isPopulated = false;
-static PICTURE_DATA scribblePicture;
-static uint16 scribbleEntries;
-static int curScribble = 0;
+int colorCursorscribble = 0;
+uint16 curColor = 0;
+int toolsCursor = 0;
+int curTool = TOOL_PENCIL;
+int queuedTool = -1;
+int lastXscribble = -1;
+int lastYscribble = -1;
+int curX = -1;
+int curY = -1;
+int slidePosition;
+bool dragging = false;
+bool dragging2 = false;
+int box_x;
+int box_y;
+uint16 tmpColor;
+char textEntry[SCRIBBLE_LEN];
+bool ignoreInput = false;
+int scribbleMode = 0;
+bool isFlipped = false;
+bool isHeld = false;
+bool s_isPopulated = false;
+PICTURE_DATA scribblePicture;
+uint16 scribbleEntries;
+int curScribble = 0;
 
 int getScribbleEntries()
 {
@@ -179,12 +174,12 @@ void freeScribbleList()
 
 void initTools()
 {
-	colorCursor = 0;
+	colorCursorscribble = 0;
 	curColor = 0 | BIT(15);
 	toolsCursor = 0;
 	curTool = TOOL_PENCIL;
-	lastX = -1;
-	lastY = -1;
+	lastXscribble = -1;
+	lastYscribble = -1;
 	penWidth = 1;
 }
 
@@ -226,48 +221,48 @@ void drawScribbleScreen()
 		{
 			case TOOL_LINE:
 				penWidth = 1;
-				s_drawLine(lastX, lastY, curX, curY, curColor);
+				s_drawLine(lastXscribble, lastYscribble, curX, curY, curColor);
 				break;				
 			case TOOL_THICKLINE:
 				penWidth = 3;
-				s_drawLine(lastX, lastY, curX, curY, curColor);
+				s_drawLine(lastXscribble, lastYscribble, curX, curY, curColor);
 				break;
 			case TOOL_RECT:
 				penWidth = 1;
-				s_drawLine(lastX, lastY, lastX, curY, curColor);
-				s_drawLine(lastX, lastY, curX, lastY, curColor);
-				s_drawLine(curX, lastY, curX, curY, curColor);
-				s_drawLine(lastX, curY, curX, curY, curColor);
+				s_drawLine(lastXscribble, lastYscribble, lastXscribble, curY, curColor);
+				s_drawLine(lastXscribble, lastYscribble, curX, lastYscribble, curColor);
+				s_drawLine(curX, lastYscribble, curX, curY, curColor);
+				s_drawLine(lastXscribble, curY, curX, curY, curColor);
 				break;
 			case TOOL_THICKRECT:
 				penWidth = 3;
-				s_drawLine(lastX, lastY, lastX, curY, curColor);
-				s_drawLine(lastX, lastY, curX, lastY, curColor);
-				s_drawLine(curX, lastY, curX, curY, curColor);
-				s_drawLine(lastX, curY, curX, curY, curColor);
+				s_drawLine(lastXscribble, lastYscribble, lastXscribble, curY, curColor);
+				s_drawLine(lastXscribble, lastYscribble, curX, lastYscribble, curColor);
+				s_drawLine(curX, lastYscribble, curX, curY, curColor);
+				s_drawLine(lastXscribble, curY, curX, curY, curColor);
 				break;						
 			case TOOL_CIRCLE:
 			{
 				penWidth = 1;
 				
-				int cX = (curX + lastX) / 2;
-				int cY = (curY + lastY) / 2;
+				int cX = (curX + lastXscribble) / 2;
+				int cY = (curY + lastYscribble) / 2;
 				
 				int radiusX = 0;
 				int radiusY = 0;
 				
-				if(curX > lastX)
-					radiusX = (curX - lastX) / 2;
+				if(curX > lastXscribble)
+					radiusX = (curX - lastXscribble) / 2;
 				else
-					radiusX = (lastX - curX) / 2;
+					radiusX = (lastXscribble - curX) / 2;
 				
-				if(curY > lastY)
-					radiusY = (curY - lastY) / 2;
+				if(curY > lastYscribble)
+					radiusY = (curY - lastYscribble) / 2;
 				else
-					radiusY = (lastY - curY) / 2;
+					radiusY = (lastYscribble - curY) / 2;
 					
 				if(radiusX == 0 || radiusY == 0)
-					s_drawLine(lastX, lastY, curX, curY, curColor);
+					s_drawLine(lastXscribble, lastYscribble, curX, curY, curColor);
 				else
 					s_drawEllipse(cX, cY, radiusX, radiusY, curColor);
 				break;					
@@ -276,24 +271,24 @@ void drawScribbleScreen()
 			{
 				penWidth = 3;
 				
-				int cX = (curX + lastX) / 2;
-				int cY = (curY + lastY) / 2;
+				int cX = (curX + lastXscribble) / 2;
+				int cY = (curY + lastYscribble) / 2;
 				
 				int radiusX = 0;
 				int radiusY = 0;
 				
-				if(curX > lastX)
-					radiusX = (curX - lastX) / 2;
+				if(curX > lastXscribble)
+					radiusX = (curX - lastXscribble) / 2;
 				else
-					radiusX = (lastX - curX) / 2;
+					radiusX = (lastXscribble - curX) / 2;
 				
-				if(curY > lastY)
-					radiusY = (curY - lastY) / 2;
+				if(curY > lastYscribble)
+					radiusY = (curY - lastYscribble) / 2;
 				else
-					radiusY = (lastY - curY) / 2;
+					radiusY = (lastYscribble - curY) / 2;
 					
 				if(radiusX == 0 || radiusY == 0)
-					s_drawLine(lastX, lastY, curX, curY, curColor);
+					s_drawLine(lastXscribble, lastYscribble, curX, curY, curColor);
 				else
 					s_drawEllipse(cX, cY, radiusX, radiusY, curColor);
 				break;
@@ -301,10 +296,10 @@ void drawScribbleScreen()
 			case TOOL_TEXT:
 				penWidth = 1;
 				drawCheckered = true;
-				s_drawLine(lastX, lastY, lastX, curY, 0);
-				s_drawLine(lastX, lastY, curX, lastY, 0);
-				s_drawLine(curX, lastY, curX, curY, 0);
-				s_drawLine(lastX, curY, curX, curY, 0);
+				s_drawLine(lastXscribble, lastYscribble, lastXscribble, curY, 0);
+				s_drawLine(lastXscribble, lastYscribble, curX, lastYscribble, 0);
+				s_drawLine(curX, lastYscribble, curX, curY, 0);
+				s_drawLine(lastXscribble, curY, curX, curY, 0);
 				drawCheckered = false;
 				break;
 		}
@@ -330,7 +325,7 @@ void drawToolsScreen()
 		int xp = x % 9;
 		int yp = x / 9;
 		
-		if(x == colorCursor)
+		if(x == colorCursorscribble)
 			bg_drawFilledRect(13 + 26*xp, 90 + 23*yp, 17 + 26*xp + 15, 94 + 23*yp + 15, widgetHighlightColor, widgetFillColor);
 		else
 			bg_drawFilledRect(13 + 26*xp, 90 + 23*yp, 17 + 26*xp + 15, 94 + 23*yp + 15, widgetBorderColor, widgetFillColor);
@@ -358,26 +353,26 @@ void drawScribbleText()
 {
 	int a,b,c,d;
 	
-	if(lastX > curX)
+	if(lastXscribble > curX)
 	{
 		a = curX;
-		c = lastX;
+		c = lastXscribble;
 	}
 	else
 	{
 		c = curX;
-		a = lastX;
+		a = lastXscribble;
 	}
 	
-	if(lastY > curY)
+	if(lastYscribble > curY)
 	{
 		b = curY;
-		d = lastY;
+		d = lastYscribble;
 	}
 	else
 	{
 		d = curY;
-		b = lastY;
+		b = lastYscribble;
 	}
 	
 	a+=3;
@@ -425,26 +420,26 @@ void exitScribbleConfirm()
 	
 	int a,b,c,d;
 	
-	if(lastX > curX)
+	if(lastXscribble > curX)
 	{
 		a = curX;
-		c = lastX;
+		c = lastXscribble;
 	}
 	else
 	{
 		c = curX;
-		a = lastX;
+		a = lastXscribble;
 	}
 	
-	if(lastY > curY)
+	if(lastYscribble > curY)
 	{
 		b = curY;
-		d = lastY;
+		d = lastYscribble;
 	}
 	else
 	{
 		d = curY;
-		b = lastY;
+		b = lastYscribble;
 	}
 	
 	a+=3;
@@ -500,26 +495,26 @@ void editScribbleAction(char c)
 	
 	int a,b,e,d;
 	
-	if(lastX > curX)
+	if(lastXscribble > curX)
 	{
 		a = curX;
-		e = lastX;
+		e = lastXscribble;
 	}
 	else
 	{
 		e = curX;
-		a = lastX;
+		a = lastXscribble;
 	}
 	
-	if(lastY > curY)
+	if(lastYscribble > curY)
 	{
 		b = curY;
-		d = lastY;
+		d = lastYscribble;
 	}
 	else
 	{
 		d = curY;
-		b = lastY;
+		b = lastYscribble;
 	}
 	
 	a+=3;
@@ -556,18 +551,18 @@ void scribbleDown(int x, int y)
 			penWidth = 3;
 		case TOOL_PENCIL:
 			s_setPixel(x, y, curColor);
-			lastX = x;
-			lastY = y;
+			lastXscribble = x;
+			lastYscribble = y;
 			break;
 		case TOOL_COLORGRAB:			
-			if(colorCursor >= 18)
-				customColors[colorCursor] = drawBuffer[x + (y * 256)] | BIT(15);
+			if(colorCursorscribble >= 18)
+				customColors[colorCursorscribble] = drawBuffer[x + (y * 256)] | BIT(15);
 			break;
 		case TOOL_ERASOR:
 			penWidth = 10;			
 			s_setPixel(x, y, 0xFFFF);
-			lastX = x;
-			lastY = y;
+			lastXscribble = x;
+			lastYscribble = y;
 			break;
 		case TOOL_FLOODFILL:
 			s_floodFill(x, y, curColor, drawBuffer[x + (y * 256)]);
@@ -585,8 +580,8 @@ void scribbleDown(int x, int y)
 			queuedTool = curTool;
 			curX = x;
 			curY = y;
-			lastX = x;
-			lastY = y;
+			lastXscribble = x;
+			lastYscribble = y;
 			break;
 		case TOOL_SPRAY:{
 			s_spray(x, y, 10, curColor);
@@ -618,29 +613,29 @@ void scribbleMove(int x, int y)
 	{
 		case TOOL_PEN:
 		case TOOL_PENCIL:
-			if(lastX <= 0 || lastY <= 0 || lastX > 255 || lastY > 191)
+			if(lastXscribble <= 0 || lastYscribble <= 0 || lastXscribble > 255 || lastYscribble > 191)
 				s_setPixel(x, y, curColor); // errant lines due to race conditions
 			else				
-				s_drawLine(lastX, lastY, x, y, curColor);
+				s_drawLine(lastXscribble, lastYscribble, x, y, curColor);
 			
-			lastX = x;
-			lastY = y;
+			lastXscribble = x;
+			lastYscribble = y;
 			break;
 		case TOOL_COLORGRAB:			
-			if(colorCursor >= 18)
-				customColors[colorCursor] = drawBuffer[x + (y * 256)] | BIT(15);
+			if(colorCursorscribble >= 18)
+				customColors[colorCursorscribble] = drawBuffer[x + (y * 256)] | BIT(15);
 			break;
 		case TOOL_ERASOR:
-			if(lastX <= 0 || lastY <= 0 || lastX > 255 || lastY > 191)
+			if(lastXscribble <= 0 || lastYscribble <= 0 || lastXscribble > 255 || lastYscribble > 191)
 				s_setPixel(x, y, 0xFFFF); // errant lines due to race conditions
 			else				
-				s_drawLine(lastX, lastY, x, y, 0xFFFF);
+				s_drawLine(lastXscribble, lastYscribble, x, y, 0xFFFF);
 			
-			lastX = x;
-			lastY = y;
+			lastXscribble = x;
+			lastYscribble = y;
 			break;
 		case TOOL_TEXT:		
-			if(lastX == -1 || lastY == -1)
+			if(lastXscribble == -1 || lastYscribble == -1)
 			{
 				tmpBuffer = (uint16 *)trackMalloc(256*192*2,"text tmp buffer");	
 				memcpy(tmpBuffer, drawBuffer, 256*192*2);		
@@ -651,12 +646,12 @@ void scribbleMove(int x, int y)
 		case TOOL_THICKRECT:
 		case TOOL_CIRCLE:
 		case TOOL_THICKCIRCLE:
-			if(lastX == -1 || lastY == -1)
+			if(lastXscribble == -1 || lastYscribble == -1)
 			{
 				memCpySet(fb_backBuffer(), drawBuffer, 256*192*2);
 				queuedTool = curTool;
-				lastX = x;
-				lastY = y;
+				lastXscribble = x;
+				lastYscribble = y;
 			}
 			curX = x;
 			curY = y;
@@ -677,8 +672,8 @@ void scribbleUp()
 		case TOOL_PEN:
 		case TOOL_PENCIL:
 		case TOOL_ERASOR:
-			lastX = -1;
-			lastY = -1;
+			lastXscribble = -1;
+			lastYscribble = -1;
 			break;
 		case TOOL_LINE:
 		case TOOL_THICKLINE:
@@ -687,14 +682,14 @@ void scribbleUp()
 		case TOOL_CIRCLE:
 		case TOOL_THICKCIRCLE:
 			memset(fb_backBuffer(), 0xFF, 256*192*2);
-			lastX = -1;
-			lastY = -1;
+			lastXscribble = -1;
+			lastYscribble = -1;
 			curX = -1;
 			curY = -1;
 			queuedTool = -1;
 			break;			
 		case TOOL_TEXT:
-			if(abs(curX - lastX) < 20 || abs(curY - lastY) < 20) // no shenanigans
+			if(abs(curX - lastXscribble) < 20 || abs(curY - lastYscribble) < 20) // no shenanigans
 				return;	
 			
 			setMode(SCRIBBLETEXT);
@@ -789,24 +784,24 @@ void moveColor(int action)
 	switch(action)
 	{
 		case CURSOR_UP:
-			if(colorCursor >= 9)
-				colorCursor-=9;
+			if(colorCursorscribble >= 9)
+				colorCursorscribble-=9;
 			break;
 		case CURSOR_DOWN:
-			if(colorCursor < 27-9)
-				colorCursor+=9;
+			if(colorCursorscribble < 27-9)
+				colorCursorscribble+=9;
 			break;
 		case CURSOR_LEFT:
-			if(colorCursor > 0)
-				colorCursor--;
+			if(colorCursorscribble > 0)
+				colorCursorscribble--;
 			break;
 		case CURSOR_RIGHT:
-			if(colorCursor < 27-1)
-				colorCursor++;
+			if(colorCursorscribble < 27-1)
+				colorCursorscribble++;
 			break;
 	}
 	
-	curColor = customColors[colorCursor] | BIT(15);
+	curColor = customColors[colorCursorscribble] | BIT(15);
 }
 
 void moveTool(int action)
@@ -865,11 +860,11 @@ void moveTool(int action)
 
 void loadColorPicker()
 {
-	if(colorCursor < 18) // don't edit pallate
+	if(colorCursorscribble < 18) // don't edit pallate
 		return;
 	
 	memCpySet(scribblePicture.picData + 2, drawBuffer, 256*192*2); // save current scribble
-	saveColor = customColors[colorCursor] | BIT(15);
+	saveColor = customColors[colorCursorscribble] | BIT(15);
 	slidePosition = 31*3;
 	dragging = false;
 	dragging2 = false;
@@ -888,7 +883,7 @@ void loadColorPicker()
 
 void drawColorPicker()
 {
-	customColors[colorCursor] = drawSlider(200, 3, tmpColor, slidePosition, fb_backBuffer()) | BIT(15);	
+	customColors[colorCursorscribble] = drawSlider(200, 3, tmpColor, slidePosition, fb_backBuffer()) | BIT(15);	
 	
 	fb_drawRect(195, slidePosition + 3, 198, slidePosition + 3, 0x0);
 	fb_drawRect(212, slidePosition + 3, 215, slidePosition + 3, 0x0);
@@ -963,8 +958,8 @@ void colorPickerUp()
 void destroyColorPicker(bool toSaveColor)
 {
 	if(!toSaveColor)
-		customColors[colorCursor] = saveColor | BIT(15);
-	curColor = customColors[colorCursor] | BIT(15);
+		customColors[colorCursorscribble] = saveColor | BIT(15);
+	curColor = customColors[colorCursorscribble] | BIT(15);
 		
 	fb_eraseBG();
 	
