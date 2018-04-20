@@ -734,15 +734,18 @@ int debug_FileExists(const char* filename, int indexSource){
 		
 		//so far index 11 correct path OK
 		//so far index 21 correct path OK
-		//so far index 10
+		//so far index 10 correct path OK
+		//so fat index 13 (config)
 		if(
 			(indexSource != 11)
 			&&
 			(indexSource != 21)
+			&&
+			(indexSource != 10)
 		){
 		
 			//printfDebugger("id:%d-missing:%s",indexSource,filename);
-			printfDebugger("%s",filename);
+			//printfDebugger("%s",filename);
 		}
 	}
 	

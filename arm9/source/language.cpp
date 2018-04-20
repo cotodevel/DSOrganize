@@ -1275,8 +1275,10 @@ void loadConfig(char *fName, void (*dataProcess)(char *, char *, char *))
 	int x = 0;
 	
 	DRAGON_chdir("/");
-	DRAGON_FILE *fFile = DRAGON_fopen(fName, "r");
-	
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)fName,0) == FT_FILE){
+		fFile = DRAGON_fopen(fName, "r");	//debug_FileExists index: 55
+	}
 	memset(curHeader, 0, 64);
 	
 	while(!DRAGON_feof(fFile))

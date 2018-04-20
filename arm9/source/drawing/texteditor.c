@@ -859,7 +859,10 @@ void saveTextFile()
 		strcpy(curDir,strTmp);
 	}
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(curDir, "w");	
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)curDir,30) == FT_FILE){
+		fFile = DRAGON_fopen(curDir, "w");	//debug_FileExists index: 30
+	}
 	
 	copying = true;
 	

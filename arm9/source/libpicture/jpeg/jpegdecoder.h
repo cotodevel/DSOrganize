@@ -275,9 +275,11 @@ public:
 
     eof_flag = false;
     error_flag = false;
-
-    Pfile = DRAGON_fopen(Pfilename, "rb");
-    if (!Pfile)
+	
+	if(debug_FileExists((const char*)Pfilename,58) == FT_FILE){
+		Pfile = DRAGON_fopen(Pfilename, "rb");	//debug_FileExists index: 58
+    }
+	if (!Pfile)
       return (true);
 
     return (false);

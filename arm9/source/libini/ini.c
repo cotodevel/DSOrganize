@@ -22,7 +22,10 @@ bool getSetting(char *section, char *name, char *buffer)
 	bool found = false;
 	int x = 0;
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(iniPath, "r");
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)iniPath,56) == FT_FILE){
+		fFile = DRAGON_fopen(iniPath, "r");	//debug_FileExists index: 56
+	}
 	
 	curHeader[0] = 0;
 	str[0] = 0;

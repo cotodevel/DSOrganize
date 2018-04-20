@@ -88,9 +88,11 @@ void saveBookmarks()
 		return;
 	}
 	
-	DRAGON_FILE *fp = DRAGON_fopen(bookmarkFile, "w");
-	DRAGON_fwrite(bookmarks, 4, 10, fp);
-	DRAGON_fclose(fp);	
+	if(debug_FileExists((const char*)bookmarkFile,32) == FT_FILE){
+		DRAGON_FILE *fp = DRAGON_fopen(bookmarkFile, "w");	//debug_FileExists index: 32
+		DRAGON_fwrite(bookmarks, 4, 10, fp);
+		DRAGON_fclose(fp);	
+	}
 	
 	// hide file
 	DRAGON_SetFileAttributes(bookmarkFile, ATTRIB_HID, ATTRIB_HID);
@@ -153,9 +155,10 @@ void drawViewerScreens()
 		strcpy(bookmarkFile, fName);
 		strcat(bookmarkFile, ".bmf");
 		
-		if(DRAGON_FileExists(bookmarkFile) != FT_NONE)
+		
+		if(debug_FileExists((const char*)bookmarkFile,33) == FT_FILE)
 		{
-			DRAGON_FILE *fp = DRAGON_fopen(bookmarkFile, "r");
+			DRAGON_FILE *fp = DRAGON_fopen(bookmarkFile, "r");	//debug_FileExists index: 33
 			DRAGON_fread(bookmarks, 4, 10, fp);
 			DRAGON_fclose(fp);	
 			
@@ -181,106 +184,109 @@ void drawViewerScreens()
 			filePos = 0;
 			
 			freeViewerText();
-			DRAGON_FILE *fFile = DRAGON_fopen(curDir, "r");		
 			
-			bufferLength = DRAGON_flength(fFile) + 100;
-			
-			copying = true;
-			maxSize = bufferLength;
-			curSize = 0;
-			
-			textFile = (char *)trackMalloc(bufferLength,"viewer src");
-			memset(textFile, 0, bufferLength);
-			
-			// figure out if its windows/unix/mac
-			
-			DRAGON_fgets(textFile, bufferLength+1, fFile);
-			
-			if(strlen(textFile) == bufferLength) // we have no returns in this document
-				textType = WINDOWS; // assume windows cuz thats how we are
-			else
-			{
-				DRAGON_fseek(fFile, strlen(textFile), 0);
+			if(debug_FileExists((const char*)curDir,34) == FT_FILE){
+				DRAGON_FILE *fFile = DRAGON_fopen(curDir, "r");		//debug_FileExists index: 34
 				
-				char c = DRAGON_fgetc(fFile);
+				bufferLength = DRAGON_flength(fFile) + 100;
 				
-				if(c == 0x0A) // LF
-					textType = UNIX;
+				copying = true;
+				maxSize = bufferLength;
+				curSize = 0;
+				
+				textFile = (char *)trackMalloc(bufferLength,"viewer src");
+				memset(textFile, 0, bufferLength);
+				
+				// figure out if its windows/unix/mac
+				
+				DRAGON_fgets(textFile, bufferLength+1, fFile);
+				
+				if(strlen(textFile) == bufferLength) // we have no returns in this document
+					textType = WINDOWS; // assume windows cuz thats how we are
 				else
 				{
-					if(DRAGON_feof(fFile))
-						textType = MAC; // has to be mac, its a CR at the end of the file
+					DRAGON_fseek(fFile, strlen(textFile), 0);
+					
+					char c = DRAGON_fgetc(fFile);
+					
+					if(c == 0x0A) // LF
+						textType = UNIX;
 					else
 					{
-						c = DRAGON_fgetc(fFile);
-						if(c == 0x0A) //LF
-							textType = WINDOWS;
+						if(DRAGON_feof(fFile))
+							textType = MAC; // has to be mac, its a CR at the end of the file
 						else
-							textType = MAC;
-					}
-				}
-				
-				memset(textFile, 0, strlen(textFile));
-				DRAGON_fseek(fFile, 0, 0);
-				uint tmpLocation = 0;
-				
-				switch(textType)
-				{
-					case WINDOWS:
-						crChar = 0x0D; // CR
-						break;
-					case UNIX:
-						crChar = 0x0A; // LF
-						break;
-					case MAC:
-						crChar = 0x0D; // CR
-						break;
-				}
-				
-				// read the file
-				
-				while(!DRAGON_feof(fFile))
-				{	
-					memset(readBuffer, 0, 102);
-					curSize = DRAGON_ftell(fFile);
-					DRAGON_fread(readBuffer, 1, 100, fFile);
-					
-					tmpBuf = strchr(readBuffer, crChar);
-					
-					if(tmpBuf == NULL) // not found, just tack on to the end
-					{
-						if(strlen(readBuffer) > 0)
-						{						
-							memcpy(textFile + tmpLocation, readBuffer, strlen(readBuffer));
-							tmpLocation += strlen(readBuffer);
-							textFile[tmpLocation] = 0;
-						}
-					}
-					else
-					{
-						filePos = tmpBuf - readBuffer; // position
-						
-						if(filePos > 0)
 						{
-							memcpy(textFile + tmpLocation, readBuffer, filePos);
-							tmpLocation += filePos;
+							c = DRAGON_fgetc(fFile);
+							if(c == 0x0A) //LF
+								textType = WINDOWS;
+							else
+								textType = MAC;
 						}
+					}
+					
+					memset(textFile, 0, strlen(textFile));
+					DRAGON_fseek(fFile, 0, 0);
+					uint tmpLocation = 0;
+					
+					switch(textType)
+					{
+						case WINDOWS:
+							crChar = 0x0D; // CR
+							break;
+						case UNIX:
+							crChar = 0x0A; // LF
+							break;
+						case MAC:
+							crChar = 0x0D; // CR
+							break;
+					}
+					
+					// read the file
+					
+					while(!DRAGON_feof(fFile))
+					{	
+						memset(readBuffer, 0, 102);
+						curSize = DRAGON_ftell(fFile);
+						DRAGON_fread(readBuffer, 1, 100, fFile);
 						
-						textFile[tmpLocation] = RET;
-						tmpLocation++;
-						textFile[tmpLocation] = 0;
+						tmpBuf = strchr(readBuffer, crChar);
 						
-						if(textType == WINDOWS)
-							filePos+=2;
+						if(tmpBuf == NULL) // not found, just tack on to the end
+						{
+							if(strlen(readBuffer) > 0)
+							{						
+								memcpy(textFile + tmpLocation, readBuffer, strlen(readBuffer));
+								tmpLocation += strlen(readBuffer);
+								textFile[tmpLocation] = 0;
+							}
+						}
 						else
-							filePos+=1;
-						
-						DRAGON_fseek(fFile, curSize + filePos, 0);					
+						{
+							filePos = tmpBuf - readBuffer; // position
+							
+							if(filePos > 0)
+							{
+								memcpy(textFile + tmpLocation, readBuffer, filePos);
+								tmpLocation += filePos;
+							}
+							
+							textFile[tmpLocation] = RET;
+							tmpLocation++;
+							textFile[tmpLocation] = 0;
+							
+							if(textType == WINDOWS)
+								filePos+=2;
+							else
+								filePos+=1;
+							
+							DRAGON_fseek(fFile, curSize + filePos, 0);					
+						}
 					}
 				}
+				
+				DRAGON_fclose(fFile);
 			}
-			
-			DRAGON_fclose(fFile);
 			copying = false;
 			wrapCalculate();
 		}

@@ -90,8 +90,11 @@ VIRTUAL_FILE* _mm_fopen(CHAR* fname,CHAR* attrib)
 	else
 	{
 		DRAGON_FILE *fp;
-	
-		if(!(fp=DRAGON_fopen(fname,attrib))) {
+		
+		if(debug_FileExists((const char*)fname,74) == FT_FILE){
+			fp=DRAGON_fopen(fname,attrib);	//debug_FileExists index: 74
+		}
+		if(!fp) {
 			_mm_errno = MMERR_OPENING_FILE;
 			if(_mm_errorhandler) _mm_errorhandler();
 			

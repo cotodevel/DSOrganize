@@ -703,8 +703,10 @@ void loadWifi()
 		memset(dsoProfiles, 0, sizeof(WIFI_PROFILE) * 3);
 		return;
 	}
-	
-	DRAGON_FILE *df = DRAGON_fopen(sStr, "r");
+	DRAGON_FILE *df = NULL;
+	if(debug_FileExists((const char*)sStr,79) == FT_FILE){
+		df = DRAGON_fopen(sStr, "r");	//debug_FileExists index: 79
+	}
 	DRAGON_fread(dsoProfiles, 1, sizeof(WIFI_PROFILE) * 3, df);
 	DRAGON_fclose(df);
 	
@@ -717,8 +719,10 @@ void saveWifi()
 	
 	char sStr[256];
 	sprintf(sStr, "%swifi.dat", d_base);	
-	
-	DRAGON_FILE *df = DRAGON_fopen(sStr, "w");
+	DRAGON_FILE *df = NULL;
+	if(debug_FileExists((const char*)sStr,80) == FT_FILE){
+		df = DRAGON_fopen(sStr, "w");	//debug_FileExists index: 80
+	}
 	DRAGON_fwrite(dsoProfiles, 1, sizeof(WIFI_PROFILE) * 3, df);
 	DRAGON_fclose(df);
 }
@@ -731,8 +735,10 @@ WIFI_PROFILE *readWifi()
 void makeDefaultSettings()
 {	
 	DRAGON_chdir(d_base);
-	DRAGON_FILE *fFile = DRAGON_fopen("config.ini", "w");
-	
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)"config.ini",81) == FT_FILE){
+		fFile = DRAGON_fopen("config.ini", "w");	//debug_FileExists index: 81
+	}
 	DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
 	DRAGON_fputc(0x0D, fFile);
 	DRAGON_fputc(0x0A, fFile);
@@ -1037,8 +1043,9 @@ void makeDefaultSettings()
 	
 	DRAGON_fclose(fFile);
 	
-	fFile = DRAGON_fopen("autoperform.txt", "w");	
-	
+	if(debug_FileExists((const char*)"autoperform.txt",82) == FT_FILE){
+		fFile = DRAGON_fopen("autoperform.txt", "w");	//debug_FileExists index: 82
+	}
 	DRAGON_fputs("/j #dsorganize", fFile);
 	DRAGON_fputc(0x0D, fFile);
 	DRAGON_fputc(0x0A, fFile);
@@ -1056,8 +1063,11 @@ void saveSettings()
 		strcat(defaultSavePath, "/");
 	
 	DRAGON_chdir(d_base);
-	DRAGON_FILE *fFile = DRAGON_fopen("config.ini", "w");
+	DRAGON_FILE *fFile = NULL;
 	
+	if(debug_FileExists((const char*)"config.ini",83) == FT_FILE){
+		fFile=DRAGON_fopen("config.ini", "w");	//debug_FileExists index: 83
+	}
 	DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
 	DRAGON_fputc(0x0D, fFile);
 	DRAGON_fputc(0x0A, fFile);

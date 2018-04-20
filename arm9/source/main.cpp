@@ -368,13 +368,10 @@ void initProgram()
 	
 	DRAGON_chdir(d_base);
 	
-	std::string PathFix = std::string(getfatfsPath(""));
-	PathFix.erase(PathFix.length()-1);
-	
+	std::string PathFix = getPathFix();
 	std::string FullPath = (PathFix + string(d_base) + string("/") + string("startup.wav"));
 	if(DRAGON_FileExists(FullPath.c_str()) == FT_FILE)
 	{
-		
 		char tStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
 		sprintf(tStr, "%s", FullPath.c_str());
 		loadWavToMemory();

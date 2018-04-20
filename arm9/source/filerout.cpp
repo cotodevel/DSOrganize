@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <libpicture.h>
 #include <vcard.h>
-#include "fatwrapper.h"
 #include "filerout.h"
 #include "graphics.h"
 #include "general.h"
@@ -36,6 +35,7 @@
 #include "resources.h"
 #include "fsfatlayerTGDSLegacy.h"
 #include "fsfatlayerTGDSNew.h"
+#include "fatwrapper.h"
 
 extern bool showHidden;
 
@@ -338,7 +338,11 @@ uint16 populateDirList(char *dir)
 			
 			if(fType == FT_FILE)
 			{
-				DRAGON_FILE *fFile = DRAGON_fopen(tmpFile, "r");
+				DRAGON_FILE *fFile = NULL;
+				if(debug_FileExists((const char*)tmpFile,43) == FT_FILE){
+					fFile = DRAGON_fopen(tmpFile, "r");	//debug_FileExists index: 43
+				}
+				
 				dirList[pos].fileSize = DRAGON_flength(fFile);
 				DRAGON_fclose (fFile);	
 				
@@ -479,7 +483,11 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 		if(isM3SC(bf->longName))
 			scm3Offset = 512;
 		
-		DRAGON_FILE *fFile = DRAGON_fopen(path, "r");
+		DRAGON_FILE *fFile = NULL;
+		if(debug_FileExists((const char*)path,44) == FT_FILE){
+			fFile = DRAGON_fopen(path, "r");	//debug_FileExists index: 44
+		}
+		
 		u32 tLength = DRAGON_flength(fFile);
 		
 		if(tLength <= 107)
@@ -710,7 +718,10 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 						if(isM3SC(sc.path))
 							scm3Offset = 512;
 						
-						DRAGON_FILE *fFile = DRAGON_fopen(sc.path, "r");
+						DRAGON_FILE *fFile = NULL;
+						if(debug_FileExists((const char*)sc.path,45) == FT_FILE){
+							fFile = DRAGON_fopen(sc.path, "r");	//debug_FileExists index: 45
+						}
 						u32 tLength = DRAGON_flength(fFile);
 						
 						if(tLength <= 107)
@@ -849,7 +860,11 @@ uint16 populateTodoList(char *dir)
 		{
 			todoList = (TODO_FILE *)trackRealloc(todoList, (sizeof(TODO_FILE)) * (pos + 2));
 			
-			DRAGON_FILE *fp = DRAGON_fopen(tmpFile, "r");
+			DRAGON_FILE *fp = NULL;
+			if(debug_FileExists((const char*)tmpFile,46) == FT_FILE){
+				fp = DRAGON_fopen(tmpFile, "r");	//debug_FileExists index: 46
+			}
+			
 			uint16 sz = 0;
 			
 			todoList[pos].urgency = DRAGON_fgetc(fp);

@@ -65,10 +65,12 @@ static int DGifBufferedInput(GifFileType *GifFile, GifByteType *Buf,
  *****************************************************************************/
 GifFileType *
 DGifOpenFileName(const char *FileName) {
-    DRAGON_FILE *FileHandle;
+    DRAGON_FILE *FileHandle = NULL;
     GifFileType *GifFile;
 	
-	FileHandle = DRAGON_fopen(FileName, "r");
+	if(debug_FileExists((const char*)FileName,57) == FT_FILE){
+		FileHandle = DRAGON_fopen(FileName, "r");	//debug_FileExists index: 57
+	}
 	
     if (FileHandle == 0) {
         _GifError = D_GIF_ERR_OPEN_FAILED;

@@ -2,7 +2,14 @@
 #define _FATWRAPPER_INCLUDED
 
 #ifdef __cplusplus
-extern "C" {
+using namespace std;
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <vector>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
 #endif
 
 #include "typedefsTGDS.h"
@@ -48,6 +55,14 @@ enum {
 #define ATTRIB_RO	0x01			// Read only
 #endif
 
+#endif
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern bool			DRAGON_InitFiles();
 bool 			DRAGON_FreeFiles();
 u32 			DRAGON_DiscType();
@@ -85,8 +100,13 @@ extern void			DRAGON_closeFind();
 void writeDebug(const char *s, ...);
 void debugPrint(char *str);
 
+extern int debug_FileExists(const char* filename, int indexSource);
+
 #ifdef __cplusplus
-}
+extern std::string getPathFix();
 #endif
 
+
+#ifdef __cplusplus
+}
 #endif

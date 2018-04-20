@@ -91,8 +91,11 @@ void saveTodo(TODO_FILE *vf, char *dir)
 	else
 		strcpy(filename, vf->fileName);
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(filename, "w");
-
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)filename,31) == FT_FILE){
+		fFile = DRAGON_fopen(filename, "w");	//debug_FileExists index: 31
+	}
+	
 	uint16 sz;
 	
 	DRAGON_fputc(vf->urgency, fFile);

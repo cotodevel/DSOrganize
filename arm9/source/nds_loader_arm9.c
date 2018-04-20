@@ -111,9 +111,10 @@ bool dldiPatchLoader (data_t *binData, u32 binSize)
 		// load and then present
 		
 		DRAGON_chdir(d_res);
-		
-		DRAGON_FILE *df = DRAGON_fopen(dldiPath, "r");
-		
+		DRAGON_FILE *df = NULL;
+		if(debug_FileExists((const char*)dldiPath,75) == FT_FILE){
+			df = DRAGON_fopen(dldiPath, "r");	//debug_FileExists index: 75
+		}
 		u32 fLen = DRAGON_flength(df);
 		pDH = safeMalloc(PATCH_SIZE);
 		memset(pDH, 0, PATCH_SIZE);

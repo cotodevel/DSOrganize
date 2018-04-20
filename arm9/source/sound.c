@@ -2129,8 +2129,10 @@ bool loadSound(char *fName)
 		
 		wavFormatChunk headerChunk;
 		char header[13];
-		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "r");		
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,87) == FT_FILE){
+			fp = DRAGON_fopen(fName, "r");		//debug_FileExists index: 87
+		}
 		DRAGON_fread(header, 1, 12, fp);
 		
 		header[12] = 0;
@@ -2313,8 +2315,10 @@ bool loadSound(char *fName)
 		mad_synth_init(&Synth);
 		mad_timer_reset(&Timer);
 		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
-		
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,88) == FT_FILE){
+			fp = DRAGON_fopen(fName, "r");	//debug_FileExists index: 88
+		}
 		soundData.filePointer = fp;
 		
 		getID3V1(fp, &id3Data);
@@ -2395,8 +2399,10 @@ bool loadSound(char *fName)
 		
 		soundData.sourceFmt = SRC_OGG;
 		soundData.bufLoc = 0;
-		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,89) == FT_FILE){
+			fp=DRAGON_fopen(fName, "r");	//debug_FileExists index: 89
+		}
 		soundData.filePointer = fp;
 		
 		ov_callbacks oggCallBacks = {callbacks_read_func, callbacks_seek_func, callbacks_close_func, callbacks_tell_func};
@@ -2446,7 +2452,10 @@ bool loadSound(char *fName)
 		if (!hAACDecoder)
 			return false;
 		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,90) == FT_FILE){
+			fp = DRAGON_fopen(fName, "r");	//debug_FileExists index: 90
+		}
 		soundData.filePointer = fp;
 		
 		aacReadBuf = (unsigned char *)trackMalloc(AAC_READBUF_SIZE, "aac read stream");
@@ -2526,7 +2535,10 @@ bool loadSound(char *fName)
 		if (!hAACDecoder)
 			return false;
 			
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,91) == FT_FILE){
+			fp=DRAGON_fopen(fName, "r");	//debug_FileExists index: 91
+		}
 		soundData.filePointer = fp;
 		
 		aacReadBuf = (unsigned char *)trackMalloc(AAC_READBUF_SIZE * 2, "aac read stream");
@@ -2663,7 +2675,9 @@ bool loadSound(char *fName)
 		soundData.sourceFmt = SRC_FLAC;
 		soundData.bufLoc = 0;
 		
-		soundData.filePointer = DRAGON_fopen(fName,"r");
+		if(debug_FileExists((const char*)fName,92) == FT_FILE){
+			soundData.filePointer = DRAGON_fopen(fName,"r");	//debug_FileExists index: 92
+		}
 		if(!flac_init(soundData.filePointer,&fc))
 		{
 			DRAGON_fclose(soundData.filePointer);
@@ -2707,7 +2721,10 @@ bool loadSound(char *fName)
 		soundData.sourceFmt = SRC_SID;
 		soundData.bufLoc = 0;
 		
-		DRAGON_FILE *df = DRAGON_fopen(fName,"r");
+		DRAGON_FILE *df = NULL;
+		if(debug_FileExists((const char*)fName,93) == FT_FILE){
+			df= DRAGON_fopen(fName,"r");	//debug_FileExists index: 93
+		}
 		sidLength = DRAGON_flength(df);
 		
 		sidfile = (char *)trackMalloc(sidLength, "sid file temporary");
@@ -2754,8 +2771,10 @@ bool loadSound(char *fName)
 		
 		soundData.sourceFmt = SRC_NSF;
 		soundData.bufLoc = 0;
-		
-		DRAGON_FILE *df = DRAGON_fopen(fName,"r");
+		DRAGON_FILE *df = NULL;
+		if(debug_FileExists((const char*)fName,94) == FT_FILE){
+			df=DRAGON_fopen(fName,"r");	//debug_FileExists index: 94
+		}
 		nsfLength = DRAGON_flength(df);
 		
 		nsffile = (uint8_t *)trackMalloc(nsfLength, "nsf file temporary");
@@ -2814,8 +2833,10 @@ bool loadSound(char *fName)
 		
 		soundData.sourceFmt = SRC_SPC;
 		soundData.bufLoc = 0;
-		
-		DRAGON_FILE *df = DRAGON_fopen(fName,"r");
+		DRAGON_FILE *df = NULL;
+		if(debug_FileExists((const char*)fName,95) == FT_FILE){
+			df=DRAGON_fopen(fName,"r");	//debug_FileExists index: 95
+		}
 		spcLength = DRAGON_flength(df);
 		
 		spcfile = (uint8_t *)trackMalloc(spcLength, "spc file temporary");
@@ -2847,8 +2868,10 @@ bool loadSound(char *fName)
 		
 		soundData.sourceFmt = SRC_SNDH;
 		soundData.bufLoc = 0;
-		
-		DRAGON_FILE *df = DRAGON_fopen(fName,"r");
+		DRAGON_FILE *df = NULL;
+		if(debug_FileExists((const char*)fName,96) == FT_FILE){
+			df=DRAGON_fopen(fName,"r");	//debug_FileExists index: 96
+		}
 		sndhLength = DRAGON_flength(df);
 		
 		sndhfile = (uint8_t *)trackMalloc(sndhLength, "sndh file temporary");

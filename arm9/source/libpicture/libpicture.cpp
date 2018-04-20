@@ -904,7 +904,10 @@ int getTypeFromMagicID(char *fName)
 	if(strcmp(ext,".bin") == 0 || strcmp(ext,".pal") == 0 || strcmp(ext,".raw") == 0)
 		return IMAGE_TYPE_RAW;
 	
-	DRAGON_FILE *df = DRAGON_fopen(fName, "r");
+	DRAGON_FILE *df = NULL;
+	if(debug_FileExists((const char*)fName,59) == FT_FILE){
+		df = DRAGON_fopen(fName, "r");	//debug_FileExists index: 59
+	}
 	
 	if(DRAGON_flength(df) == 0)
 	{
@@ -1283,7 +1286,10 @@ void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight)
 		
 		png_byte header[8];
 		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "rb");
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,60) == FT_FILE){
+			fp = DRAGON_fopen(fName, "rb");	//debug_FileExists index: 60
+		}
 		DRAGON_fread(header, 1, 8, fp);
 		int is_png = !png_sig_cmp(header, 0, 8);
 		if (!is_png)
@@ -1456,7 +1462,10 @@ void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight)
 		
 		uint16 *pallate = NULL;
 		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "rb");
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,61) == FT_FILE){
+			fp = DRAGON_fopen(fName, "rb");	//debug_FileExists index: 61
+		}
 		
 		char h1 = DRAGON_fgetc(fp);
 		char h2 = DRAGON_fgetc(fp);
@@ -1719,8 +1728,10 @@ void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight)
 		//bin file!
 		
 		bool loaded = false;
-		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "rb");
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,62) == FT_FILE){
+			fp = DRAGON_fopen(fName, "rb");	//debug_FileExists index: 62
+		}
 		int tLength = DRAGON_flength(fp);
 		
 		if(tLength == 98304) // 256x192 raw
@@ -1773,7 +1784,11 @@ void loadImage(char *fName, PICTURE_DATA *pd, int thumbWidth, int thumbHeight)
 				
 				char *tempData = (char *)malloc(pd->max_X*pd->max_Y);
 				
-				DRAGON_FILE *fp = DRAGON_fopen(pd->binName, "rb");
+				DRAGON_FILE *fp = NULL;
+				if(debug_FileExists((const char*)pd->binName,63) == FT_FILE){
+					fp = DRAGON_fopen(pd->binName, "rb");	//debug_FileExists index: 63
+				}
+				
 				DRAGON_fread(tempData, 1, pd->max_X*pd->max_Y, fp);
 				
 				uint16 *bgData = (uint16 *)pd->rawData;
@@ -2237,8 +2252,11 @@ bool getPictureSize(char *fName, int *max_X, int *max_Y)
 	if(imageType == IMAGE_TYPE_PNG)
 	{
 		png_byte header[8];
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,64) == FT_FILE){
+			fp = DRAGON_fopen(fName, "rb");	//debug_FileExists index: 64
+		}
 		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "rb");
 		DRAGON_fread(header, 1, 8, fp);
 		int is_png = !png_sig_cmp(header, 0, 8);
 		if (!is_png)
@@ -2287,9 +2305,10 @@ bool getPictureSize(char *fName, int *max_X, int *max_Y)
 	if(imageType == IMAGE_TYPE_BMP)
 	{
 		//bmp file!
-		
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "rb");
-		
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,65) == FT_FILE){
+			fp = DRAGON_fopen(fName, "rb");	//debug_FileExists index: 65
+		}
 		char h1 = DRAGON_fgetc(fp);
 		char h2 = DRAGON_fgetc(fp);
 		
@@ -2409,7 +2428,9 @@ bool saveImage(char *fName, void *rawData, int max_X, int max_Y)
 		png_structp png_ptr;
 		png_infop info_ptr;
 		
-		fp = DRAGON_fopen(fName, "w");
+		if(debug_FileExists((const char*)fName,66) == FT_FILE){
+			fp = DRAGON_fopen(fName, "w");	//debug_FileExists index: 66
+		}
 		if (fp == NULL)
 			return false;
 		
@@ -2494,8 +2515,10 @@ bool saveImage(char *fName, void *rawData, int max_X, int max_Y)
 		
 		uint tData = 0;
 		uint16 tData16 = 0;
-		DRAGON_FILE *fp = DRAGON_fopen(fName, "w");
-		
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)fName,67) == FT_FILE){
+			fp = DRAGON_fopen(fName, "w");	//debug_FileExists index: 67
+		}
 		// signature
 		DRAGON_fputc(0x42, fp);
 		DRAGON_fputc(0x4D, fp);

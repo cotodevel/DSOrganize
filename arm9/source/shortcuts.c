@@ -111,7 +111,11 @@ bool loadShortcut(char *filename, SHORTCUT *sc)
 	strcpy(sc->location, filename);
 	
 	char *str = (char *)safeMalloc(MAX_SHORTCUT_SIZE + 1);
-	DRAGON_FILE *fp = DRAGON_fopen(filename, "r");
+	
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)filename,84) == FT_FILE){
+		fp=DRAGON_fopen(filename, "r");	//debug_FileExists index: 84
+	}
 	DRAGON_fgets(str, MAX_SHORTCUT_SIZE, fp);
 	strlwr(str);
 	
@@ -281,8 +285,10 @@ void loadShortcutIcon(SHORTCUT *sc)
 	if(DRAGON_FileExists(crcFile) == FT_FILE) // theres already a cached icon
 	{
 		u32 tFile;
-		DRAGON_FILE *fp = DRAGON_fopen(crcFile, "r");
-		
+		DRAGON_FILE *fp = NULL;
+		if(debug_FileExists((const char*)crcFile,85) == FT_FILE){
+			fp = DRAGON_fopen(crcFile, "r");	//debug_FileExists index: 85
+		}
 		tFile = DRAGON_flength(fp);
 		sc->loadedIcon = (uint16 *)trackMalloc(tFile , "cached icon");		
 		DRAGON_fread(sc->loadedIcon, 1, tFile, fp);
@@ -317,7 +323,10 @@ void loadShortcutIcon(SHORTCUT *sc)
 	memcpy(sc->loadedIcon, tPicture.picData, 4 + ((50*50)*2));
 	freeImage(&tPicture);
 	
-	DRAGON_FILE *fp = DRAGON_fopen(crcFile, "w");
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)crcFile,86) == FT_FILE){
+		fp = DRAGON_fopen(crcFile, "w");	//debug_FileExists index: 86
+	}
 	DRAGON_fwrite(sc->loadedIcon, 1, 4 + ((50*50)*2), fp);
 	DRAGON_fclose(fp);
 }

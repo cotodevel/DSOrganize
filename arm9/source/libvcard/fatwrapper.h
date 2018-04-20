@@ -2,8 +2,16 @@
 #define _FATWRAPPER_INCLUDED
 
 #ifdef __cplusplus
-extern "C" {
+using namespace std;
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <vector>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
 #endif
+
 
 #include "typedefsTGDS.h"
 #include "dsregs.h"
@@ -48,6 +56,13 @@ enum {
 
 #define MAX_FILES 10
 
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern bool			DRAGON_InitFiles();
 bool 			DRAGON_FreeFiles();
 u32 			DRAGON_DiscType();
@@ -82,8 +97,14 @@ int 			DRAGON_fseek(DRAGON_FILE* df, s32 offset, int origin);
 u32 			DRAGON_ftell(DRAGON_FILE* df);
 void 			DRAGON_detectUnicode(DRAGON_FILE* df);
 
+extern int debug_FileExists(const char* filename, int indexSource);
+
+#ifdef __cplusplus
+extern std::string getPathFix();
+#endif
+
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif

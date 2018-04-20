@@ -196,7 +196,10 @@ void getOggInfo(OggVorbis_File *vf, ID3V1_TYPE *id3)
 void getGenre(int g, char *str)
 {
 	DRAGON_chdir(d_base);
-	DRAGON_FILE *fp = DRAGON_fopen("genre.dat", "r");
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)"genre.dat",54) == FT_FILE){
+		fp = DRAGON_fopen("genre.dat", "r");	//debug_FileExists index: 54
+	}
 	DRAGON_fseek(fp, (g * 60), SEEK_SET);
 	DRAGON_fread(str, 1, 60, fp);
 	DRAGON_fclose(fp);
@@ -206,7 +209,7 @@ void outputGenresToFile()
 {
 	char tmpStr[60];
 	
-	DRAGON_FILE *fp = DRAGON_fopen("/genre.dat", "w");
+	//no DRAGON_FILE *fp = DRAGON_fopen("/genre.dat", "w");
 	
 	for(int i=0;i<=125;i++)
 	{

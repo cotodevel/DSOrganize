@@ -141,8 +141,9 @@ extern bool 			DRAGON_needsUpdate(DRAGON_FILE *df);
 
 extern int debug_FileExists(const char* filename, int indexSource);
 
+#ifdef __cplusplus
 extern std::string getPathFix();
-
+#endif
 
 #ifdef __cplusplus
 }

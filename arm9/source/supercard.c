@@ -68,7 +68,7 @@ static void SetSC_UNLOCK(int SSC)
 
 void boot_SCCF(char *file)
 {
-  DRAGON_FILE *fp = DRAGON_fopen(file, "r");
+ //DRAGON_FILE *fp = DRAGON_fopen(file, "r");
   
   vu16 *pROM16=(vu16*)0x08000000;
   

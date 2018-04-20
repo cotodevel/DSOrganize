@@ -75,8 +75,11 @@ int parseTokens(char *inStr, int type)
 int isValidVCard(char *filename)
 {
 	char str[255];
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)filename,68) == FT_FILE){
+		fFile = DRAGON_fopen(filename, "r");	//debug_FileExists index: 68
+	}
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(filename, "r");
 	DRAGON_detectUnicode(fFile);
 	memset(str, 0, 255);
 	DRAGON_fgets(str, 255, fFile);
@@ -355,8 +358,11 @@ void loadVCard(char *filename, VCARD_FILE *vf)
 	clearVCard(vf);
 	
 	strcpy(vf->fileName, filename);
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)filename,69) == FT_FILE){
+		fFile = DRAGON_fopen(filename, "r");	//debug_FileExists index: 69
+	}
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(filename, "r");
 	DRAGON_detectUnicode(fFile);
 	
 	while(!DRAGON_feof(fFile))
@@ -523,7 +529,10 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	else
 		strcpy(filename, vf->fileName);
 		
-	fFile = DRAGON_fopen(filename, "w");
+	if(debug_FileExists((const char*)filename,70) == FT_FILE){
+		fFile = DRAGON_fopen(filename, "w");	//debug_FileExists index: 70
+	}
+	
 	DRAGON_fputs("BEGIN:VCARD", fFile);
 	DRAGON_fputc(0x0D, fFile);
 	DRAGON_fputc(0x0A, fFile);
@@ -659,7 +668,7 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	
 	memset(finalStr, 0, 10240);	
 	
-	fFile = DRAGON_fopen(vf->fileName, "r");
+	//fFile = DRAGON_fopen(vf->fileName, "r");
 	
 	while(!DRAGON_feof(fFile))
 	{
@@ -748,7 +757,7 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	
 	DRAGON_fclose(fFile);
 	
-	fFile = DRAGON_fopen(vf->fileName, "w");
+	//fFile = DRAGON_fopen(vf->fileName, "w");
 	DRAGON_fputs(finalStr, fFile);	
 	DRAGON_fclose(fFile);		
 	
@@ -761,8 +770,11 @@ bool checkMultiples(char *tmpFile)
 	char *str = (char *)safeMalloc(4096);
 	char str2[257];
 	char ext[10];
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)tmpFile,71) == FT_FILE){
+		fFile = DRAGON_fopen(tmpFile, "r");	//debug_FileExists index: 71
+	}
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(tmpFile, "r");
 	DRAGON_detectUnicode(fFile);
 	
 	while(!DRAGON_feof(fFile))
@@ -809,8 +821,10 @@ bool checkMultiples(char *tmpFile)
 				}
 				
 				// copy over the rest of the contents, doesn't matter if it contains multiples because it'll be recursive
-				
-				DRAGON_FILE *newFile = DRAGON_fopen(str2, "w");
+				DRAGON_FILE *newFile = NULL;
+				if(debug_FileExists((const char*)str2,72) == FT_FILE){
+					newFile = DRAGON_fopen(str2, "w");	//debug_FileExists index: 72
+				}
 				char *contents = (char *)trackMalloc(100, "copy vcard stuff");
 				memset(contents, 0, 100);
 				
@@ -833,7 +847,9 @@ bool checkMultiples(char *tmpFile)
 				DRAGON_fclose(fFile);
 				DRAGON_remove(tmpFile);
 				
-				fFile = DRAGON_fopen(tmpFile, "w");
+				if(debug_FileExists((const char*)tmpFile,73) == FT_FILE){
+					fFile = DRAGON_fopen(tmpFile, "w");	//debug_FileExists index: 73
+				}
 				DRAGON_fwrite(contents, 1, originalPos, fFile);
 				DRAGON_fclose(fFile);
 				

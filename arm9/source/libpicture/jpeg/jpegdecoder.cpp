@@ -861,12 +861,12 @@ Pcoeff_buf_t jpeg_decoder::coeff_buf_open(
   
   char str[256];
   sprintf(str, "%s%08x.jpt", d_cache, jpegNumber++);
-  cb->Pfile = DRAGON_fopen(str, "w");
+  //cb->Pfile = DRAGON_fopen(str, "w");
   DRAGON_fwrite(tData, 1, cb->block_size * block_num_x * block_num_y, cb->Pfile);
   DRAGON_fclose(cb->Pfile);
   free(tData);
   
-  cb->Pfile = DRAGON_fopen(str, "r+");
+  //cb->Pfile = DRAGON_fopen(str, "r+");
   
   iprintf("%s\n%d", str, cb->block_size * block_num_x * block_num_y);
   

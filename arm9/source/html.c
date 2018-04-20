@@ -7206,7 +7206,11 @@ void loadHTMLFromFile(char *htmlFile, HTML_RENDERED *htmlPage)
 	if(DRAGON_FileExists(htmlFile) != FT_FILE)
 		return;
 	
-	DRAGON_FILE *fp = DRAGON_fopen(htmlFile, "r");
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)htmlFile,52) == FT_FILE){
+		fp = DRAGON_fopen(htmlFile, "r");	//debug_FileExists index: 52
+	}
+	
 	int length = DRAGON_flength(fp);
 	
 	char *tempStr = (char *)trackMalloc(length + 2048 + 1,"Html data"); // 2 kb render buffer
@@ -7273,7 +7277,10 @@ u32 getCRCFromOffset(char *inStr, LINK_TYPE inURL)
 
 void getURLFromPosition(char *fName, LINK_TYPE inURL, char *outURL)
 {
-	DRAGON_FILE *df = DRAGON_fopen(fName, "r");
+	DRAGON_FILE *df = NULL;
+	if(debug_FileExists((const char*)fName,53) == FT_FILE){
+		df = DRAGON_fopen(fName, "r");	//debug_FileExists index: 53
+	}
 	
 	DRAGON_fseek(df, inURL.startPos, SEEK_SET);
 	

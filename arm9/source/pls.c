@@ -62,9 +62,10 @@ bool loadM3U(char *fName, PLS_TYPE *outData)
 	outData->descriptionEntry = NULL;
 	outData->urlEntry = NULL;
 	outData->numEntries = 0;
-	
-	DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
-	
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)fName,76) == FT_FILE){
+		fp = DRAGON_fopen(fName, "r");	//debug_FileExists index: 76
+	}
 	memset(lastTitle, 0, 512);
 	memset(str, 0, 513);
 	DRAGON_fgets(str, 512, fp);
@@ -190,9 +191,10 @@ bool loadPlaylist(char *fName, PLS_TYPE *outData)
 	
 	outData->descriptionEntry = NULL;
 	outData->urlEntry = NULL;
-	
-	DRAGON_FILE *fp = DRAGON_fopen(fName, "r");
-	
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)fName,77) == FT_FILE){
+		fp = DRAGON_fopen(fName, "r");	//debug_FileExists index: 77
+	}
 	memset(str, 0, 513);
 	DRAGON_fgets(str, 512, fp);
 	strlwr(str);
@@ -242,8 +244,9 @@ bool loadPlaylist(char *fName, PLS_TYPE *outData)
 	memset(outData->descriptionEntry, 0, numEntries * sizeof(DCHAR));
 	memset(outData->urlEntry, 0, numEntries * sizeof(DCHAR));
 	
-	fp = DRAGON_fopen(fName, "r");
-	
+	if(debug_FileExists((const char*)fName,78) == FT_FILE){
+		fp = DRAGON_fopen(fName, "r");	//debug_FileExists index: 78
+	}
 	while(1)
 	{	
 		if(DRAGON_feof(fp))

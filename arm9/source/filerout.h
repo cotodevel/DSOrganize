@@ -20,9 +20,6 @@
 #ifndef _FILEROUT_INCLUDED
 #define _FILEROUT_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define DIRECTORY		0
 #define NDSFILE			1
@@ -78,46 +75,52 @@ typedef struct
 	char shortName[64];
 } SCRIBBLE_FILE;
 
+#endif
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // General
-void safeFileName(char *fName);
+extern void safeFileName(char *fName);
 
 // vcard
-uint16 populateList(char *dir);
-void freeVCard();
-int addVCard();
-void sortList(int pos);
+extern uint16 populateList(char *dir);
+extern void freeVCard();
+extern int addVCard();
+extern void sortList(int pos);
 
 //browser
-uint16 populateDirList(char *dir);
-void freeDirList();
-void getInfo(BROWSER_FILE *bf, char *path, FILE_INFO *file);
-uint16 getFileType(char *fName);
+extern uint16 populateDirList(char *dir);
+extern void freeDirList();
+extern void getInfo(BROWSER_FILE *bf, char *path, FILE_INFO *file);
+extern uint16 getFileType(char *fName);
 
 //todo
-uint16 populateTodoList(char *dir);
-void freeTodo();
-int addTodo();
-void sortTodoList(int pos);
-void clearTodo(TODO_FILE *vf);
+extern uint16 populateTodoList(char *dir);
+extern void freeTodo();
+extern int addTodo();
+extern void sortTodoList(int pos);
+extern void clearTodo(TODO_FILE *vf);
 
 //scribble
-uint16 populateScribbleList(char *dir);
-void freeScribble();
-void sortScribbleList(int pos);
+extern uint16 populateScribbleList(char *dir);
+extern void freeScribble();
+extern void sortScribbleList(int pos);
 
 // random stuff
-void separateDir(char *dir, char *file);
-int nextFile(char *curFile, int numEntries);
-int prevFile(char *curFile);
-int randFile(char *curFile, int fileType, int numEntries);
+extern void separateDir(char *dir, char *file);
+extern int nextFile(char *curFile, int numEntries);
+extern int prevFile(char *curFile);
+extern int randFile(char *curFile, int fileType, int numEntries);
 
 // for pls files
-char *getLastDir();
+extern char *getLastDir();
 
 extern bool isScribbleFile(char *tmpFile);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -478,7 +478,11 @@ void launchNDSMethod0(char *file)
 	
 			u32 fCluster;
 			
-			DRAGON_FILE *fFile = DRAGON_fopen(file, "r");
+			DRAGON_FILE *fFile = NULL;
+			if(debug_FileExists((const char*)file,47) == FT_FILE){
+				fFile = DRAGON_fopen(file, "r");	//debug_FileExists index: 47
+			}
+			
 			fCluster = fFile->firstCluster;
 			DRAGON_fclose(fFile);	
 			DRAGON_FreeFiles();			
@@ -553,7 +557,11 @@ void launchNDSMethod1(char *file)
 	whereSlash[0] = 0;	
 	
 	DRAGON_chdir("/");
-	DRAGON_FILE *fp = DRAGON_fopen(file, "r");
+	
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)file,48) == FT_FILE){
+		fp = DRAGON_fopen(file, "r");	//debug_FileExists index: 48
+	}
 	
 	DRAGON_GetAlias(shortFile);
 	DRAGON_fclose(fp);
@@ -576,7 +584,11 @@ void launchNDSMethod2(char *file)
 	
 	u32 fCluster;
 	
-	DRAGON_FILE *fFile = DRAGON_fopen(file, "r");
+	DRAGON_FILE *fFile = NULL;
+	if(debug_FileExists((const char*)file,49) == FT_FILE){
+		fFile = DRAGON_fopen(file, "r");	//debug_FileExists index: 49
+	}
+	
 	fCluster = fFile->firstCluster;
 	DRAGON_fclose(fFile);
 	
@@ -585,7 +597,12 @@ void launchNDSMethod2(char *file)
 	DRAGON_chdir("/");
 	char cCommand[256];
 	sprintf(cCommand, "%sload.bin", d_res);
-	DRAGON_FILE *stub = DRAGON_fopen(cCommand,"r");
+	
+	DRAGON_FILE *stub = NULL;
+	if(debug_FileExists((const char*)cCommand,50) == FT_FILE){
+		stub = DRAGON_fopen(cCommand,"r");	//debug_FileExists index: 50
+	}
+	
 	u32 tLen = DRAGON_flength(stub);
 	
 	char *buffer = (char *)safeMalloc(tLen);
@@ -1163,7 +1180,12 @@ void writeDebug(const char *s, ...)
 	
 	DRAGON_preserveVars();
 	DRAGON_chdir("/");
-	DRAGON_FILE *fp = DRAGON_fopen("debug.txt", "a");
+	
+	DRAGON_FILE *fp = NULL;
+	if(debug_FileExists((const char*)"debug.txt",51) == FT_FILE){
+		fp = DRAGON_fopen("debug.txt", "a");	//debug_FileExists index: 51
+	}
+	
 	DRAGON_fputs(temp, fp);
 	DRAGON_fputc('\r', fp);
 	DRAGON_fputc('\n', fp);

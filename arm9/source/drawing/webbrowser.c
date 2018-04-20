@@ -401,8 +401,11 @@ void loadSearchPreferences()
 	if(DRAGON_FileExists("searchprefs.txt") != FT_FILE)
 		return;
 	
-	DRAGON_FILE *df = DRAGON_fopen("searchprefs.txt", "r");
+	DRAGON_FILE *df = NULL;
 	
+	if(debug_FileExists((const char*)"searchprefs.txt",35) == FT_FILE){
+		df = DRAGON_fopen("searchprefs.txt", "r");	//debug_FileExists index: 35
+	}
 	while(!DRAGON_feof(df))
 	{
 		setGlobalError(ERROR_WEB_SEARCHTEMP);
@@ -445,7 +448,10 @@ void loadSpecialKeys()
 	if(DRAGON_FileExists("specialkeys.txt") != FT_FILE)
 		return;
 	
-	DRAGON_FILE *df = DRAGON_fopen("specialkeys.txt", "r");
+	DRAGON_FILE *df = NULL;
+	if(debug_FileExists((const char*)"specialkeys.txt",36) == FT_FILE){
+		df = DRAGON_fopen("specialkeys.txt", "r");	//debug_FileExists index: 36
+	}
 	
 	int numKeys = 0;
 	
@@ -471,8 +477,11 @@ void loadFavorites()
 	if(DRAGON_FileExists("favorites.txt") != FT_FILE)
 		return;
 	
-	DRAGON_FILE *df = DRAGON_fopen("favorites.txt", "r");
+	DRAGON_FILE *df = NULL;
 	
+	if(debug_FileExists((const char*)"favorites.txt",37) == FT_FILE){
+		df = DRAGON_fopen("favorites.txt", "r");	//debug_FileExists index: 37
+	}
 	while(!DRAGON_feof(df))
 	{
 		if(!favorites)
@@ -545,7 +554,11 @@ void bookmarkCurrent()
 	
 	DRAGON_chdir(d_base);
 	
-	DRAGON_FILE *df = DRAGON_fopen("favorites.txt", "w");
+	DRAGON_FILE *df = NULL;
+	
+	if(debug_FileExists((const char*)"favorites.txt",38) == FT_FILE){
+		df = DRAGON_fopen("favorites.txt", "w");	//debug_FileExists index: 38
+	}
 	
 	for(int i=0;i < favorites->numEntries;i++)
 	{
@@ -934,7 +947,11 @@ void checkDLQueue()
 				}
 				case DLQ_CSS:
 				{	
-					DRAGON_FILE *df = DRAGON_fopen(downFile, "r");
+					DRAGON_FILE *df = NULL;
+					
+					if(debug_FileExists((const char*)downFile,39) == FT_FILE){
+						df = DRAGON_fopen(downFile, "r");	//debug_FileExists index: 39
+					}
 					
 					u32 fLen = DRAGON_flength(df);
 					
@@ -1111,9 +1128,8 @@ exitFor:		// because you cant break out of a for while in a switch
 			
 			sprintf(downFile, "%s%08X.%s", d_cache, (u32)CalcCRC32(tURL), tEXT);
 			
-			if(DRAGON_FileExists(downFile) == FT_NONE)
-			{
-				downFP = DRAGON_fopen(downFile, "w");
+			if(debug_FileExists((const char*)downFile,40) == FT_FILE){
+				downFP = DRAGON_fopen(downFile, "w+");	//debug_FileExists index: 40
 				resetRCount();
 				
 				setReferrer(lastURL);
@@ -1275,7 +1291,11 @@ void loadPage(char *file, bool toHistory)
 		return;
 	}
 	
-	DRAGON_FILE *tFile = DRAGON_fopen(file, "r");
+	DRAGON_FILE *tFile = NULL;
+	if(debug_FileExists((const char*)file,41) == FT_FILE){
+		tFile = DRAGON_fopen(file, "r");	//debug_FileExists index: 41
+	}
+	
 	if(DRAGON_flength(tFile) == 0)
 	{
 		DRAGON_fclose(tFile);
@@ -2693,10 +2713,9 @@ void webBrowserForward()
 		
 		sprintf(downFile, "%s%08X.TMP", d_cache, (u32)CalcCRC32(inputBuffer));
 		
-		if(DRAGON_FileExists(downFile) != FT_NONE)
-			DRAGON_remove(downFile);
-		
-		downFP = DRAGON_fopen(downFile, "w");
+		if(debug_FileExists((const char*)downFile,42) == FT_NONE){
+			downFP = DRAGON_fopen(downFile, "w+");	//debug_FileExists index: 42
+		}
 		resetRCount();
 		
 		strcpy(lastURL, inputBuffer);
