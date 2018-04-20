@@ -46,6 +46,7 @@
 #include "../language.h"
 #include "../controls.h"
 #include "specific_shared.h"
+#include "videoTGDS.h"
 
 extern SCRIBBLE_FILE *scribbleList;
 extern char fileName[256];
@@ -133,7 +134,7 @@ void drawScribbleList()
 	
 	if(!s_isPopulated)
 	{	
-		scribbleEntries = populateScribbleList(d_scribble);
+		scribbleEntries = populateScribbleList((char*)getDefaultDSOrganizeScribbleFolder("").c_str());
 		
 		strcpy(copyFrom, "");
 		s_isPopulated = true;		
@@ -729,7 +730,7 @@ void createScribble()
 			
 			fb_setBGColor(0xFFFF);
 			createImage(&scribblePicture, 256, 192, 0xFFFF);
-			strcpy(scribblePicture.fileName, d_scribble);
+			strcpy(scribblePicture.fileName, getDefaultDSOrganizeScribbleFolder("").c_str());
 			strcat(scribblePicture.fileName, fileName);
 			
 			switch(saveFormat)

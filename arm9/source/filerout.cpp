@@ -163,11 +163,14 @@ uint16 populateList(char *dir)
 	int fType;
 	uint16 pos = 0;
 	
-	appendSlash(dir);	
 	freeVCard();
 	
-	DRAGON_chdir("/");
-	DRAGON_chdir(dir);
+	//appendSlash(dir);
+	//DRAGON_chdir("/");	
+	//DRAGON_chdir(dir);	//coto: DRAGON_FindFirstFile is relative to current dir passed as arg directly. No need to call DRAGON_chdir before
+	
+	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
+	
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)
@@ -843,10 +846,13 @@ uint16 populateTodoList(char *dir)
 	int fType;
 	
 	uint16 pos = 0;
+	//appendSlash(dir);
+	//DRAGON_chdir("/");	
+	//DRAGON_chdir(dir);	//coto: DRAGON_FindFirstFile is relative to current dir passed as arg directly. No need to call DRAGON_chdir before
 	
-	appendSlash(dir);
-	DRAGON_chdir("/");
-	DRAGON_chdir(dir);
+	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
+	
+	
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	freeTodo();
@@ -980,13 +986,14 @@ uint16 populateScribbleList(char *dir)
 	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	int fType;
 	
-	uint16 pos = 0;
+	uint16 pos = 0;	
+	//appendSlash(dir);
+	//DRAGON_chdir("/");	
+	//DRAGON_chdir(dir);	//coto: DRAGON_FindFirstFile is relative to current dir passed as arg directly. No need to call DRAGON_chdir before
 	
-	appendSlash(dir);
-	DRAGON_chdir("/");
-	DRAGON_chdir(dir);
+	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
+	
 	fType = DRAGON_FindFirstFile(tmpFile);
-	
 	freeScribble();
 	
 	scribbleList = (SCRIBBLE_FILE *)trackMalloc(sizeof(SCRIBBLE_FILE),"Scribble list");	
@@ -1023,7 +1030,7 @@ uint16 populateScribbleList(char *dir)
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");	
+	//DRAGON_chdir("/");	
 	sortScribbleList(pos);	
 	return pos;
 }

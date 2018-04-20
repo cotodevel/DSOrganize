@@ -102,7 +102,6 @@ extern void quickSwap(int *x, int *y);
 extern void gotoApplication(int app, bool transPos);
 extern void defaultLocations();
 extern void fakeConfiguration();
-extern bool isDataDir();
 extern bool isNumerical(char c);
 extern void osprintf(char *out, const char* fmt, ...);
 extern int cursorPosCall(int pos, u32 c, int pass, int xPos, int yPos);
@@ -136,19 +135,6 @@ extern void goForward();
 // fix for games & music
 extern struct touchScr touchReadXYNew();
 
-// for directories
-extern char d_base[60];
-extern char d_day[60];
-extern char d_help[60];
-extern char d_lang[60];
-extern char d_reminder[60];
-extern char d_scribble[60];
-extern char d_todo[60];
-extern char d_vcard[60];
-extern char d_icons[60];
-extern char d_res[60];
-extern char d_cache[60];
-extern char d_home[60];
 
 #ifdef __cplusplus
 }

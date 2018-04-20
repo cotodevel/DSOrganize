@@ -885,8 +885,11 @@ bool isVCard(char *file)
 void separateMultiples(char *dir)
 {
 	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	
+	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
+	
 	bool repeat = true;
-	int fType;
+	int fType = FT_NONE;
 	
 	while(repeat)
 	{

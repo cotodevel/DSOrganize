@@ -393,7 +393,8 @@ char quickLower(char c)
 
 void loadSearchPreferences()
 {
-	DRAGON_chdir(d_base);
+	
+	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
 	
 	searchStrings = NULL;
 	searchMax = 0;
@@ -443,7 +444,7 @@ void loadSpecialKeys()
 {
 	memset(specialKey, 0, 18*8);
 	
-	DRAGON_chdir(d_base);
+	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
 	
 	if(DRAGON_FileExists("specialkeys.txt") != FT_FILE)
 		return;
@@ -470,7 +471,7 @@ void loadSpecialKeys()
 
 void loadFavorites()
 {
-	DRAGON_chdir(d_base);
+	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
 	
 	favorites = NULL;
 	
@@ -552,7 +553,7 @@ void bookmarkCurrent()
 	
 	strncpy(favorites[favorites->numEntries-1].url, inputBuffer, 511);
 	
-	DRAGON_chdir(d_base);
+	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
 	
 	DRAGON_FILE *df = NULL;
 	
@@ -608,7 +609,7 @@ void addURLToCapture(char *url)
 void initWebBrowser()
 {
 	// clear cache
-	deleteFAT(d_cache, false);
+	deleteFAT((char*)getDefaultDSOrganizeCacheFolder("").c_str(), false);
 	
 	loadSearchPreferences();
 	loadSpecialKeys();
@@ -1126,10 +1127,10 @@ exitFor:		// because you cant break out of a for while in a switch
 			tEXT[3] = 0;
 			strupr(tEXT);
 			
-			sprintf(downFile, "%s%08X.%s", d_cache, (u32)CalcCRC32(tURL), tEXT);
+			std::string PathFix = getDefaultDSOrganizeCachePath(std::to_string((u32)CalcCRC32(tURL)) +"."+ string(tEXT));
 			
-			if(debug_FileExists((const char*)downFile,40) == FT_FILE){
-				downFP = DRAGON_fopen(downFile, "w+");	//debug_FileExists index: 40
+			if(debug_FileExists((const char*)PathFix.c_str(),40) == FT_FILE){
+				downFP = DRAGON_fopen(PathFix.c_str(), "w+");	//debug_FileExists index: 40
 				resetRCount();
 				
 				setReferrer(lastURL);
@@ -1194,7 +1195,7 @@ void freeWebBrowser()
 	clearFocus();
 	
 	// clear cache
-	deleteFAT(d_cache, false);	
+	deleteFAT((char*)getDefaultDSOrganizeCacheFolder("").c_str(), false);	
 	
 	DRAGON_chdir("/");
 }
@@ -2710,11 +2711,10 @@ void webBrowserForward()
 	else
 	{	
 		setPageFile(inputBuffer);
+		std::string PathFix = getDefaultDSOrganizeCachePath( string( std::to_string((u32)CalcCRC32(inputBuffer)) + string(".TMP") ));
 		
-		sprintf(downFile, "%s%08X.TMP", d_cache, (u32)CalcCRC32(inputBuffer));
-		
-		if(debug_FileExists((const char*)downFile,42) == FT_NONE){
-			downFP = DRAGON_fopen(downFile, "w+");	//debug_FileExists index: 42
+		if(debug_FileExists((const char*)PathFix.c_str(),42) == FT_NONE){
+			downFP = DRAGON_fopen(PathFix.c_str(), "w+");	//debug_FileExists index: 42
 		}
 		resetRCount();
 		

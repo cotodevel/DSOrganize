@@ -48,6 +48,7 @@
 #include "../cookies.h"
 #include "zlib.h"
 #include "../errors.h"
+#include "InterruptsARMCores_h.h"
 
 extern bool reverseDate;
 extern char defaultSavePath[256];
@@ -91,7 +92,7 @@ static char *referer = NULL;
 static char *postData = NULL;
 static char *tAgent = NULL;
 static char *motd = NULL;
-static char *list = NULL;
+static char *databaseList = NULL;
 static char *pkgStatus = NULL;
 static char *savedURL = NULL;
 static INST_LIST *instList = NULL;
@@ -186,17 +187,17 @@ void customPackage(char *str)
 {
 	specialMode = 2;
 	
-	list = (char *)trackMalloc(MAX_CUSTOM_LIST,"package list");	
-	memcpy(list, str, strlen(str)+1);
+	databaseList = (char *)trackMalloc(MAX_CUSTOM_LIST,"package databaseList");	
+	memcpy(databaseList, str, strlen(str)+1);
 	
-	pkgEntries = parseInstructions(list);
+	pkgEntries = parseInstructions(databaseList);
 	
 	initPackage();
 	
 	strcpy(downStatus, "N/A");
 	
-	trackFree(list);
-	list = NULL;
+	trackFree(databaseList);
+	databaseList = NULL;
 	tmpPos = 0;
 	
 	aPressed = false;
@@ -224,8 +225,8 @@ void freeWifiMem()
 	if(catList != NULL)
 		trackFree(catList);
 	
-	if(list != NULL)
-		trackFree(list);
+	if(databaseList != NULL)
+		trackFree(databaseList);
 		
 	if(pkgStatus)
 		trackFree(pkgStatus);
@@ -234,7 +235,7 @@ void freeWifiMem()
 		trackFree(postData);
 
 	postData = NULL;	
-	list = NULL;
+	databaseList = NULL;
 	catList = NULL;
 	hbList = NULL;
 	motd = NULL;
@@ -337,12 +338,12 @@ void craftDate(HB_LIST *hb)
 		sprintf(hb->date, "%s/%s/%s", str[1], str[0], str[2]);		
 }
 
-int parseList(char *list)
+int parseList(char *databaseList)
 {	
-	if(list[0] == 0)
+	if(databaseList[0] == 0)
 		return 0;
 	
-	hbList = (HB_LIST *)trackMalloc(sizeof(HB_LIST),"homebrew list");
+	hbList = (HB_LIST *)trackMalloc(sizeof(HB_LIST),"homebrew databaseList");
 	memset(&hbList[0], 0, sizeof(HB_LIST));
 	
 	int lPos = 0;
@@ -350,9 +351,9 @@ int parseList(char *list)
 	int state = 0;
 	int x = 0;
 	
-	while(list[lPos] != 0)
+	while(databaseList[lPos] != 0)
 	{
-		if(list[lPos] == '@') // end of line
+		if(databaseList[lPos] == '@') // end of line
 		{
 			addNA(&hbList[pos]);
 			craftDate(&hbList[pos]);
@@ -362,7 +363,7 @@ int parseList(char *list)
 			state = 0;
 			x = 0;
 		}
-		else if(list[lPos] == '|') // end of data section
+		else if(databaseList[lPos] == '|') // end of data section
 		{
 			insertCharDB(&hbList[pos], state, x, 0);
 			state++;
@@ -370,7 +371,7 @@ int parseList(char *list)
 		}
 		else
 		{
-			insertCharDB(&hbList[pos], state, x, list[lPos]);
+			insertCharDB(&hbList[pos], state, x, databaseList[lPos]);
 			x++;
 		}
 		
@@ -544,7 +545,7 @@ int compareHBListName(const void *a, const void *b)
 
 int parseInstructions(char *inst)
 {
-	if(list[0] == 0)
+	if(databaseList[0] == 0)
 		return 0;
 	
 	if(instList)
@@ -561,15 +562,15 @@ int parseInstructions(char *inst)
 	
 	while(1)
 	{
-		if(list[lPos] == '\r' || list[lPos] == '\n' || list[lPos] == '\t')
+		if(databaseList[lPos] == '\r' || databaseList[lPos] == '\n' || databaseList[lPos] == '\t')
 		{
 			// skip
 		} 
-		else if(state == 0 && list[lPos] == ' ')
+		else if(state == 0 && databaseList[lPos] == ' ')
 		{
 			// skip trailing spaces
 		}
-		else if(list[lPos] == '@') // end of line
+		else if(databaseList[lPos] == '@') // end of line
 		{
 			pos++;
 			instList = (INST_LIST *)trackRealloc(instList, sizeof(INST_LIST) * (pos + 1));
@@ -577,7 +578,7 @@ int parseInstructions(char *inst)
 			state = 0;
 			x = 0;
 		}
-		else if(list[lPos] == 0) // end of data
+		else if(databaseList[lPos] == 0) // end of data
 		{
 			return pos;
 		}		
@@ -590,16 +591,16 @@ int parseInstructions(char *inst)
 				
 				for(int z=0;z<4;z++)
 				{
-					if(list[lPos] != '@')
+					if(databaseList[lPos] != '@')
 					{
-						cmd[z] = list[lPos];
+						cmd[z] = databaseList[lPos];
 						lPos++;
 					}
 					else
 						break;
 				}
 				
-				if(list[lPos] == '@')
+				if(databaseList[lPos] == '@')
 					lPos--;
 				
 				strlwr(cmd);
@@ -630,7 +631,7 @@ int parseInstructions(char *inst)
 			else
 			{
 				if(x < 256)
-					instList[pos].instruction[x] = list[lPos];
+					instList[pos].instruction[x] = databaseList[lPos];
 				x++;
 			}
 		}
@@ -1503,16 +1504,16 @@ void cancelDownload()
 
 void finishPackage()
 {	
-	stripEnd(list);
+	stripEnd(databaseList);
 	
-	pkgEntries = parseInstructions(list);
+	pkgEntries = parseInstructions(databaseList);
 	
 	initPackage();
 	
 	strcpy(downStatus, "N/A");
 	
-	trackFree(list);
-	list = NULL;
+	trackFree(databaseList);
+	databaseList = NULL;
 	
 	dbMode = DB_RECIEVEDPACKAGE;
 	tmpPos = 0;
@@ -1520,17 +1521,17 @@ void finishPackage()
 
 void failedPackage()
 {
-	if(list)
-		trackFree(list);	
+	if(databaseList)
+		trackFree(databaseList);	
 	
-	list = NULL;
+	databaseList = NULL;
 	
 	dbMode = DB_FAILEDPACKAGE;
 }
 
 void getPackage(char *packageName)
 {
-	list = (char *)trackMalloc(MAX_CUSTOM_LIST,"package list");
+	databaseList = (char *)trackMalloc(MAX_CUSTOM_LIST,"package databaseList");
 	char pkg[URL_SIZE];
 	
 	if(specialMode == 1) // custom url
@@ -1545,7 +1546,7 @@ void getPackage(char *packageName)
 		sprintf(pkg, res_PKG, packageName);
 	
 	rCount = 0;
-	getGenericURL(pkg, list, MAX_CUSTOM_LIST, finishPackage, failedPackage);
+	getGenericURL(pkg, databaseList, MAX_CUSTOM_LIST, finishPackage, failedPackage);
 }
 
 void finishMOTD()
@@ -1562,10 +1563,10 @@ void failedMOTD()
 		trackFree(catList);
 	if(hbList)
 		trackFree(hbList);
-	if(list)
-		trackFree(list);	
+	if(databaseList)
+		trackFree(databaseList);	
 	
-	list = NULL;	
+	databaseList = NULL;	
 	catList = NULL;
 	hbList = NULL;
 }
@@ -1596,15 +1597,15 @@ void finishList()
 	catList = NULL;
 	hbList = NULL;
 	
-	stripEnd(list);
+	stripEnd(databaseList);
 	
-	listEntries = parseList(list);
+	listEntries = parseList(databaseList);
 	catEntries = listEntries;
 	strcpy(curCat, "All");
 	whichCat = 0;
 	
-	trackFree(list);
-	list = NULL;
+	trackFree(databaseList);
+	databaseList = NULL;
 	
 	if(listEntries > 1) // lets sort this fucker
 		qsort(hbList, listEntries, sizeof(HB_LIST), compareHBListName);
@@ -1616,10 +1617,10 @@ void finishList()
 
 void getList()
 {
-	if(list)
-		trackFree(list);
+	if(databaseList)
+		trackFree(databaseList);
 	
-	list = (char *)trackMalloc(LIST_SIZE,"hblist temp");
+	databaseList = (char *)trackMalloc(LIST_SIZE,"hblist temp");
 	
 	char tStr[URL_SIZE];
 	
@@ -1645,7 +1646,7 @@ void getList()
 	}
 	
 	rCount = 0;
-	getGenericURL(tStr, list, LIST_SIZE, finishList, failedMOTD);
+	getGenericURL(tStr, databaseList, LIST_SIZE, finishList, failedMOTD);
 }
 
 void drawTopDatabaseScreen()
@@ -1742,10 +1743,10 @@ void drawTopDatabaseScreen()
 			
 			switch(instList[tmpPos].command)
 			{
-				case CHDR:
+				case CHDR:{
 					// directories are always given relative to root
 					DRAGON_chdir("/");
-					char tmpDisp[512];
+					char tmpDisp[512] = {0};
 					
 					if(strncmp(instList[tmpPos].instruction, "/%root%/", 8) == 0)
 					{
@@ -1755,7 +1756,7 @@ void drawTopDatabaseScreen()
 					}
 					else if(strncmp(instList[tmpPos].instruction, "/%data%/", 8) == 0) // it's dso data dir
 					{
-						strcpy(tmpDisp, d_base);
+						strcpy(tmpDisp, getDefaultDSOrganizePath(string("")).c_str());
 						if(strlen(instList[tmpPos].instruction) > 8)
 							strcat(tmpDisp, instList[tmpPos].instruction + 8);
 					}
@@ -1770,8 +1771,8 @@ void drawTopDatabaseScreen()
 					strcat(pkgStatus, "'.\n");
 					
 					strcpy(downStatus, "N/A");
-					
-					break;
+				}	
+				break;
 				case MKDR:
 					// mkdir is relative to current path
 					if(DRAGON_FileExists(instList[tmpPos].instruction) == FT_DIR)

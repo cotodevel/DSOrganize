@@ -101,6 +101,29 @@ extern int debug_FileExists(const char* filename, int indexSource);
 
 #ifdef __cplusplus
 extern std::string getPathFix();
+extern std::string getDefaultDSOrganizeFolder(std::string str0);		// /d_base
+extern std::string getDefaultDSOrganizePath(std::string str0);	// 0:/d_base
+extern std::string getDefaultDSOrganizeHelpPath(std::string str0);
+extern std::string getDefaultDSOrganizeDayPath(std::string str0);
+extern std::string getDefaultDSOrganizeLangPath(std::string str0);
+extern std::string getDefaultDSOrganizeLangFolder(std::string str0);
+extern std::string getDefaultDSOrganizeReminderPath(std::string str0);
+extern std::string getDefaultDSOrganizeScribbleFolder(std::string str0);
+extern std::string getDefaultDSOrganizeScribblePath(std::string str0);
+extern std::string getDefaultDSOrganizeTodoFolder(std::string str0);
+extern std::string getDefaultDSOrganizeTodoPath(std::string str0);
+extern std::string getDefaultDSOrganizeVcardFolder(std::string str0);
+extern std::string getDefaultDSOrganizeVcardPath(std::string str0);
+extern std::string getDefaultDSOrganizeIconsFolder(std::string str0);
+extern std::string getDefaultDSOrganizeIconsPath(std::string str0);
+extern std::string getDefaultDSOrganizeResourcesFolder(std::string str0);
+extern std::string getDefaultDSOrganizeResourcesPath(std::string str0);
+extern std::string getDefaultDSOrganizeCacheFolder(std::string str0);
+extern std::string getDefaultDSOrganizeCachePath(std::string str0);
+extern std::string getDefaultDSOrganizeHomeFolder(std::string str0);
+extern std::string getDefaultDSOrganizeHomePath(std::string str0);
+
+extern std::string getDefaultConfigPath();
 #endif
 
 

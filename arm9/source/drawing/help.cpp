@@ -29,6 +29,8 @@
 #include "html.h"
 #include "general.h"
 #include "globals.h"
+#include "fsfatlayerTGDSNew.h"
+#include "fatwrapper.h"
 
 extern char curLang[30];
 extern bool allowSwapBuffer;
@@ -129,8 +131,8 @@ void drawHelpScreen()
 		u32 oldText = htmlStyle;
 		htmlStyle = 1;
 		
-		char str[256];
-		sprintf(str, htmlFile, d_help, curLang);
+		char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
+		sprintf(str, htmlFile, getDefaultDSOrganizeHelpPath("/").c_str(), curLang);
 		
 		setHTMLWidth(250, &htmlPage);
 		setEncoding(0, &htmlPage);
@@ -139,7 +141,7 @@ void drawHelpScreen()
 		
 		if(!isLoaded(&htmlPage))
 		{
-			sprintf(str, htmlFile, d_help, "english");
+			sprintf(str, htmlFile, getDefaultDSOrganizeHelpPath("/").c_str(), "english");
 			loadHTMLFromFile(str, &htmlPage); // try the english one
 			
 			if(!isLoaded(&htmlPage))

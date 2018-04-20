@@ -45,6 +45,7 @@
 #include "../language.h"
 #include "../controls.h"
 #include "../errors.h"
+#include "InterruptsARMCores_h.h"
 
 static char backBuffer[6][MAX_INPUT+1];
 static int backPlace = 0;
@@ -2319,8 +2320,8 @@ void autoPerform()
 	// check if the autoperform.txt file is in the dsorganize data root
 	// if so, perform each line as a command
 	
-	char fName[256];
-	sprintf(fName, "%sautoperform.txt", d_base);
+	char fName[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	sprintf(fName, "%s", getDefaultDSOrganizePath(string("autoperform.txt")).c_str());
 	parseScriptFile(fName);
 	
 	if(strlen(curNetwork) > 0)
@@ -2328,9 +2329,9 @@ void autoPerform()
 		// check if the [network].autoperform.txt file is in the dsorganize data root
 		// if so, perform each line as a command
 		
-		char fName[256];
-		sprintf(fName, "%s%s.autoperform.txt", d_base, curNetwork);
-		parseScriptFile(fName);
+		char fName2[MAX_TGDSFILENAME_LENGTH+1] = {0};
+		sprintf(fName2, "%s", getDefaultDSOrganizePath(string(curNetwork) + string(".")+ string("autoperform.txt")).c_str());
+		parseScriptFile(fName2);
 	}
 }
 
@@ -2596,11 +2597,8 @@ void parseMessage(char *msg)
 					
 					if(tabFromName(fromNick) != activeTab && notifyPresent)
 					{
-						char tStr[256];
-						
-						sprintf(tStr, "%snotify.wav", d_base);
 						loadWavToMemory();
-						loadSound(tStr);
+						loadSound((char*)getDefaultDSOrganizePath(string("notify.wav")).c_str());
 					}
 					
 					sprintf(cStr, "\n%s", irc_actionreceived);
@@ -2621,11 +2619,8 @@ void parseMessage(char *msg)
 							
 							if(notifyPresent)
 							{
-								char tStr[256];
-								
-								sprintf(tStr, "%snotify.wav", d_base);
 								loadWavToMemory();
-								loadSound(tStr);
+								loadSound((char*)getDefaultDSOrganizePath(string("notify.wav")).c_str());
 							}
 						}
 						sprintf(cStr, "\n%s", irc_actionreceived);
@@ -2663,11 +2658,8 @@ void parseMessage(char *msg)
 			
 			if(tabFromName(fromNick) != activeTab && notifyPresent)
 			{
-				char tStr[256];
-				
-				sprintf(tStr, "%snotify.wav", d_base);
 				loadWavToMemory();
-				loadSound(tStr);
+				loadSound((char*)getDefaultDSOrganizePath(string("notify.wav")).c_str());
 			}
 		}
 		else // channel
@@ -2682,11 +2674,8 @@ void parseMessage(char *msg)
 					
 					if(notifyPresent)
 					{
-						char tStr[256];
-						
-						sprintf(tStr, "%snotify.wav", d_base);
 						loadWavToMemory();
-						loadSound(tStr);
+						loadSound((char*)getDefaultDSOrganizePath(string("notify.wav")).c_str());
 					}
 				}
 				
@@ -4184,7 +4173,7 @@ void resetIRCMode()
 	
 	notifyPresent = false;
 	
-	DRAGON_chdir(d_base);
+	DRAGON_chdir(getDefaultDSOrganizeFolder(string("")).c_str());
 	
 	if(DRAGON_FileExists("notify.wav") == FT_FILE)
 		notifyPresent = true;

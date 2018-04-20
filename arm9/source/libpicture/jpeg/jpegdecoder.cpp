@@ -53,7 +53,6 @@ static int16 aan_scales[64] =
 };
 
 //static int jpegNumber = 0;
-//extern char d_cache[60];
 
 //------------------------------------------------------------------------------
 // Unconditionally frees all allocated blocks.
@@ -860,7 +859,7 @@ Pcoeff_buf_t jpeg_decoder::coeff_buf_open(
   /*memset(tData, 0, cb->block_size * block_num_x * block_num_y);
   
   char str[256];
-  sprintf(str, "%s%08x.jpt", d_cache, jpegNumber++);
+  //sprintf(str, "%s%08x.jpt", d_cache, jpegNumber++);
   //cb->Pfile = DRAGON_fopen(str, "w");
   DRAGON_fwrite(tData, 1, cb->block_size * block_num_x * block_num_y, cb->Pfile);
   DRAGON_fclose(cb->Pfile);

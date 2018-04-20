@@ -162,26 +162,21 @@ void loadDay(int whichDay, int whichMonth, int whichYear)
 	dvStruct = (DV_DYNAMIC *)trackMalloc(sizeof(DV_DYNAMIC), "tmp dayview");
 	memset(dvStruct, 0, sizeof(DV_DYNAMIC));
 	
-	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
-	std::string PathFix = getPathFix();
-	sprintf(str,"%s%s/%02d%02d%04d.REM",PathFix.c_str(),d_reminder,getMonth(),getDay(),getYear());	
-	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	//sprintf(str,"%s%s/%02d%02d%04d.REM",PathFix.c_str(),d_reminder,getMonth(),getDay(),getYear());	// ???????
+	
+	std::string PathFixDay = getDefaultDSOrganizeDayPath("/");
 	
 	// grab the latest day
-	sprintf(tmpFile,"%s%s/%02d%02d%04d.DPL",PathFix.c_str(), d_day, whichMonth, whichDay, whichYear);
-	loadFileStream(tmpFile, dvStruct, TYPE_DAILY);
+	loadFileStream( (char*)string(PathFixDay + std::to_string(whichMonth) + std::to_string(whichDay) + std::to_string(whichYear) + string(".DPL")).c_str() , dvStruct, TYPE_DAILY);
 	
 	// grab anything that is weekly	
-	sprintf(tmpFile,"%s%s/%02d.DPL",PathFix.c_str(), d_day, dayOfWeek(whichDay, whichMonth, whichYear));
-	loadFileStream(tmpFile, dvStruct, TYPE_WEEKLY);
+	loadFileStream( (char*)string(PathFixDay + std::to_string(dayOfWeek(whichDay, whichMonth, whichYear)) + string(".DPL")).c_str() , dvStruct, TYPE_WEEKLY);
 	
 	// grab anything that is monthly
-	sprintf(tmpFile,"%s%s/--%02d----.DPL",PathFix.c_str(), d_day, whichDay);
-	loadFileStream(tmpFile, dvStruct, TYPE_MONTHLY);
+	loadFileStream( (char*)string(PathFixDay + string("--") + std::to_string(whichDay) + string("----") + string(".DPL")).c_str() , dvStruct, TYPE_MONTHLY);
 	
 	// grab anything that is annual
-	sprintf(tmpFile,"%s%s/%02d%02d----.DPL",PathFix.c_str(), d_day, whichDay, whichMonth);
-	loadFileStream(tmpFile, dvStruct, TYPE_ANNUALLY);
+	loadFileStream( (char*)string(PathFixDay + std::to_string(whichDay) + std::to_string(whichMonth) + string("----") + string(".DPL")).c_str() , dvStruct, TYPE_ANNUALLY);
 }
 
 void saveFile(char *fName, DV_DYNAMIC *dvFile) 
@@ -258,22 +253,25 @@ void saveData(char *fName)
 void saveDayView()
 {
 	// set up filenames for new entries
-	char tFile[256];
-	
+	std::string FilePath;
 	switch(whatType)
 	{
-		case TYPE_DAILY:
-			sprintf(tFile,"%s%02d%02d%04d.DPL", d_day, curMonth, curDay, curYear);
-			break;
-		case TYPE_WEEKLY:
-			sprintf(tFile,"%s%02d.DPL", d_day, dayOfWeek(curDay, curMonth, curYear));
-			break;
-		case TYPE_MONTHLY:
-			sprintf(tFile,"%s--%02d----.DPL", d_day, curDay);
-			break;
-		case TYPE_ANNUALLY:
-			sprintf(tFile,"%s%02d%02d----.DPL", d_day, curDay, curMonth);
-			break;
+		case TYPE_DAILY:{
+			FilePath = (getDefaultDSOrganizeDayPath("/") + std::to_string(curMonth) + std::to_string(curDay) + std::to_string(curYear) + string(".DPL"));
+		}
+		break;
+		case TYPE_WEEKLY:{
+			FilePath = (getDefaultDSOrganizeDayPath("/") + std::to_string(dayOfWeek(curDay, curMonth, curYear)) + string(".DPL"));
+		}
+		break;
+		case TYPE_MONTHLY:{
+			FilePath = (getDefaultDSOrganizeDayPath("/") + string("--") + std::to_string(curDay) + string("----") + string(".DPL"));
+		}
+		break;
+		case TYPE_ANNUALLY:{
+			FilePath = (getDefaultDSOrganizeDayPath("/") + std::to_string(curDay) + std::to_string(curMonth) + string("----") + string(".DPL"));
+		}
+		break;
 	}
 	
 	// check to see if the data changed repeating types (and existed before)
@@ -294,7 +292,7 @@ void saveDayView()
 	
 	// now it's safe to update
 	dvStruct->dayType[curTime] = whatType;
-	strncpy(dvStruct->dayPath[curTime], tFile, 255);
+	strncpy(dvStruct->dayPath[curTime], FilePath.c_str(), 255);
 	saveData(dvStruct->dayPath[curTime]);
 }
 

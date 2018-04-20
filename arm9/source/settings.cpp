@@ -370,7 +370,7 @@ void loadExternalDLDI()
 	
 	memset(dldiFileName, 0, MAX_TGDSFILENAME_LENGTH+1);
 	
-	DRAGON_chdir(d_res);
+	DRAGON_chdir(getDefaultDSOrganizeResourcesFolder("").c_str());
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)
@@ -404,10 +404,9 @@ void loadSettings()
 {
 	defaultLocations();
 	char sStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
-	std::string PathFix = getPathFix();
-	std::string FullPath = (PathFix + string(d_base) + string("/") + string("config.ini"));
+	std::string PathFix = getDefaultDSOrganizePath(string("config.ini"));
 	
-	if(DRAGON_FileExists(FullPath.c_str()) != FT_FILE){
+	if(DRAGON_FileExists(PathFix.c_str()) != FT_FILE){
 		//default settings
 		makeDefaultSettings();
 	}
@@ -415,7 +414,7 @@ void loadSettings()
 		//read from config.ini
 	}
 	
-	sprintf(sStr,"%s",FullPath.c_str());
+	sprintf(sStr,"%s",PathFix.c_str());
 	setIniFile(sStr);
 	
 	if(getSetting("HomeScreen", "Order", sStr))
@@ -691,40 +690,34 @@ void loadSettings()
 
 void loadWifi()
 {
-	DRAGON_chdir("/");
-	
-	char sStr[256];
-	sprintf(sStr, "%swifi.dat", d_base);
-	
+	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
+	std::string FilePath = getDefaultDSOrganizeFolder("wifi.dat");
 	dsoProfiles = (WIFI_PROFILE *)safeMalloc(3 * sizeof(WIFI_PROFILE));
 	
-	if(DRAGON_FileExists(sStr) != FT_FILE)
+	int ret = debug_FileExists((const char*)FilePath.c_str(),79);
+	if(ret != FT_FILE)
 	{
 		memset(dsoProfiles, 0, sizeof(WIFI_PROFILE) * 3);
 		return;
 	}
-	DRAGON_FILE *df = NULL;
-	if(debug_FileExists((const char*)sStr,79) == FT_FILE){
-		df = DRAGON_fopen(sStr, "r");	//debug_FileExists index: 79
+	else if(ret == FT_FILE){
+		DRAGON_FILE *df = NULL;
+		df = DRAGON_fopen(FilePath.c_str(), "r");	//debug_FileExists index: 79
+		DRAGON_fread(dsoProfiles, 1, sizeof(WIFI_PROFILE) * 3, df);
+		DRAGON_fclose(df);
+		cloneIfNeeded(dsoProfiles);		
 	}
-	DRAGON_fread(dsoProfiles, 1, sizeof(WIFI_PROFILE) * 3, df);
-	DRAGON_fclose(df);
-	
-	cloneIfNeeded(dsoProfiles);
 }
 
 void saveWifi()
 {
-	DRAGON_chdir("/");
-	
-	char sStr[256];
-	sprintf(sStr, "%swifi.dat", d_base);	
+	std::string PathFix = getDefaultDSOrganizePath("wifi.dat");
 	DRAGON_FILE *df = NULL;
-	if(debug_FileExists((const char*)sStr,80) == FT_FILE){
-		df = DRAGON_fopen(sStr, "w");	//debug_FileExists index: 80
+	if(debug_FileExists((const char*)PathFix.c_str(),80) == FT_FILE){
+		df = DRAGON_fopen(PathFix.c_str(), "w+");	//debug_FileExists index: 80
+		DRAGON_fwrite(dsoProfiles, 1, sizeof(WIFI_PROFILE) * 3, df);
+		DRAGON_fclose(df);
 	}
-	DRAGON_fwrite(dsoProfiles, 1, sizeof(WIFI_PROFILE) * 3, df);
-	DRAGON_fclose(df);
 }
 
 WIFI_PROFILE *readWifi()
@@ -734,323 +727,323 @@ WIFI_PROFILE *readWifi()
 
 void makeDefaultSettings()
 {	
-	DRAGON_chdir(d_base);
 	DRAGON_FILE *fFile = NULL;
-	if(debug_FileExists((const char*)"config.ini",81) == FT_FILE){
-		fFile = DRAGON_fopen("config.ini", "w");	//debug_FileExists index: 81
+	std::string configPath = getDefaultConfigPath();	//need DSOrganize default config.ini (full)filePath
+	
+	if(debug_FileExists((const char*)configPath.c_str(),81) == FT_FILE){
+		fFile = DRAGON_fopen(configPath.c_str(), "w");	//debug_FileExists index: 81
+		DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; to your liking.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[Startup]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs(";DefaultScreen can be one of the following:", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs(";calendar, dayview, home, address, calculator, todo, scribble, irc, webbrowser or browser", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("DefaultScreen=home", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[Regional]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Change this to the filename of the language file you need, sans", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; the extension.  English is built in.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Language=English", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Set this to true to display things in 24 hour mode.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Display24h=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Set this to true to show names in First Last format instead of", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Last, First format.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("DisplayFirstLast=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Set this to true to display dates with day first.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("ReverseDate=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[Browser]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting will hide hidden and system files in the browser.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("ShowHidden=true", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting will disable autopatching in the browser.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("DisablePatching=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[ScribblePad]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting allows choice in scribble pad saving formats.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Current support allows for bmp or png.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("SaveFormat=png", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[Todo]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Set this to true to have the todo add automatic bullets.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("AutoBullet=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[HomeScreen]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting allows you to rearrange the home pages.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Order=calendar,dayview,address,todo,scribble,browser,calculator,irc,webbrowser,hbdb", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting allows you to specify a custom iconlist for the homescreen.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("IconSet=Default", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[General]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting enables clicking again to launch in some screens.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("SecondClickAction=true", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting changes the HTML render style.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("HTMLStyle=2", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Set this to true to reverse the A/B buttons.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("swapAB=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; These two settings control the loader assigned to A and Y in the browser.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; Choices currently include: internal, chishm, mightymax", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("NormalLoader=chishm", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("AlternateLoader=mightymax", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This changes the location of the scrollbars.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Hand=right", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This changes where DSOrganize looks for your wifi profile.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("WifiMethod=firmware", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This enables or disables the click noise on the keyboard.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("KeyboardNoise=false", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[Database]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting changes where homebrew is downloaded to.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("DefaultPath=/", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs(";Proxy=127.0.0.1:8080", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[IRC]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; These settings change your irc options.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Nick=", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("AltNick=", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Server=irc.rizon.net:6667", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("AutoConnect=true", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Font=variable", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[WebBrowser]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; These settings change your web browser options.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Homepage=about:blank", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting changes where things are downloaded to from the web browser.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("DownloadPath=/", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting changes whether or not the keyboard is hidden after navigating to a page.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("AutoHide=true", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[ImageViewer]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; This setting changes the screen orientation of the image viewer.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Orientation=landscape", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("[Editor]", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("; These settings change your text editor options.", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fputs("Font=variable", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);
+		DRAGON_fclose(fFile);
 	}
-	DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; to your liking.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[Startup]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs(";DefaultScreen can be one of the following:", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs(";calendar, dayview, home, address, calculator, todo, scribble, irc, webbrowser or browser", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("DefaultScreen=home", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[Regional]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Change this to the filename of the language file you need, sans", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; the extension.  English is built in.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Language=English", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Set this to true to display things in 24 hour mode.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Display24h=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Set this to true to show names in First Last format instead of", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Last, First format.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("DisplayFirstLast=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Set this to true to display dates with day first.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("ReverseDate=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[Browser]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting will hide hidden and system files in the browser.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("ShowHidden=true", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting will disable autopatching in the browser.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("DisablePatching=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[ScribblePad]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting allows choice in scribble pad saving formats.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Current support allows for bmp or png.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("SaveFormat=png", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[Todo]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Set this to true to have the todo add automatic bullets.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("AutoBullet=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[HomeScreen]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting allows you to rearrange the home pages.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Order=calendar,dayview,address,todo,scribble,browser,calculator,irc,webbrowser,hbdb", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting allows you to specify a custom iconlist for the homescreen.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("IconSet=Default", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[General]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting enables clicking again to launch in some screens.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("SecondClickAction=true", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting changes the HTML render style.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("HTMLStyle=2", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Set this to true to reverse the A/B buttons.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("swapAB=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; These two settings control the loader assigned to A and Y in the browser.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; Choices currently include: internal, chishm, mightymax", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("NormalLoader=chishm", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("AlternateLoader=mightymax", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This changes the location of the scrollbars.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Hand=right", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This changes where DSOrganize looks for your wifi profile.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("WifiMethod=firmware", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This enables or disables the click noise on the keyboard.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("KeyboardNoise=false", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[Database]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting changes where homebrew is downloaded to.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("DefaultPath=/", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs(";Proxy=127.0.0.1:8080", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[IRC]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; These settings change your irc options.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Nick=", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("AltNick=", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Server=irc.rizon.net:6667", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("AutoConnect=true", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Font=variable", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[WebBrowser]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; These settings change your web browser options.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Homepage=about:blank", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting changes where things are downloaded to from the web browser.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("DownloadPath=/", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting changes whether or not the keyboard is hidden after navigating to a page.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("AutoHide=true", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[ImageViewer]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; This setting changes the screen orientation of the image viewer.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Orientation=landscape", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("[Editor]", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("; These settings change your text editor options.", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	DRAGON_fputs("Font=variable", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
 	
-	DRAGON_fclose(fFile);
-	
-	if(debug_FileExists((const char*)"autoperform.txt",82) == FT_FILE){
-		fFile = DRAGON_fopen("autoperform.txt", "w");	//debug_FileExists index: 82
+	std::string FilePath = getDefaultDSOrganizePath("autoperform.txt");
+	if(debug_FileExists((const char*)FilePath.c_str(),82) == FT_FILE){
+		fFile = DRAGON_fopen(FilePath.c_str(), "w+");	//debug_FileExists index: 82
+		DRAGON_fputs("/j #dsorganize", fFile);
+		DRAGON_fputc(0x0D, fFile);
+		DRAGON_fputc(0x0A, fFile);		
+		DRAGON_fclose(fFile);
 	}
-	DRAGON_fputs("/j #dsorganize", fFile);
-	DRAGON_fputc(0x0D, fFile);
-	DRAGON_fputc(0x0A, fFile);
-	
-	DRAGON_fclose(fFile);
 	
 	strcpy(lLanguage, "english");
 	loadLanguage(lLanguage);
@@ -1062,11 +1055,14 @@ void saveSettings()
 	if(defaultSavePath[x] != '/')
 		strcat(defaultSavePath, "/");
 	
-	DRAGON_chdir(d_base);
+	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
 	DRAGON_FILE *fFile = NULL;
 	
-	if(debug_FileExists((const char*)"config.ini",83) == FT_FILE){
-		fFile=DRAGON_fopen("config.ini", "w");	//debug_FileExists index: 83
+	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	std::string configPath = getDefaultConfigPath();	//need DSOrganize default config.ini (full)filePath
+	
+	if(debug_FileExists((const char*)configPath.c_str(),83) == FT_FILE){
+		fFile=DRAGON_fopen(configPath.c_str(), "w+");	//debug_FileExists index: 83
 	}
 	DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
 	DRAGON_fputc(0x0D, fFile);
@@ -1264,7 +1260,7 @@ void saveSettings()
 		if(i > 18)
 			DRAGON_fputc(',', fFile);
 		
-		char strColor[64];
+		char strColor[64] = {0};
 		
 		sprintf(strColor, "%d", getCustomColors()[i]);
 		
@@ -1660,24 +1656,28 @@ void saveSettings()
 
 void loadColors()
 {
-	char sStr[256];
+	std:string PathFix;
 	uint16 tColor = 0;
 	int tValue = -1;
 	
-	// try colors.ini inside iconset first
-	DRAGON_chdir("/");
-	sprintf(sStr, "%s%s/colors.ini", d_icons, cIconSet);
-	
-	if(DRAGON_FileExists(sStr) != FT_FILE)
+	// try colors.ini inside iconset first ("/DSOrganize/ICONS/")
+	if(DRAGON_FileExists( (char*)getDefaultDSOrganizePath(getDefaultDSOrganizeIconsPath("/" + string(cIconSet))).c_str()  ) != FT_FILE)
 	{
-		sprintf(sStr, "%scolors.ini", d_base);
-		if(DRAGON_FileExists(sStr) != FT_FILE)
+		//if not then try inside /DSOrganize/colors.ini
+		if(DRAGON_FileExists(getDefaultDSOrganizePath("colors.ini").c_str()) != FT_FILE)
 		{	
+			
 			return;
 		}
+		else{
+			PathFix = getDefaultDSOrganizePath("colors.ini");
+		}
+	}
+	else{
+		PathFix = getDefaultDSOrganizePath(getDefaultDSOrganizeIconsPath("/" + string(cIconSet)));
 	}
 	
-	setIniFile(sStr);
+	setIniFile((char*)PathFix.c_str());	//updates fullpath for config.ini
 	
 	// general
 	tColor = getColorSetting("Generic", "Highlight");

@@ -124,7 +124,7 @@ void fixGautami()
 
 void loadCurrentTodos(char **rStr)
 {
-	int tmpEntries = populateTodoList(d_todo);
+	int tmpEntries = populateTodoList((char*)getDefaultDSOrganizeTodoFolder("").c_str());
 	
 	if(tmpEntries == 0)
 	{
@@ -205,7 +205,7 @@ void drawTodoList()
 	
 	if(!t_isPop)
 	{
-		todoEntries = populateTodoList(d_todo);
+		todoEntries = populateTodoList((char*)getDefaultDSOrganizeTodoFolder("").c_str());
 		t_isPop = true;
 		
 		if(strlen(fileName) > 0) // we have to jump to a specific one		
@@ -446,7 +446,7 @@ void editTodoForward()
 	switch(todoMode)
 	{
 		case 0: // save
-			saveTodo(&todoList[curTodo], d_todo);
+			saveTodo(&todoList[curTodo], (char*)getDefaultDSOrganizeTodoFolder("").c_str());
 			
 			sortTodoList(todoEntries);			
 			strcpy(fileName,"");
@@ -454,7 +454,7 @@ void editTodoForward()
 			popCursor();
 			break;
 		case 1: // delete
-			DRAGON_chdir(d_todo);
+			DRAGON_chdir(getDefaultDSOrganizeTodoFolder("").c_str());
 			DRAGON_remove(todoList[curTodo].fileName);
 			DRAGON_chdir("/");
 			t_isPop = false;
@@ -480,7 +480,7 @@ void todoForward()
 			}
 			break;
 		case 1: // delete
-			DRAGON_chdir(d_todo);
+			DRAGON_chdir(getDefaultDSOrganizeTodoFolder("").c_str());
 			DRAGON_remove(todoList[getCursor()].fileName);
 			DRAGON_chdir("/");
 			t_isPop = false;

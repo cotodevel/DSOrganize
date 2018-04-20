@@ -73,7 +73,8 @@
 
 #include "keypadTGDS.h"
 #include "videoTGDS.h"
-
+#include "InterruptsARMCores_h.h"
+#include "biosDSOrganize.h"
 
 bool copying = false;
 bool loading = false;
@@ -94,7 +95,6 @@ static int direction = 1;
 static u32 webAniHeartBeat = 0;
 static bool haltOnOutOfMem = true;
 static int repCount = 0;
-static bool useDataDir;
 static u32 globalError = 0;
 
 extern bool working;
@@ -122,24 +122,6 @@ extern bool isQueued();
 	static int mallocListPtr = 0;
 #endif
 
-// for directories
-char d_base[60];
-char d_day[60];
-char d_help[60];
-char d_lang[60];
-char d_reminder[60];
-char d_scribble[60];
-char d_todo[60];
-char d_vcard[60];
-char d_icons[60];
-char d_res[60];
-char d_cache[60];
-char d_home[60];
-
-bool isDataDir()
-{
-	return useDataDir;
-}
 
 int getRepCount()
 {
@@ -168,7 +150,6 @@ void quickSwap(int *x, int *y)
 
 void findDataDirectory()
 {
-	useDataDir = false;
 	//use the default 0:/DSOrganize <dir>
 	/*
 	DRAGON_chdir("/");
@@ -176,46 +157,15 @@ void findDataDirectory()
 	{
 		DRAGON_chdir("/data/");
 		
-		if(DRAGON_FileExists("DSOrganize") == FT_DIR)
-			useDataDir = true;
-		else
-			DRAGON_chdir("/");
+		
+		DRAGON_chdir("/");
 	}
 	*/
 }
 
 void makeDirectories() // for creating the right paths to the data dir
 {
-	if(useDataDir)
-	{
-		strcpy(d_base, "/data/DSOrganize");
-		strcpy(d_day, "/data/DSOrganize/DAY");
-		strcpy(d_help, "/data/DSOrganize/HELP");
-		strcpy(d_lang, "/data/DSOrganize/LANG");
-		strcpy(d_reminder, "/data/DSOrganize/REMINDER");
-		strcpy(d_scribble, "/data/DSOrganize/SCRIBBLE");
-		strcpy(d_todo, "/data/DSOrganize/TODO");
-		strcpy(d_vcard, "/data/DSOrganize/VCARD");
-		strcpy(d_icons, "/data/DSOrganize/ICONS");
-		strcpy(d_res, "/data/DSOrganize/RESOURCES");
-		strcpy(d_cache, "/data/DSOrganize/CACHE");
-		strcpy(d_home, "/data/DSOrganize/HOME");
-	}
-	else
-	{
-		strcpy(d_base, "/DSOrganize");
-		strcpy(d_day, "/DSOrganize/DAY");
-		strcpy(d_help, "/DSOrganize/HELP");
-		strcpy(d_lang, "/DSOrganize/LANG");
-		strcpy(d_reminder, "/DSOrganize/REMINDER");
-		strcpy(d_scribble, "/DSOrganize/SCRIBBLE");
-		strcpy(d_todo, "/DSOrganize/TODO");
-		strcpy(d_vcard, "/DSOrganize/VCARD");
-		strcpy(d_icons, "/DSOrganize/ICONS");
-		strcpy(d_res, "/DSOrganize/RESOURCES");
-		strcpy(d_cache, "/DSOrganize/CACHE");
-		strcpy(d_home, "/DSOrganize/HOME");
-	}
+	
 }
 
 u32 getAniHeartBeat()
@@ -593,14 +543,12 @@ void launchNDSMethod2(char *file)
 	DRAGON_fclose(fFile);
 	
 	// get loader
-	
 	DRAGON_chdir("/");
-	char cCommand[256];
-	sprintf(cCommand, "%sload.bin", d_res);
+	std::string PathFix = getDefaultDSOrganizeResourcesPath("load.bin");
 	
 	DRAGON_FILE *stub = NULL;
-	if(debug_FileExists((const char*)cCommand,50) == FT_FILE){
-		stub = DRAGON_fopen(cCommand,"r");	//debug_FileExists index: 50
+	if(debug_FileExists((const char*)PathFix.c_str(),50) == FT_FILE){
+		stub = DRAGON_fopen(PathFix.c_str(),"r");	//debug_FileExists index: 50
 	}
 	
 	u32 tLen = DRAGON_flength(stub);

@@ -36,6 +36,7 @@
 
 #include "nds_loader_arm9.h"
 #include "dldi.h"
+#include "biosDSOrganize.h"
 
 static addr_t readAddr (data_t *mem, addr_t offset) {
 	return ((addr_t*)mem)[offset/sizeof(addr_t)];
@@ -110,13 +111,13 @@ bool dldiPatchLoader (data_t *binData, u32 binSize)
 		
 		// load and then present
 		
-		DRAGON_chdir(d_res);
+		DRAGON_chdir(getDefaultDSOrganizeResourcesFolder("").c_str());
 		DRAGON_FILE *df = NULL;
 		if(debug_FileExists((const char*)dldiPath,75) == FT_FILE){
 			df = DRAGON_fopen(dldiPath, "r");	//debug_FileExists index: 75
 		}
 		u32 fLen = DRAGON_flength(df);
-		pDH = safeMalloc(PATCH_SIZE);
+		pDH = (data_t*)safeMalloc(PATCH_SIZE);
 		memset(pDH, 0, PATCH_SIZE);
 		
 		DRAGON_fread(pDH, 1, fLen, df);

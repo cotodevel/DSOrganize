@@ -1124,9 +1124,7 @@ void volumeDown()
 void loadSoundMode()
 {
 	DRAGON_chdir("/");
-	
-	std::string PathFix = getPathFix();
-	std::string FullPath = (PathFix + string(d_base) + string("/") + string("sound.dat"));
+	std::string FullPath = getDefaultDSOrganizePath(string("sound.dat"));
 	
 	if(debug_FileExists((const char*)FullPath.c_str(),24) == FT_FILE){
 		DRAGON_FILE *fp = DRAGON_fopen(FullPath.c_str(), "r");		//debug_FileExists index: 24
@@ -1142,13 +1140,10 @@ void loadSoundMode()
 
 void saveSoundMode()
 {
-	char sStr[256];
-	
 	DRAGON_chdir("/");
-	sprintf(sStr, "%ssound.dat", d_base);	
-	
-	if(debug_FileExists((const char*)sStr,25) == FT_FILE){
-		DRAGON_FILE *fp = DRAGON_fopen(sStr, "w");	//debug_FileExists index: 25
+	std::string FilePath = getDefaultDSOrganizePath("sound.dat");
+	if(debug_FileExists((const char*)FilePath.c_str(),25) == FT_FILE){
+		DRAGON_FILE *fp = DRAGON_fopen(FilePath.c_str(), "w");	//debug_FileExists index: 25
 		DRAGON_fputc(soundMode + '0', fp);
 		DRAGON_fclose(fp);
 	}

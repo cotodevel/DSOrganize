@@ -276,36 +276,29 @@ void loadShortcutIcon(SHORTCUT *sc)
 	}
 	
 	DRAGON_chdir("/");
-	
 	u32 fileCRC = CalcCRC32(sc->largeiconpath);
-	char crcFile[256];
+	std::string FilePath = getDefaultDSOrganizeIconsPath(std::to_string(fileCRC) + string(".ico"));
 	
-	sprintf(crcFile, "%s%08X.ico", d_icons, fileCRC);
-	
-	if(DRAGON_FileExists(crcFile) == FT_FILE) // theres already a cached icon
-	{
+	if(debug_FileExists((const char*)FilePath.c_str(),85) == FT_FILE){		// theres already a cached icon
 		u32 tFile;
 		DRAGON_FILE *fp = NULL;
-		if(debug_FileExists((const char*)crcFile,85) == FT_FILE){
-			fp = DRAGON_fopen(crcFile, "r");	//debug_FileExists index: 85
-		}
+		fp = DRAGON_fopen(FilePath.c_str(), "r");	//debug_FileExists index: 85		
 		tFile = DRAGON_flength(fp);
 		sc->loadedIcon = (uint16 *)trackMalloc(tFile , "cached icon");		
 		DRAGON_fread(sc->loadedIcon, 1, tFile, fp);
 		DRAGON_fclose(fp);
-		
 		return;
-	}	
-	
+	}
+		
 	if(DRAGON_FileExists(sc->largeiconpath) != FT_FILE) // no cache, file doesn't exist
 	{
 		createDefaultIcon(sc);
 		return;
 	}
 	
-	int x, y;
+	int x = 0, y = 0;
 	
-	getPictureSize(sc->largeiconpath, x, y);
+	getPictureSize(sc->largeiconpath, &x, &y);
 	
 	if(x != 50 || y != 50) // file is not 50x50
 	{
@@ -324,8 +317,8 @@ void loadShortcutIcon(SHORTCUT *sc)
 	freeImage(&tPicture);
 	
 	DRAGON_FILE *fp = NULL;
-	if(debug_FileExists((const char*)crcFile,86) == FT_FILE){
-		fp = DRAGON_fopen(crcFile, "w");	//debug_FileExists index: 86
+	if(debug_FileExists((const char*)FilePath.c_str(),86) == FT_FILE){
+		fp = DRAGON_fopen(FilePath.c_str(), "w");	//debug_FileExists index: 86
 	}
 	DRAGON_fwrite(sc->loadedIcon, 1, 4 + ((50*50)*2), fp);
 	DRAGON_fclose(fp);

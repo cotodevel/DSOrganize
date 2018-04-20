@@ -312,8 +312,7 @@ void initProgram()
 	//did their extracting program actually get all the dirs?
 	//-------------------------------------------------------------------	
 	
-	
-	DRAGON_chdir(d_base);	//DRAGON_chdir(getfatfsPath(d_base)) format incorrect, use DRAGON_chdir("/DSOrganize"); for chdir
+	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
 	
 	if(DRAGON_FileExists("DAY") != FT_DIR)
 	{
@@ -366,14 +365,13 @@ void initProgram()
 	fb_setBGColor(genericFillColor);
 	bg_setBGColor(genericFillColor);
 	
-	DRAGON_chdir(d_base);
+	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
 	
-	std::string PathFix = getPathFix();
-	std::string FullPath = (PathFix + string(d_base) + string("/") + string("startup.wav"));
-	if(DRAGON_FileExists(FullPath.c_str()) == FT_FILE)
+	std::string PathFix = getDefaultDSOrganizePath(string("startup.wav"));
+	if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 	{
 		char tStr[MAX_TGDSFILENAME_LENGTH+1] = {0};
-		sprintf(tStr, "%s", FullPath.c_str());
+		sprintf(tStr, "%s", PathFix.c_str());
 		loadWavToMemory();
 		loadSound(tStr);
 	}

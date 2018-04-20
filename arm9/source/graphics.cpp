@@ -523,7 +523,7 @@ int listIconSets(ICON_LIST buffer[])
 	strcpy(buffer[0].iconURL,"Default");
 	uint16 pos = 1;
 
-	DRAGON_chdir(d_icons);
+	DRAGON_chdir(getDefaultDSOrganizeIconsFolder("").c_str());
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)
@@ -587,7 +587,7 @@ uint16 *loadIcon(char *path, uint16 *defIcon)
 		}
 	}
 	
-	if(!getPictureSize(fileName, cX, cY)) // couldn't open
+	if(!getPictureSize(fileName, &cX, &cY)) // couldn't open
 		return defIcon;
 	
 	if(cX != (int)getSpriteWidth(defIcon) || cY != (int)getSpriteHeight(defIcon)) // invalid size for particular icon
@@ -695,7 +695,7 @@ void loadIconSet()
 	if(strcmp(strTemp, "default") == 0)
 		return;
 	
-	DRAGON_chdir(d_icons);
+	DRAGON_chdir(getDefaultDSOrganizeIconsFolder("").c_str());
 	DRAGON_chdir(cIconSet);
 	
 	// home screen iconset

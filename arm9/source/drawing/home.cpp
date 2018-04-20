@@ -443,14 +443,16 @@ void drawHomeScreenShortcuts()
 		char tStr[6][MAX_TGDSFILENAME_LENGTH+1] = {0};
 		int fType;
 		
-		DRAGON_chdir(d_home);
+		DRAGON_chdir(getDefaultDSOrganizeHomeFolder("").c_str());
+		sprintf(tmpFile,"%s",getDefaultDSOrganizeHomeFolder("").c_str());	//copy path so FirstFile knows the base directory used for file listing
+		
 		fType = DRAGON_FindFirstFile(tmpFile);
 		
 		while(fType != FT_NONE && scCount < MAX_SHORTCUTS)
 		{
 			if(getFileType(tmpFile) == SHORTCUTFILE)
 			{
-				sprintf(tStr[scCount], "%s%s", d_home, tmpFile);
+				sprintf(tStr[scCount], "%s", getDefaultDSOrganizeHomePath(string(tmpFile)).c_str() );
 				scCount++;
 			}
 			

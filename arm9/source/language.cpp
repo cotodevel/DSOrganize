@@ -1355,15 +1355,11 @@ void loadConfig(char *fName, void (*dataProcess)(char *, char *, char *))
 
 void loadIRCConfig()
 {
-	char fName[256];
-	
-	sprintf(fName, "%sIRC.ini", d_base);
-	
-	DRAGON_chdir("/");
-	if(DRAGON_FileExists(fName) != FT_FILE)
+	std::string FilePath = getDefaultDSOrganizePath("IRC.ini");
+	if(DRAGON_FileExists(FilePath.c_str()) != FT_FILE){
 		return;
-	
-	loadConfig(fName, setIRCString);
+	}
+	loadConfig((char*)FilePath.c_str(), setIRCString);
 }
 
 void initLanguage()
@@ -1704,12 +1700,10 @@ void initLanguage()
 void loadLanguage(char *filename)
 {
 	strcpy(curLang,filename);
+	std::string PathFix = getDefaultDSOrganizeLangPath(string(filename) + string(".lng"));
 	
-	std::string PathFix = getPathFix();
-	std::string FullPath = (PathFix + string(d_base) + string("/") + string(filename) + string(".lng"));
-	
-	if( DRAGON_FileExists((char*)FullPath.c_str()) && (strcmp(FullPath.c_str(),"english") != 0)){
-		loadConfig((char*)FullPath.c_str(), setLangString);
+	if( DRAGON_FileExists((char*)PathFix.c_str()) && (strcmp(PathFix.c_str(),"english") != 0)){
+		loadConfig((char*)PathFix.c_str(), setLangString);
 	}
 	else
 	{
@@ -1779,7 +1773,7 @@ int listLanguages(LANG_LIST buffer[])
 	strcpy(buffer[0].langURL,"English");
 	uint16 pos = 1;
 
-	DRAGON_chdir(d_lang);
+	DRAGON_chdir((char*)getDefaultDSOrganizeLangFolder(string("")).c_str());
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)

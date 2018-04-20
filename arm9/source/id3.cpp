@@ -195,7 +195,7 @@ void getOggInfo(OggVorbis_File *vf, ID3V1_TYPE *id3)
 
 void getGenre(int g, char *str)
 {
-	DRAGON_chdir(d_base);
+	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
 	DRAGON_FILE *fp = NULL;
 	if(debug_FileExists((const char*)"genre.dat",54) == FT_FILE){
 		fp = DRAGON_fopen("genre.dat", "r");	//debug_FileExists index: 54

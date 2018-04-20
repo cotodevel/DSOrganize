@@ -46,10 +46,12 @@
 #include "../tabs.h"
 #include "../wifi.h"
 #include "wifi_shared.h"
+#include "wifi_arm9.h"
 #include "../sound.h"
 #include "scribble.h"
 #include "irc.h"
 #include "fsfatlayerTGDSLegacy.h"
+#include "InterruptsARMCores_h.h"
 
 LANG_LIST *aLanguages = NULL;
 ICON_LIST *cIcons = NULL;
@@ -583,43 +585,18 @@ void drawTopConfiguration()
 		{
 			if(strlen(textStrings[configCursor]) != 0)
 			{
-				char tmpLocation[256];
-				char tmpLocation2[256];
+				std::string FilePath1 = (getDefaultDSOrganizeHelpPath("/") + string(curLang) + string("/config/") + string(textStrings[configCursor]));
+				std::string FilePath2 = (getDefaultDSOrganizeHelpPath("/") + string("english") + string("/config/") + string(textStrings[configCursor]));
 				
-				sprintf(tmpLocation, "%s%s/config/%s", d_help, curLang, textStrings[configCursor]);
-				sprintf(tmpLocation2, "%s%s/config/%s", d_help, "english", textStrings[configCursor]);
-				
-				//ori
-				/*
-				if(DRAGON_FileExists(tmpLocation) == FT_FILE)
+				if(debug_FileExists((const char*)FilePath1.c_str(),13) == FT_FILE)
 				{
-					//DRAGON_FILE *fp = DRAGON_fopen(tmpLocation, "r");
+					DRAGON_FILE *fp = DRAGON_fopen(FilePath1.c_str(), "r");	//debug_FileExists index: 13
 					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
 					DRAGON_fclose(fp);
 				}
-				else if(DRAGON_FileExists(tmpLocation2) == FT_FILE)
+				else if(debug_FileExists((const char*)FilePath2.c_str(),14) == FT_FILE)
 				{
-					//DRAGON_FILE *fp = DRAGON_fopen(tmpLocation2, "r");
-					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
-					DRAGON_fclose(fp);
-				}				
-				else
-				{
-					strcpy(descText, "");
-				}
-				*/
-				
-				
-				//new
-				if(debug_FileExists((const char*)tmpLocation,13) == FT_FILE)
-				{
-					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation, "r");	//debug_FileExists index: 13
-					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
-					DRAGON_fclose(fp);
-				}
-				else if(debug_FileExists((const char*)tmpLocation2,14) == FT_FILE)
-				{
-					DRAGON_FILE *fp = DRAGON_fopen(tmpLocation2, "r");	//debug_FileExists index: 14
+					DRAGON_FILE *fp = DRAGON_fopen(FilePath2.c_str(), "r");	//debug_FileExists index: 14
 					descText[DRAGON_fread(descText, 1, 2048, fp)] = 0;
 					DRAGON_fclose(fp);
 				}				

@@ -20,10 +20,6 @@
 #ifndef _SOUND_INCLUDED
 #define _SOUND_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "fatwrapper.h"
 #include "http.h"
 #include "aacdec.h"
@@ -136,6 +132,13 @@ typedef struct
 	int mp3SampleRate;
 } sndData;
 
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void initComplexSound();
 void waitForInit();
 void setSoundInterrupt();
@@ -195,4 +198,3 @@ extern void updateStream();
 }
 #endif
 
-#endif

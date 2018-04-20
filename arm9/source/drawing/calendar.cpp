@@ -215,10 +215,10 @@ void drawCurDay()
 
 void drawReminders()
 {
-	std::string PathFix = getPathFix();
+	
 	//we have to load new reminders first...
-	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
-		
+	std::string PathFix;	//char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	
 	if(!(curYear == oldYear && curMonth == oldMonth && curDay == oldDay) || !calLoaded)
 	{
 		if(curMonth != oldMonth || !calLoaded)
@@ -226,35 +226,35 @@ void drawReminders()
 			// we gotta update the reminders thing
 			for(uint16 x=1;x<=31;x++)
 			{	
-				sprintf(str,"%s%s/%02d%02d%04d.REM", PathFix.c_str(), d_reminder,curMonth,x,curYear);
-				if(DRAGON_FileExists(str) == FT_FILE)
+				PathFix = string(getDefaultDSOrganizeReminderPath(std::to_string(curMonth) + std::to_string(x) + std::to_string(curYear) + string(".REM")));
+				if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 					reminders[x] = 1;
 				else
 					reminders[x] = 0;
 					
-				sprintf(str,"%s%s/%02d%02d%04d.DPL", PathFix.c_str(), d_day, curMonth, x, curYear);
-				if(DRAGON_FileExists(str) == FT_FILE)
+				PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(curMonth) + std::to_string(x) + std::to_string(curYear) + (".DPL"));
+				if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 				{
 					dayViews[x] = 1;
 				}
 				else
 				{
-					sprintf(str,"%s%s/%02d.DPL", PathFix.c_str(), d_day, dayOfWeek(x, curMonth, curYear));
-					if(DRAGON_FileExists(str) == FT_FILE)
+					PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(dayOfWeek(x, curMonth, curYear)) + (".DPL"));
+					if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 					{
 						dayViews[x] = 1;
 					}
 					else
 					{
-						sprintf(str,"%s%s/--%02d----.DPL",PathFix.c_str(), d_day, x);
-						if(DRAGON_FileExists(str) == FT_FILE)
+						PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(x));
+						if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 						{
 							dayViews[x] = 1;
 						}
 						else
 						{
-							sprintf(str,"%s%s/%02d%02d----.DPL",PathFix.c_str(), d_day, curDay, curMonth);
-							if(DRAGON_FileExists(str) == FT_FILE)
+							PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(curDay) + std::to_string(curMonth));
+							if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 							{
 								dayViews[x] = 1;
 							}
@@ -275,8 +275,7 @@ void drawReminders()
 		oldMonth = curMonth;
 		oldDay = curDay;	
 		
-		sprintf(str,"%s%s/%02d%02d%04d.REM", PathFix.c_str(), d_reminder,curMonth,curDay,curYear);	
-		
+		std::string PathFix2 = (getDefaultDSOrganizeReminderPath(std::to_string(curMonth) + std::to_string(curDay) + std::to_string(curYear) + string(".REM")));
 		createReminder();
 		
 		//ori
@@ -292,8 +291,8 @@ void drawReminders()
 		*/
 		
 		//new
-		if(debug_FileExists((const char*)str,10) == FT_FILE){
-			DRAGON_FILE *fFile = DRAGON_fopen(str, "r");	//debug_FileExists index: 10
+		if(debug_FileExists((const char*)PathFix2.c_str(),10) == FT_FILE){
+			DRAGON_FILE *fFile = DRAGON_fopen(PathFix2.c_str(), "r");	//debug_FileExists index: 10
 			uint16 len = DRAGON_fread(reminder, 1, REM_SIZE - 1, fFile);
 			DRAGON_fclose(fFile);
 			reminder[len] = 0;
@@ -315,10 +314,7 @@ void drawReminders()
 
 void loadCurrentReminder(char **rStr)
 {
-	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};
-	std::string PathFix = getPathFix();
-	sprintf(str,"%s%s/%02d%02d%04d.REM",PathFix.c_str(),d_reminder,getMonth(),getDay(),getYear());	
-	
+	std::string PathFix = (getDefaultDSOrganizeReminderPath(std::to_string(curMonth) + std::to_string(curDay) + std::to_string(curYear) + string(".REM")));
 	//ori
 	/*
 	if(DRAGON_FileExists(str) == FT_FILE)
@@ -340,8 +336,8 @@ void loadCurrentReminder(char **rStr)
 	*/
 	
 	//new
-	if(debug_FileExists((const char*)str,11) == FT_FILE){
-		DRAGON_FILE *fFile = DRAGON_fopen(str, "r");	//debug_FileExists index: 11
+	if(debug_FileExists((const char*)PathFix.c_str(),11) == FT_FILE){
+		DRAGON_FILE *fFile = DRAGON_fopen(PathFix.c_str(), "r");	//debug_FileExists index: 11
 		u32 tLen = DRAGON_flength(fFile);
 		
 		*rStr = (char *)trackMalloc(tLen+5, "tmp reminder");
@@ -407,27 +403,23 @@ void drawEditReminder()
 }
 
 void saveReminder()
-{
-	char str[512];
+{// here is where we write back the reminder if we've gone and edited it
 	
-	// here is where we write back the reminder if we've gone and edited it
-	
-	sprintf(str,"%s%02d%02d%04d.REM",d_reminder,curMonth,curDay,curYear);		
-	
+	std::string PathFix = (getDefaultDSOrganizeReminderPath(std::to_string(curMonth) + std::to_string(curDay) + std::to_string(curYear) + string(".REM")));
 	if(reminder == NULL || reminder[0] == 0)
 	{
-		if(DRAGON_FileExists(str) == FT_FILE)
+		if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 		{
 			//delete file, nothing in it!
-			DRAGON_remove(str);			
+			DRAGON_remove(PathFix.c_str());			
 		}
 		
 		reminders[curDay] = 0;
 		return; // gtfo!
 	}
 	
-	if(debug_FileExists((const char*)str,12) == FT_FILE){
-		DRAGON_FILE *fFile = DRAGON_fopen(str, "w");	//debug_FileExists index: 12	
+	if(debug_FileExists((const char*)PathFix.c_str(),12) == FT_FILE){
+		DRAGON_FILE *fFile = DRAGON_fopen(PathFix.c_str(), "w");	//debug_FileExists index: 12	
 		DRAGON_fwrite (reminder, 1, strlen(reminder), fFile);
 		DRAGON_fclose(fFile);
 		reminders[curDay] = 1;

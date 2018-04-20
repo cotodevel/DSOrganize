@@ -169,8 +169,9 @@ void drawAddressList()
 	
 	if(!a_isPop)
 	{
-		separateMultiples(d_vcard);
-		addressEntries = populateList(d_vcard);	//segfaults
+		std::string PathFix = getDefaultDSOrganizeVcardFolder("");
+		separateMultiples((char*)PathFix.c_str());
+		addressEntries = populateList((char*)PathFix.c_str());
 		
 		a_isPop = true;
 		
@@ -698,10 +699,11 @@ void deleteAddress()
 
 void editAddressForward()
 {
+	std::string PathFix = getDefaultDSOrganizeVcardFolder("");
 	switch(addressMode)
 	{
 		case 0: // save
-			saveVCard(&fileList[curAddress], d_vcard);
+			saveVCard(&fileList[curAddress], (char*)PathFix.c_str());
 			
 			sortList(addressEntries);			
 			strcpy(fileName,"");
@@ -709,7 +711,7 @@ void editAddressForward()
 			popCursor();
 			break;
 		case 1: // delete
-			DRAGON_chdir(d_vcard);
+			DRAGON_chdir(PathFix.c_str());
 			DRAGON_remove(fileList[curAddress].fileName);
 			DRAGON_chdir("/");
 			a_isPop = false;
@@ -735,7 +737,7 @@ void addressForward()
 			}
 			break;
 		case 1: // delete
-			DRAGON_chdir(d_vcard);
+			DRAGON_chdir(getDefaultDSOrganizeVcardFolder("").c_str());
 			DRAGON_remove(fileList[getCursor()].fileName);
 			DRAGON_chdir("/");
 			a_isPop = false;

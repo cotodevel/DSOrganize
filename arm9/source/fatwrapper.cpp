@@ -83,16 +83,17 @@ char *DRAGON_tryingInterface()
 	return dldi_tryingInterface();
 }
 
-bool DRAGON_chdir(const char* path)
+bool DRAGON_chdir(const char* path)	//use DRAGON_chdir("/DSOrganize"); for chdir
 {
 	return chdir(path);
 }
 
 //coto: assume full permision always
+//fix full directory outside
 int DRAGON_mkdir(const char* path)
 {
-	std::string PathFix = (string(d_base) + string("/") + string(path));	//              /dir/path1 == mkdir OK
-	int ret = mkdir(PathFix.c_str(),777);
+	//std::string PathFix = (getDefaultDSOrganizeFolder() + string("/") + string(path));	//              /dir/path1 == mkdir OK
+	int ret = mkdir(path,777);
 	//printfDebugger("mkdir:%s:%d",PathFix.c_str(),ret);	//while(1==1){} inside
 	return ret;
 }
@@ -735,16 +736,29 @@ int debug_FileExists(const char* filename, int indexSource){
 		//so far index 11 correct path OK
 		//so far index 21 correct path OK
 		//so far index 10 correct path OK
-		//so fat index 13 (config)
+		//so far index 13 correct path OK
+		//so far index 80 correct path OK
+		//so far index 83 correct path OK
+		//so far index 14 correct path OK
+		//so far index 81
 		if(
 			(indexSource != 11)
 			&&
 			(indexSource != 21)
 			&&
 			(indexSource != 10)
+			&&
+			(indexSource != 13)
+			&&
+			(indexSource != 80)
+			&&
+			(indexSource != 83)
+			&&
+			(indexSource != 14)
+			
 		){
 		
-			//printfDebugger("id:%d-missing:%s",indexSource,filename);
+			printfDebugger("id:%d-missing:%s",indexSource,filename);
 			//printfDebugger("%s",filename);
 		}
 	}
@@ -757,4 +771,127 @@ std::string getPathFix(){
 	std::string PathLocal = std::string(getfatfsPath(""));
 	PathLocal.erase(PathLocal.length()-1);
 	return PathLocal;
+}
+
+std::string getDefaultDSOrganizeFolder(std::string str0){
+	std::string PathFix = (string("/DSOrganize") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizePath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (PathFix + getDefaultDSOrganizeFolder(string("/")) + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeHelpPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("HELP") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeDayPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("DAY") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeLangFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/LANG") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeLangPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("LANG") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeReminderPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("REMINDER") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeScribbleFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/SCRIBBLE") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeScribblePath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("SCRIBBLE") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeTodoFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/TODO") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeTodoPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("TODO") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeVcardFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/VCARD") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeVcardPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("VCARD") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeIconsFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/ICONS") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeIconsPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("ICONS") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeResourcesFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/RESOURCES") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeResourcesPath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("RESOURCES") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeCacheFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/CACHE") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeCachePath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("CACHE") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultDSOrganizeHomeFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/HOME") + str0);
+	return PathFix;
+}
+
+std::string getDefaultDSOrganizeHomePath(std::string str0){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("HOME") + string("/") + str0);
+	return FilePath;
+}
+
+std::string getDefaultConfigPath(){
+	std::string PathFix = getPathFix();
+	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("config.ini"));
+	return FilePath;
 }
