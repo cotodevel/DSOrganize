@@ -1745,7 +1745,6 @@ void drawTopDatabaseScreen()
 			{
 				case CHDR:{
 					// directories are always given relative to root
-					DRAGON_chdir("/");
 					char tmpDisp[512] = {0};
 					
 					if(strncmp(instList[tmpPos].instruction, "/%root%/", 8) == 0)
@@ -1762,8 +1761,6 @@ void drawTopDatabaseScreen()
 					}
 					else
 						strcpy(tmpDisp, instList[tmpPos].instruction);
-					
-					DRAGON_chdir(tmpDisp);
 					
 					strcat(pkgStatus, l_changedto);
 					strcat(pkgStatus, " '");

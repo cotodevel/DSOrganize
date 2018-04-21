@@ -443,7 +443,6 @@ void drawHomeScreenShortcuts()
 		char tStr[6][MAX_TGDSFILENAME_LENGTH+1] = {0};
 		int fType;
 		
-		DRAGON_chdir(getDefaultDSOrganizeHomeFolder("").c_str());
 		sprintf(tmpFile,"%s",getDefaultDSOrganizeHomeFolder("").c_str());	//copy path so FirstFile knows the base directory used for file listing
 		
 		fType = DRAGON_FindFirstFile(tmpFile);
@@ -460,7 +459,6 @@ void drawHomeScreenShortcuts()
 		}
 		
 		DRAGON_closeFind();		
-		DRAGON_chdir("/");
 		
 		if(scCount > 0)
 		{

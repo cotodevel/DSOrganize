@@ -1274,7 +1274,6 @@ void loadConfig(char *fName, void (*dataProcess)(char *, char *, char *))
 	char curHeader[64];
 	int x = 0;
 	
-	DRAGON_chdir("/");
 	DRAGON_FILE *fFile = NULL;
 	if(debug_FileExists((const char*)fName,0) == FT_FILE){
 		fFile = DRAGON_fopen(fName, "r");	//debug_FileExists index: 55
@@ -1773,7 +1772,6 @@ int listLanguages(LANG_LIST buffer[])
 	strcpy(buffer[0].langURL,"English");
 	uint16 pos = 1;
 
-	DRAGON_chdir((char*)getDefaultDSOrganizeLangFolder(string("")).c_str());
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)
@@ -1792,7 +1790,6 @@ int listLanguages(LANG_LIST buffer[])
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");
 	
 	if(pos > 1) // lets sort this list too
 		qsort(buffer, pos, LANG_SIZE, compareLanguage);

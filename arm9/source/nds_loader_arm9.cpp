@@ -111,7 +111,6 @@ bool dldiPatchLoader (data_t *binData, u32 binSize)
 		
 		// load and then present
 		
-		DRAGON_chdir(getDefaultDSOrganizeResourcesFolder("").c_str());
 		DRAGON_FILE *df = NULL;
 		if(debug_FileExists((const char*)dldiPath,75) == FT_FILE){
 			df = DRAGON_fopen(dldiPath, "r");	//debug_FileExists index: 75

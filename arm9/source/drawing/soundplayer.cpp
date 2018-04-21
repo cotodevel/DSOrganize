@@ -381,7 +381,6 @@ void checkEndSound()
 			sndMode = TYPE_PLS;
 			if(loadPlaylist(fileName, &curPlaylist))
 			{
-				DRAGON_chdir("/");
 				loadSound(curPlaylist.urlEntry[0].data);
 				plsPos = 0;
 			}
@@ -456,7 +455,6 @@ void checkEndSound()
 					plsPos++;
 			}
 			
-			DRAGON_chdir("/");
 			loadSound(curPlaylist.urlEntry[plsPos].data);
 			
 			flagRefresh();
@@ -1123,7 +1121,6 @@ void volumeDown()
 
 void loadSoundMode()
 {
-	DRAGON_chdir("/");
 	std::string FullPath = getDefaultDSOrganizePath(string("sound.dat"));
 	
 	if(debug_FileExists((const char*)FullPath.c_str(),24) == FT_FILE){
@@ -1140,7 +1137,6 @@ void loadSoundMode()
 
 void saveSoundMode()
 {
-	DRAGON_chdir("/");
 	std::string FilePath = getDefaultDSOrganizePath("sound.dat");
 	if(debug_FileExists((const char*)FilePath.c_str(),25) == FT_FILE){
 		DRAGON_FILE *fp = DRAGON_fopen(FilePath.c_str(), "w");	//debug_FileExists index: 25

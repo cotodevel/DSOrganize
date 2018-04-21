@@ -1460,8 +1460,6 @@ void renameFile()
 			return;
 		
 		// new file
-		DRAGON_chdir(curDir);
-		
 		if(dir_create)
 			DRAGON_mkdir(fileName);
 		else{
@@ -1497,8 +1495,6 @@ void renameFile()
 
 void deleteFAT(char *entry, bool deleteFinal)
 {
-	DRAGON_chdir("/");
-	
 	if(DRAGON_FileExists(entry) == FT_NONE)
 		return;
 	
@@ -1514,7 +1510,6 @@ void deleteFAT(char *entry, bool deleteFinal)
 	char done = false;
 	int type;
 	
-	DRAGON_chdir(entry);
 	type = DRAGON_FindFirstFile(toDelete);
 	
 	while(!done)
@@ -1536,7 +1531,6 @@ void deleteFAT(char *entry, bool deleteFinal)
 				strcat(str, toDelete);
 				
 				deleteFAT(str, true);
-				DRAGON_chdir(entry);
 			}
 		}
 		else if(type == FT_FILE)
@@ -1753,13 +1747,9 @@ void browserBack()
 				str[y] = 0;
 				
 				// str now holds the filename from copyfrom
-				DRAGON_chdir(newDir);
-				
 				if(debug_FileExists((const char*)str,8) == FT_FILE){
 					DRAGON_FILE *dest = DRAGON_fopen(str, "w");	//debug_FileExists index: 8
 				
-					DRAGON_chdir("/");
-					
 					if(debug_FileExists((const char*)copyFrom,9) == FT_FILE){
 						DRAGON_FILE *src = DRAGON_fopen(copyFrom, "r");	//debug_FileExists index: 9
 						

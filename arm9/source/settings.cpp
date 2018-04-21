@@ -370,7 +370,6 @@ void loadExternalDLDI()
 	
 	memset(dldiFileName, 0, MAX_TGDSFILENAME_LENGTH+1);
 	
-	DRAGON_chdir(getDefaultDSOrganizeResourcesFolder("").c_str());
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)
@@ -397,7 +396,6 @@ void loadExternalDLDI()
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");
 }
 
 void loadSettings()
@@ -690,8 +688,7 @@ void loadSettings()
 
 void loadWifi()
 {
-	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
-	std::string FilePath = getDefaultDSOrganizeFolder("wifi.dat");
+	std::string FilePath = getDefaultDSOrganizePath("wifi.dat");
 	dsoProfiles = (WIFI_PROFILE *)safeMalloc(3 * sizeof(WIFI_PROFILE));
 	
 	int ret = debug_FileExists((const char*)FilePath.c_str(),79);
@@ -730,8 +727,9 @@ void makeDefaultSettings()
 	DRAGON_FILE *fFile = NULL;
 	std::string configPath = getDefaultConfigPath();	//need DSOrganize default config.ini (full)filePath
 	
-	if(debug_FileExists((const char*)configPath.c_str(),81) == FT_FILE){
-		fFile = DRAGON_fopen(configPath.c_str(), "w");	//debug_FileExists index: 81
+	//if(debug_FileExists((const char*)configPath.c_str(),81) == FT_FILE){
+	
+		fFile = DRAGON_fopen(configPath.c_str(), "w+");	//debug_FileExists index: 81
 		DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
 		DRAGON_fputc(0x0D, fFile);
 		DRAGON_fputc(0x0A, fFile);
@@ -1034,7 +1032,7 @@ void makeDefaultSettings()
 		DRAGON_fputc(0x0D, fFile);
 		DRAGON_fputc(0x0A, fFile);
 		DRAGON_fclose(fFile);
-	}
+	//}
 	
 	std::string FilePath = getDefaultDSOrganizePath("autoperform.txt");
 	if(debug_FileExists((const char*)FilePath.c_str(),82) == FT_FILE){
@@ -1055,7 +1053,6 @@ void saveSettings()
 	if(defaultSavePath[x] != '/')
 		strcat(defaultSavePath, "/");
 	
-	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
 	DRAGON_FILE *fFile = NULL;
 	
 	char str[MAX_TGDSFILENAME_LENGTH+1] = {0};

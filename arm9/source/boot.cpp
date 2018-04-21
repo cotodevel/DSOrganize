@@ -67,7 +67,6 @@ void exec(char *command, bool gbaBoot, bool memBoot)
 	// set up debug output 
 	
 	// you can load the stub from whatever place: gbfs,wifi,fat & whatever
-	DRAGON_chdir("/");
 	std::string PathFix = getDefaultDSOrganizeResourcesPath("exec_stub.bin");
 	if(debug_FileExists((const char*)PathFix.c_str(),3) == FT_FILE){
 		DRAGON_FILE *stub = DRAGON_fopen(PathFix.c_str(),"r");	//debug_FileExists index: 3

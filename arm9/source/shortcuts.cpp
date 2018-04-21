@@ -169,7 +169,6 @@ void launchShortcut(SHORTCUT *sc)
 	if(!sc)
 		return;
 	
-	DRAGON_chdir("/");
 	if(DRAGON_FileExists(sc->path) == FT_NONE)
 		return;
 	
@@ -275,7 +274,6 @@ void loadShortcutIcon(SHORTCUT *sc)
 		return;
 	}
 	
-	DRAGON_chdir("/");
 	u32 fileCRC = CalcCRC32(sc->largeiconpath);
 	std::string FilePath = getDefaultDSOrganizeIconsPath(std::to_string(fileCRC) + string(".ico"));
 	

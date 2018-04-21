@@ -711,9 +711,7 @@ void editAddressForward()
 			popCursor();
 			break;
 		case 1: // delete
-			DRAGON_chdir(PathFix.c_str());
 			DRAGON_remove(fileList[curAddress].fileName);
-			DRAGON_chdir("/");
 			a_isPop = false;
 			strcpy(fileName,"");
 			setMode(ADDRESS);
@@ -737,9 +735,7 @@ void addressForward()
 			}
 			break;
 		case 1: // delete
-			DRAGON_chdir(getDefaultDSOrganizeVcardFolder("").c_str());
 			DRAGON_remove(fileList[getCursor()].fileName);
-			DRAGON_chdir("/");
 			a_isPop = false;
 			strcpy(fileName,"");
 			if(getCursor() > 0)

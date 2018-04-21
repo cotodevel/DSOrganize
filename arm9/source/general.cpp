@@ -150,17 +150,8 @@ void quickSwap(int *x, int *y)
 
 void findDataDirectory()
 {
-	//use the default 0:/DSOrganize <dir>
-	/*
-	DRAGON_chdir("/");
-	if(DRAGON_FileExists("data") == FT_DIR) // detected homebrew data dir
-	{
-		DRAGON_chdir("/data/");
-		
-		
-		DRAGON_chdir("/");
-	}
-	*/
+	//use the default 0:/<dir> (root)
+	//file access / file or directory listing is relative to inmediate path passed as argument. So we remove the crazy ammount of DRAGON_chdir calls there is around DSOrganize code
 }
 
 void makeDirectories() // for creating the right paths to the data dir
@@ -506,8 +497,6 @@ void launchNDSMethod1(char *file)
 	
 	whereSlash[0] = 0;	
 	
-	DRAGON_chdir("/");
-	
 	DRAGON_FILE *fp = NULL;
 	if(debug_FileExists((const char*)file,48) == FT_FILE){
 		fp = DRAGON_fopen(file, "r");	//debug_FileExists index: 48
@@ -543,7 +532,6 @@ void launchNDSMethod2(char *file)
 	DRAGON_fclose(fFile);
 	
 	// get loader
-	DRAGON_chdir("/");
 	std::string PathFix = getDefaultDSOrganizeResourcesPath("load.bin");
 	
 	DRAGON_FILE *stub = NULL;
@@ -1127,7 +1115,6 @@ void writeDebug(const char *s, ...)
 	}
 	
 	DRAGON_preserveVars();
-	DRAGON_chdir("/");
 	
 	DRAGON_FILE *fp = NULL;
 	if(debug_FileExists((const char*)"debug.txt",51) == FT_FILE){
@@ -1552,7 +1539,6 @@ void takeScreenshot()
 			memcpy((uint16 *)ssPicture.rawData + 256*192, bg_backBuffer(), 256*192*2);
 		}
 		
-		DRAGON_chdir("/");
 		saveImageFromHandle(&ssPicture);				
 		freeImage(&ssPicture);
 	}

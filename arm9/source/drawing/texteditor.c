@@ -848,7 +848,6 @@ void saveTextFile()
 	IRQVBlankWait();
 	fb_swapBuffers();
 	
-	DRAGON_chdir("/");
 	DRAGON_remove(curDir);
 	
 	if(curDir[0] != '/')

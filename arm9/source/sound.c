@@ -2066,7 +2066,6 @@ bool loadSound(char *fName)
 	strlwr(ext);
 	
 	freeSound();	
-	DRAGON_chdir("/");
 	
 	cutOff = false;
 	sndPaused = false;

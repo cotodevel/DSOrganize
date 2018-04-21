@@ -54,6 +54,7 @@ bool DRAGON_InitFiles()
 	int ret=FS_init();
 	if (ret == 0)
 	{
+		DRAGON_chdir("/");	//set default dir at "/" or root 
 		dldiCardSt = true;	//FS Init OK
 	}
 	else if(ret == -1)
@@ -83,7 +84,7 @@ char *DRAGON_tryingInterface()
 	return dldi_tryingInterface();
 }
 
-bool DRAGON_chdir(const char* path)	//use DRAGON_chdir("/DSOrganize"); for chdir
+int DRAGON_chdir(const char* path)	//use DRAGON_chdir("/DSOrganize"); for chdir
 {
 	return chdir(path);
 }
@@ -732,16 +733,9 @@ int debug_FileExists(const char* filename, int indexSource){
 	int ret =  DRAGON_FileExists(filename);
 
 	if(ret == FT_NONE){
-		
-		//so far index 11 correct path OK
-		//so far index 21 correct path OK
-		//so far index 10 correct path OK
-		//so far index 13 correct path OK
-		//so far index 80 correct path OK
-		//so far index 83 correct path OK
-		//so far index 14 correct path OK
-		//so far index 81
 		if(
+			(indexSource < 10000)
+			/*
 			(indexSource != 11)
 			&&
 			(indexSource != 21)
@@ -755,9 +749,16 @@ int debug_FileExists(const char* filename, int indexSource){
 			(indexSource != 83)
 			&&
 			(indexSource != 14)
-			
+			&&
+			(indexSource != 79)
+			&&
+			(indexSource != 81)	//config.ini creates here so this rule must be.. well ruled out
+			&&
+			(indexSource != 56)
+			&&
+			(indexSource != 82)	//so far here segfaults
+			*/
 		){
-		
 			printfDebugger("id:%d-missing:%s",indexSource,filename);
 			//printfDebugger("%s",filename);
 		}
@@ -784,10 +785,20 @@ std::string getDefaultDSOrganizePath(std::string str0){
 	return FilePath;
 }
 
+std::string getDefaultDSOrganizeHelpFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/HELP") + str0);
+	return PathFix;
+}
+
 std::string getDefaultDSOrganizeHelpPath(std::string str0){
 	std::string PathFix = getPathFix();
 	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("HELP") + string("/") + str0);
 	return FilePath;
+}
+
+std::string getDefaultDSOrganizeDayFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/DAY") + str0);
+	return PathFix;
 }
 
 std::string getDefaultDSOrganizeDayPath(std::string str0){
@@ -805,6 +816,11 @@ std::string getDefaultDSOrganizeLangPath(std::string str0){
 	std::string PathFix = getPathFix();
 	std::string FilePath = (getDefaultDSOrganizePath(string("")) + string("LANG") + string("/") + str0);
 	return FilePath;
+}
+
+std::string getDefaultDSOrganizeReminderFolder(std::string str0){
+	std::string PathFix = (getDefaultDSOrganizeFolder("/REMINDER") + str0);
+	return PathFix;
 }
 
 std::string getDefaultDSOrganizeReminderPath(std::string str0){

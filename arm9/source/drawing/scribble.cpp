@@ -769,8 +769,6 @@ void saveScribble()
 		isFlipped = false;
 	}
 	
-	DRAGON_chdir("/");
-	
 	loading = true;
 	saveImageFromHandle(&scribblePicture);
 	loading = false;

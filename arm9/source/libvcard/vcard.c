@@ -511,9 +511,7 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	char filename[255];
 	char listName[70];
 	
-	DRAGON_chdir("/");
 	calculateListName(vf, listName);
-	DRAGON_chdir(dir);
 	
 	DRAGON_FILE *fFile;
 	
@@ -644,8 +642,6 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	DRAGON_fputc(0x0A, fFile);
 	DRAGON_fclose(fFile);
 	
-	DRAGON_chdir("/");
-	
 	strcpy(vf->fileName, filename); // write back filename
 	
 	/*
@@ -761,7 +757,6 @@ void saveVCard(VCARD_FILE *vf, char *dir)
 	DRAGON_fputs(finalStr, fFile);	
 	DRAGON_fclose(fFile);		
 	
-	DRAGON_chdir("/");
 	*/
 }
 
@@ -894,7 +889,6 @@ void separateMultiples(char *dir)
 	while(repeat)
 	{
 		repeat = false;
-		DRAGON_chdir(dir);
 		fType = DRAGON_FindFirstFile(tmpFile);
 		while(fType != FT_NONE)
 		{
@@ -911,7 +905,6 @@ void separateMultiples(char *dir)
 			fType = DRAGON_FindNextFile(tmpFile);		
 		}
 		
-		DRAGON_closeFind();		
-		DRAGON_chdir("/");
+		DRAGON_closeFind();
 	}
 }

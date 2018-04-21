@@ -523,7 +523,6 @@ int listIconSets(ICON_LIST buffer[])
 	strcpy(buffer[0].iconURL,"Default");
 	uint16 pos = 1;
 
-	DRAGON_chdir(getDefaultDSOrganizeIconsFolder("").c_str());
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	while(fType != FT_NONE)
@@ -541,7 +540,6 @@ int listIconSets(ICON_LIST buffer[])
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");
 	
 	if(pos > 1) // lets sort this list too
 		qsort(buffer, pos, ICON_SIZE, compareIcons);
@@ -695,9 +693,6 @@ void loadIconSet()
 	if(strcmp(strTemp, "default") == 0)
 		return;
 	
-	DRAGON_chdir(getDefaultDSOrganizeIconsFolder("").c_str());
-	DRAGON_chdir(cIconSet);
-	
 	// home screen iconset
 	spr_unavailable = loadIcon("home_unavailable", spr_unavailable1);
 	spr_Scribble = loadIcon("home_scribble", spr_Scribble1);
@@ -771,6 +766,5 @@ void loadIconSet()
 	c_unlocked = loadIcon("config_unlocked", c_unlocked1);
 	c_locked = loadIcon("config_locked", c_locked1);
 	
-	DRAGON_chdir("/");
 }
 

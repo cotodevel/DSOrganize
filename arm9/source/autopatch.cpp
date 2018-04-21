@@ -113,8 +113,6 @@ void patchFile(char *fName)
 		
 		// load and then present
 		
-		DRAGON_chdir(getDefaultDSOrganizeResourcesFolder("").c_str());
-		
 		if(debug_FileExists((const char*)dldiPath,0) == FT_FILE){
 			DRAGON_FILE *df = DRAGON_fopen(dldiPath, "r");	//debug_FileExists index: 0
 			
@@ -151,7 +149,6 @@ void patchFile(char *fName)
 	size_t dldiFileSize = 0;    // lol comment
 	addr_t addrIter;			// lol comment
 	
-	DRAGON_chdir("/");
 	
 	if(debug_FileExists((const char*)fName,1) == FT_FILE){
 		DRAGON_FILE *ndsFile = DRAGON_fopen(fName, "r");	//debug_FileExists index: 1

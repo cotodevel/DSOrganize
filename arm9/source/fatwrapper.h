@@ -110,7 +110,7 @@ extern bool 			DRAGON_GetLongFilename(char* filename);
 extern u32 			DRAGON_GetFileSize();
 extern u32 			DRAGON_GetFileCluster();
 extern int				DRAGON_mkdir(const char* path);
-extern bool			DRAGON_chdir(const char* path);
+extern int			DRAGON_chdir(const char* path);
 extern int 			DRAGON_remove(const char* path);
 extern bool 			DRAGON_rename(const char *oldName, const char *newName);
 extern int				DRAGON_FileExists(const char* filename);
@@ -145,11 +145,14 @@ extern int debug_FileExists(const char* filename, int indexSource);
 extern std::string getPathFix();
 extern std::string getDefaultDSOrganizeFolder(std::string str0);		// /d_base
 extern std::string getDefaultDSOrganizePath(std::string str0);	// 0:/d_base
+extern std::string getDefaultDSOrganizeHelpFolder(std::string str0);
 extern std::string getDefaultDSOrganizeHelpPath(std::string str0);
+extern std::string getDefaultDSOrganizeDayFolder(std::string str0);
 extern std::string getDefaultDSOrganizeDayPath(std::string str0);
 extern std::string getDefaultDSOrganizeLangFolder(std::string str0);
 extern std::string getDefaultDSOrganizeLangPath(std::string str0);
 extern std::string getDefaultDSOrganizeScribbleFolder(std::string str0);
+extern std::string getDefaultDSOrganizeReminderFolder(std::string str0);
 extern std::string getDefaultDSOrganizeReminderPath(std::string str0);
 extern std::string getDefaultDSOrganizeTodoFolder(std::string str0);
 extern std::string getDefaultDSOrganizeTodoPath(std::string str0);

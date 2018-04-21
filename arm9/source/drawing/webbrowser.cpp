@@ -393,9 +393,6 @@ char quickLower(char c)
 
 void loadSearchPreferences()
 {
-	
-	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
-	
 	searchStrings = NULL;
 	searchMax = 0;
 	
@@ -444,8 +441,6 @@ void loadSpecialKeys()
 {
 	memset(specialKey, 0, 18*8);
 	
-	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
-	
 	if(DRAGON_FileExists("specialkeys.txt") != FT_FILE)
 		return;
 	
@@ -471,8 +466,6 @@ void loadSpecialKeys()
 
 void loadFavorites()
 {
-	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
-	
 	favorites = NULL;
 	
 	if(DRAGON_FileExists("favorites.txt") != FT_FILE)
@@ -552,8 +545,6 @@ void bookmarkCurrent()
 	}
 	
 	strncpy(favorites[favorites->numEntries-1].url, inputBuffer, 511);
-	
-	DRAGON_chdir((char*)getDefaultDSOrganizeFolder("").c_str());
 	
 	DRAGON_FILE *df = NULL;
 	
@@ -642,7 +633,6 @@ void initWebBrowser()
 	memset(curExtension, 0, MAX_EXT);
 	memset(curFileName, 0, FILENAME_SIZE);
 	
-	DRAGON_chdir("/");
 	clearFocus();
 	
 	bState = WEBSTATE_INIT;
@@ -1197,7 +1187,6 @@ void freeWebBrowser()
 	// clear cache
 	deleteFAT((char*)getDefaultDSOrganizeCacheFolder("").c_str(), false);	
 	
-	DRAGON_chdir("/");
 }
 
 void loadPage(char *file, bool toHistory)

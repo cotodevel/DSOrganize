@@ -166,7 +166,6 @@ uint16 populateList(char *dir)
 	freeVCard();
 	
 	//appendSlash(dir);
-	//DRAGON_chdir("/");	
 	//DRAGON_chdir(dir);	//coto: DRAGON_FindFirstFile is relative to current dir passed as arg directly. No need to call DRAGON_chdir before
 	
 	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
@@ -201,7 +200,6 @@ uint16 populateList(char *dir)
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");
 	sortList(pos);
 	
 	return pos;
@@ -311,8 +309,6 @@ uint16 populateDirList(char *dir)
 	uint16 pos = 0;
 	
 	strcpy(lastDir, dir);
-	DRAGON_chdir("/");
-	DRAGON_chdir(dir);
 	fType = DRAGON_FindFirstFile(tmpFile);
 	
 	freeDirList();	
@@ -361,7 +357,6 @@ uint16 populateDirList(char *dir)
 	}
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");	
 	sortDirList(pos);
 	
 	return pos;
@@ -699,7 +694,6 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 			strcpy(file->internalName, str);
 		
 		DRAGON_preserveVars();
-		DRAGON_chdir("/");
 		
 		//if(DRAGON_FileExists(sc.smalliconpath) == FT_FILE)
 		//	memcpy(file->iconData, unknownlarge, 1026*2);	// load icon in the future (or never)
@@ -847,7 +841,6 @@ uint16 populateTodoList(char *dir)
 	
 	uint16 pos = 0;
 	//appendSlash(dir);
-	//DRAGON_chdir("/");	
 	//DRAGON_chdir(dir);	//coto: DRAGON_FindFirstFile is relative to current dir passed as arg directly. No need to call DRAGON_chdir before
 	
 	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
@@ -896,7 +889,6 @@ uint16 populateTodoList(char *dir)
 	
 	
 	DRAGON_closeFind();
-	DRAGON_chdir("/");	
 	sortTodoList(pos);	
 	
 	return pos;
@@ -988,7 +980,6 @@ uint16 populateScribbleList(char *dir)
 	
 	uint16 pos = 0;	
 	//appendSlash(dir);
-	//DRAGON_chdir("/");	
 	//DRAGON_chdir(dir);	//coto: DRAGON_FindFirstFile is relative to current dir passed as arg directly. No need to call DRAGON_chdir before
 	
 	sprintf(tmpFile,"%s",dir);	//copy path so the next lookup work works
@@ -1030,7 +1021,6 @@ uint16 populateScribbleList(char *dir)
 	}
 	
 	DRAGON_closeFind();
-	//DRAGON_chdir("/");	
 	sortScribbleList(pos);	
 	return pos;
 }

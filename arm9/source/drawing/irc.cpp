@@ -2315,23 +2315,14 @@ void parseScriptFile(char *fName)
 
 void autoPerform()
 {
-	DRAGON_chdir("/");
-	
 	// check if the autoperform.txt file is in the dsorganize data root
 	// if so, perform each line as a command
-	
-	char fName[MAX_TGDSFILENAME_LENGTH+1] = {0};
-	sprintf(fName, "%s", getDefaultDSOrganizePath(string("autoperform.txt")).c_str());
-	parseScriptFile(fName);
-	
+	parseScriptFile((char*)getDefaultDSOrganizePath(string("autoperform.txt")).c_str());
 	if(strlen(curNetwork) > 0)
 	{
 		// check if the [network].autoperform.txt file is in the dsorganize data root
 		// if so, perform each line as a command
-		
-		char fName2[MAX_TGDSFILENAME_LENGTH+1] = {0};
-		sprintf(fName2, "%s", getDefaultDSOrganizePath(string(curNetwork) + string(".")+ string("autoperform.txt")).c_str());
-		parseScriptFile(fName2);
+		parseScriptFile((char*)getDefaultDSOrganizePath(string(curNetwork) + string(".")+ string("autoperform.txt")).c_str());
 	}
 }
 
@@ -4173,12 +4164,9 @@ void resetIRCMode()
 	
 	notifyPresent = false;
 	
-	DRAGON_chdir(getDefaultDSOrganizeFolder(string("")).c_str());
-	
 	if(DRAGON_FileExists("notify.wav") == FT_FILE)
 		notifyPresent = true;
 	
-	DRAGON_chdir("/");
 	
 	initSideTabs();
 	

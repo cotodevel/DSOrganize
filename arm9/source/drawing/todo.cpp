@@ -71,12 +71,7 @@ void todoSetUnPopulated()
 
 void saveTodo(TODO_FILE *vf, char *dir)
 {
-	DRAGON_chdir("/");
-	
-	char filename[255];	
-	
-	DRAGON_chdir(dir);	
-	
+	char filename[MAX_TGDSFILENAME_LENGTH+1] = {0};	
 	if(strlen(vf->fileName) == 0)
 	{	// new todo
 		
@@ -454,9 +449,7 @@ void editTodoForward()
 			popCursor();
 			break;
 		case 1: // delete
-			DRAGON_chdir(getDefaultDSOrganizeTodoFolder("").c_str());
 			DRAGON_remove(todoList[curTodo].fileName);
-			DRAGON_chdir("/");
 			t_isPop = false;
 			strcpy(fileName,"");
 			setMode(TODOLIST);
@@ -480,9 +473,7 @@ void todoForward()
 			}
 			break;
 		case 1: // delete
-			DRAGON_chdir(getDefaultDSOrganizeTodoFolder("").c_str());
 			DRAGON_remove(todoList[getCursor()].fileName);
-			DRAGON_chdir("/");
 			t_isPop = false;
 			strcpy(fileName,"");
 			if(getCursor() > 0)

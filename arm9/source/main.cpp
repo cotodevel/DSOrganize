@@ -268,25 +268,17 @@ void initProgram()
 	findDataDirectory();
 	makeDirectories();
 	
-	if(DRAGON_FileExists("DSOrganize") != FT_DIR)
+	std::string initPath = getDefaultDSOrganizePath("");
+	initPath.erase(initPath.length()-1);
+	
+	//Dir exists?
+	int retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeFolder("").c_str());
+	if(retDir != 0)
 	{
+		//printfDebugger("DRAGON_chdir:creating new dirs");	//while(1==1){} inside
 		setMode(DISPLAYCOW);
-		
 		// oops, not there, we must create!
-		DRAGON_mkdir("DSOrganize");
-		DRAGON_chdir("DSOrganize");
-		DRAGON_mkdir("DAY");
-		DRAGON_mkdir("HELP");
-		DRAGON_mkdir("LANG");
-		DRAGON_mkdir("RESOURCES");
-		DRAGON_mkdir("REMINDER");
-		DRAGON_mkdir("SCRIBBLE");
-		DRAGON_mkdir("TODO");
-		DRAGON_mkdir("VCARD");
-		DRAGON_mkdir("ICONS");
-		DRAGON_mkdir("CACHE");
-		DRAGON_mkdir("HOME");
-		DRAGON_chdir("/");
+		DRAGON_mkdir(getDefaultDSOrganizeFolder("").c_str());
 		
 		makeDefaultSettings();
 		
@@ -303,7 +295,8 @@ void initProgram()
 		//}
 	}
 	else{
-		
+		//printfDebugger("DRAGON_chdir:no need to create");	//ok
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
 	}
 	setMode(INITPLUGIN);
 	
@@ -312,51 +305,104 @@ void initProgram()
 	//did their extracting program actually get all the dirs?
 	//-------------------------------------------------------------------	
 	
-	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
-	
-	if(DRAGON_FileExists("DAY") != FT_DIR)
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeDayFolder("").c_str());
+	if(retDir != 0)
 	{
-		DRAGON_mkdir("DAY");
+		DRAGON_mkdir(getDefaultDSOrganizeDayFolder("").c_str());	
 	}
-	if(DRAGON_FileExists("HELP") != FT_DIR)
-	{
-		DRAGON_mkdir("HELP");
-	}
-	if(DRAGON_FileExists("LANG") != FT_DIR)
-	{
-		DRAGON_mkdir("LANG");
-	}
-	if(DRAGON_FileExists("REMINDER") != FT_DIR)
-	{
-		DRAGON_mkdir("REMINDER");
-	}
-	if(DRAGON_FileExists("SCRIBBLE") != FT_DIR)
-	{
-		DRAGON_mkdir("SCRIBBLE");
-	}
-	if(DRAGON_FileExists("TODO") != FT_DIR)
-	{
-		DRAGON_mkdir("TODO");
-	}
-	if(DRAGON_FileExists("VCARD") != FT_DIR)
-	{
-		DRAGON_mkdir("VCARD");
-	}
-	if(DRAGON_FileExists("ICONS") != FT_DIR)
-	{
-		DRAGON_mkdir("ICONS");
-	}
-	if(DRAGON_FileExists("CACHE") != FT_DIR)
-	{
-		DRAGON_mkdir("CACHE");
-	}
-	if(DRAGON_FileExists("HOME") != FT_DIR)
-	{
-		DRAGON_mkdir("HOME");
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
 	}
 	
-	DRAGON_chdir("/");
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeHelpFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeHelpFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
 	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeLangFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeLangFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeReminderFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeReminderFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeScribbleFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeScribbleFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeTodoFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeTodoFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeVcardFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeVcardFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeIconsFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeIconsFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeCacheFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeCacheFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeHomeFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeHomeFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
+	
+	retDir = DRAGON_chdir((const char*)getDefaultDSOrganizeResourcesFolder("").c_str());
+	if(retDir != 0)
+	{
+		DRAGON_mkdir(getDefaultDSOrganizeResourcesFolder("").c_str());
+	}
+	else{
+		DRAGON_chdir((const char*)"/");	//ok, return to base path
+	}
 	
 	//-------------------------------------------
 	//how about we load the settings for them eh?
@@ -364,8 +410,6 @@ void initProgram()
 	loadSettings();
 	fb_setBGColor(genericFillColor);
 	bg_setBGColor(genericFillColor);
-	
-	DRAGON_chdir(getDefaultDSOrganizeFolder("").c_str());
 	
 	std::string PathFix = getDefaultDSOrganizePath(string("startup.wav"));
 	if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
@@ -375,7 +419,7 @@ void initProgram()
 		loadWavToMemory();
 		loadSound(tStr);
 	}
-	DRAGON_chdir("/");
+	
 }
 
 void drawCurrentApp()
