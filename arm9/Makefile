@@ -56,11 +56,11 @@ VPATH 	=	$(DIR_SRC)
 OBJPROG = 	$(addprefix $(OBJDIR)/, $(ELF_ARM9))
 
 
-all: buildpath|$(TARGET_LIBRARY_CRT0_FILE_9).o	$(BINSTRIP_RULE_9)
+all: $(OBJDIR)|	$(TARGET_LIBRARY_CRT0_FILE_9).o	$(BINSTRIP_RULE_9)
 #all: debug
 
 #Check $(OBJDIR) if not exists: create it
-buildpath:
+$(OBJDIR):
 	@echo "Folder $(OBJDIR) does not exist. Creating"
 	mkdir -p $(OBJDIR)
 
@@ -102,6 +102,8 @@ $(OBJDIR)/%.o : %.S
 $(TARGET_LIBRARY_CRT0_FILE_9).o:	$(TARGET_LIBRARY_LINKER_FILE_9)
 	-@echo 'S Compile start: crt0s'
 	$(CXX)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $(OBJDIR)/$@ -c $<
+	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.ld $(CURDIR)
+	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.specs $(CURDIR)
 	-@echo 'S Compile end: crt0s'
 
 #Linkage. 
@@ -120,7 +122,7 @@ $(BINSTRIP_RULE_9): $(OBJPROG)
 
 clean:
 	-@echo 'cleanup $(DIR_ARM9)'
-	-@rm -fr $(OBJDIR)	$(BINSTRIP_RULE_9)	$(MAPFILE)
+	-@rm -fr $(OBJDIR)	$(BINSTRIP_RULE_9)	$(MAPFILE)	$(CURDIR)/nds_arm9_ld.specs	$(CURDIR)/nds_arm9_ld.ld
 	
 debug:
 	-@echo '$(OBJDIR)';
