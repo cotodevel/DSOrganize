@@ -280,8 +280,6 @@ void initProgram()
 		// oops, not there, we must create!
 		DRAGON_mkdir(getDefaultDSOrganizeFolder("").c_str());
 		
-		makeDefaultSettings();
-		
 		setFont((uint16 **)font_arial_11);
 		setColor(0xFFFF);
 		

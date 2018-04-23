@@ -164,7 +164,7 @@ void loadDay(int whichDay, int whichMonth, int whichYear)
 	
 	//sprintf(str,"%s%s/%02d%02d%04d.REM",PathFix.c_str(),d_reminder,getMonth(),getDay(),getYear());	// ???????
 	
-	std::string PathFixDay = getDefaultDSOrganizeDayPath("/");
+	std::string PathFixDay = getDefaultDSOrganizeDayPath("");
 	
 	// grab the latest day
 	loadFileStream( (char*)string(PathFixDay + std::to_string(whichMonth) + std::to_string(whichDay) + std::to_string(whichYear) + string(".DPL")).c_str() , dvStruct, TYPE_DAILY);
@@ -257,19 +257,19 @@ void saveDayView()
 	switch(whatType)
 	{
 		case TYPE_DAILY:{
-			FilePath = (getDefaultDSOrganizeDayPath("/") + std::to_string(curMonth) + std::to_string(curDay) + std::to_string(curYear) + string(".DPL"));
+			FilePath = (getDefaultDSOrganizeDayPath(string(std::to_string(curMonth) + std::to_string(curDay) + std::to_string(curYear) + string(".DPL"))));
 		}
 		break;
 		case TYPE_WEEKLY:{
-			FilePath = (getDefaultDSOrganizeDayPath("/") + std::to_string(dayOfWeek(curDay, curMonth, curYear)) + string(".DPL"));
+			FilePath = (getDefaultDSOrganizeDayPath(string(std::to_string(dayOfWeek(curDay, curMonth, curYear)) + string(".DPL"))));
 		}
 		break;
 		case TYPE_MONTHLY:{
-			FilePath = (getDefaultDSOrganizeDayPath("/") + string("--") + std::to_string(curDay) + string("----") + string(".DPL"));
+			FilePath = (getDefaultDSOrganizeDayPath(string(string("--") + std::to_string(curDay) + string("----") + string(".DPL"))));
 		}
 		break;
 		case TYPE_ANNUALLY:{
-			FilePath = (getDefaultDSOrganizeDayPath("/") + std::to_string(curDay) + std::to_string(curMonth) + string("----") + string(".DPL"));
+			FilePath = (getDefaultDSOrganizeDayPath(string(std::to_string(curDay) + std::to_string(curMonth) + string("----") + string(".DPL"))));
 		}
 		break;
 	}

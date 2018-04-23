@@ -585,8 +585,8 @@ void drawTopConfiguration()
 		{
 			if(strlen(textStrings[configCursor]) != 0)
 			{
-				std::string FilePath1 = (getDefaultDSOrganizeHelpPath("/") + string(curLang) + string("/config/") + string(textStrings[configCursor]));
-				std::string FilePath2 = (getDefaultDSOrganizeHelpPath("/") + string("english") + string("/config/") + string(textStrings[configCursor]));
+				std::string FilePath1 = (getDefaultDSOrganizeHelpPath("") + string(curLang) + string("/config/") + string(textStrings[configCursor]));
+				std::string FilePath2 = (getDefaultDSOrganizeHelpPath("") + string("english") + string("/config/") + string(textStrings[configCursor]));
 				
 				if(debug_FileExists((const char*)FilePath1.c_str(),13) == FT_FILE)
 				{
@@ -2746,6 +2746,7 @@ void configurationForward()
 
 void configurationBack()
 {	
+	
 	if(configCursor >= PAGE11 && wifiState != WIFI_NORMAL)
 	{
 		switch(wifiState)
@@ -2773,7 +2774,7 @@ void configurationBack()
 	}
 
 	int tmpMode = getMode();
-	loadSettings();	
+	//loadSettings();		//segfaults so removed
 	fakeConfiguration();
 	destroyConfiguration();
 	setMode(tmpMode);

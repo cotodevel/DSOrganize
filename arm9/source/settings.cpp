@@ -727,7 +727,7 @@ void makeDefaultSettings()
 	DRAGON_FILE *fFile = NULL;
 	std::string configPath = getDefaultConfigPath();	//need DSOrganize default config.ini (full)filePath
 	
-	//if(debug_FileExists((const char*)configPath.c_str(),81) == FT_FILE){
+	if(debug_FileExists((const char*)configPath.c_str(),81) == FT_NONE){
 	
 		fFile = DRAGON_fopen(configPath.c_str(), "w+");	//debug_FileExists index: 81
 		DRAGON_fputs("; Edit this as you please to customize DSOrganize", fFile);
@@ -1032,10 +1032,10 @@ void makeDefaultSettings()
 		DRAGON_fputc(0x0D, fFile);
 		DRAGON_fputc(0x0A, fFile);
 		DRAGON_fclose(fFile);
-	//}
+	}
 	
 	std::string FilePath = getDefaultDSOrganizePath("autoperform.txt");
-	if(debug_FileExists((const char*)FilePath.c_str(),82) == FT_FILE){
+	if(debug_FileExists((const char*)FilePath.c_str(),82) == FT_NONE){
 		fFile = DRAGON_fopen(FilePath.c_str(), "w+");	//debug_FileExists index: 82
 		DRAGON_fputs("/j #dsorganize", fFile);
 		DRAGON_fputc(0x0D, fFile);
@@ -1658,7 +1658,7 @@ void loadColors()
 	int tValue = -1;
 	
 	// try colors.ini inside iconset first ("/DSOrganize/ICONS/")
-	if(DRAGON_FileExists( (char*)getDefaultDSOrganizePath(getDefaultDSOrganizeIconsPath("/" + string(cIconSet))).c_str()  ) != FT_FILE)
+	if(DRAGON_FileExists( (char*)getDefaultDSOrganizePath(getDefaultDSOrganizeIconsPath(string(cIconSet))).c_str()  ) != FT_FILE)
 	{
 		//if not then try inside /DSOrganize/colors.ini
 		if(DRAGON_FileExists(getDefaultDSOrganizePath("colors.ini").c_str()) != FT_FILE)
@@ -1671,7 +1671,7 @@ void loadColors()
 		}
 	}
 	else{
-		PathFix = getDefaultDSOrganizePath(getDefaultDSOrganizeIconsPath("/" + string(cIconSet)));
+		PathFix = getDefaultDSOrganizePath(getDefaultDSOrganizeIconsPath(string(cIconSet)));
 	}
 	
 	setIniFile((char*)PathFix.c_str());	//updates fullpath for config.ini

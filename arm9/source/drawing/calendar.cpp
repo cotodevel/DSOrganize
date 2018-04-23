@@ -232,28 +232,28 @@ void drawReminders()
 				else
 					reminders[x] = 0;
 					
-				PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(curMonth) + std::to_string(x) + std::to_string(curYear) + (".DPL"));
+				PathFix = getDefaultDSOrganizeDayPath(std::to_string(curMonth) + std::to_string(x) + std::to_string(curYear) + (".DPL"));
 				if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 				{
 					dayViews[x] = 1;
 				}
 				else
 				{
-					PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(dayOfWeek(x, curMonth, curYear)) + (".DPL"));
+					PathFix = getDefaultDSOrganizeDayPath(std::to_string(dayOfWeek(x, curMonth, curYear)) + (".DPL"));
 					if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 					{
 						dayViews[x] = 1;
 					}
 					else
 					{
-						PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(x));
+						PathFix = getDefaultDSOrganizeDayPath(std::to_string(x));
 						if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 						{
 							dayViews[x] = 1;
 						}
 						else
 						{
-							PathFix = getDefaultDSOrganizeDayPath(string("/") + std::to_string(curDay) + std::to_string(curMonth));
+							PathFix = getDefaultDSOrganizeDayPath(std::to_string(curDay) + std::to_string(curMonth));
 							if(DRAGON_FileExists(PathFix.c_str()) == FT_FILE)
 							{
 								dayViews[x] = 1;

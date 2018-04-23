@@ -735,24 +735,28 @@ int debug_FileExists(const char* filename, int indexSource){
 	if(ret == FT_NONE){
 		if(
 			(indexSource < 10000)
-			/*
+			&&
+			(indexSource != 79)
+			&&
 			(indexSource != 11)
 			&&
 			(indexSource != 21)
 			&&
-			(indexSource != 10)
+			(indexSource != 81)	//config.ini creates here
 			&&
 			(indexSource != 13)
 			&&
-			(indexSource != 80)
-			&&
-			(indexSource != 83)
-			&&
 			(indexSource != 14)
 			&&
-			(indexSource != 79)
+			(indexSource != 80)	//Save Config (A button)
 			&&
-			(indexSource != 81)	//config.ini creates here so this rule must be.. well ruled out
+			(indexSource != 83)	//Save Config (A button)
+			
+			/*
+			&&
+			(indexSource != 10)
+			
+			
 			&&
 			(indexSource != 56)
 			&&
