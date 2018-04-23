@@ -64,16 +64,15 @@ static int (*callbackFunction)(int,u32,int,int,int) = NULL;
 static bool callbackEnabled = false;
 
 // internal prototypes
-inline uint32 getSpriteWidthInternal(uint16* sprite);
-inline uint32 getSpriteHeightInternal(uint16* sprite);
+uint32 getSpriteWidthInternal(uint16* sprite);
+uint32 getSpriteHeightInternal(uint16* sprite);
 
-// defined as inline instead of macro to reduce macro bugs
-inline int MAXFB(int a, int b)
+int MAXFB(int a, int b)
 {
 	return a > b ? a : b;
 }
 
-inline uint32 bitsFromPal(uint32 palHigh)
+uint32 bitsFromPal(uint32 palHigh)
 {
 	if(palHigh < 3)
 		return 1;
@@ -92,7 +91,7 @@ inline uint32 bitsFromPal(uint32 palHigh)
 	return 8;
 }
 
-inline uint32 bitMaskCalc(uint32 palHigh)
+uint32 bitMaskCalc(uint32 palHigh)
 {
 	if(palHigh < 3)
 		return 1; //0000 0001
@@ -111,7 +110,7 @@ inline uint32 bitMaskCalc(uint32 palHigh)
 	return 255; //1111 1111
 }
 
-static inline void dispCustomSpriteNormal(int x, int y, uint16* sprite, uint32 tc, uint32 colormask, uint16 *bgFlag, int max_X, int max_Y)
+static void dispCustomSpriteNormal(int x, int y, uint16* sprite, uint32 tc, uint32 colormask, uint16 *bgFlag, int max_X, int max_Y)
 {
 	//italics
 	if(italics)
@@ -208,7 +207,7 @@ static inline void dispCustomSpriteNormal(int x, int y, uint16* sprite, uint32 t
 	}	
 }
 
-static inline void dispCustomSpriteCompressed(int x, int y, uint16* sprite, uint32 tc, uint32 colormask, uint16 *bgFlag, uint max_X, uint max_Y)
+static void dispCustomSpriteCompressed(int x, int y, uint16* sprite, uint32 tc, uint32 colormask, uint16 *bgFlag, uint max_X, uint max_Y)
 {
 	//italics
 	if(italics)
@@ -422,7 +421,7 @@ void drawRect(int x, int y, int bx, int by, uint16 c, uint16 *buf, int max_y)
 	}
 }
 
-inline bool isArbitraryGlyphAvailable(u32 c, uint16 **FP)
+bool isArbitraryGlyphAvailable(u32 c, uint16 **FP)
 {
 	if(!FP)
 		return false;
@@ -433,12 +432,12 @@ inline bool isArbitraryGlyphAvailable(u32 c, uint16 **FP)
 	return false;
 }
 
-inline bool isGlyphAvailable(u32 c)
+bool isGlyphAvailable(u32 c)
 {
 	return isArbitraryGlyphAvailable(c, currentFont);
 }
 
-inline uint32 getCharWidth(u32 toDisp)
+uint32 getCharWidth(u32 toDisp)
 {	
 	if(!isGlyphAvailable(toDisp))
 		toDisp = '?';
@@ -446,21 +445,20 @@ inline uint32 getCharWidth(u32 toDisp)
 	return getSpriteWidthInternal(currentFont[toDisp]);
 }
 
-inline uint32 getSpriteWidthInternal(uint16* sprite)
+uint32 getSpriteWidthInternal(uint16* sprite)
 {
 	if(*sprite == 0xFFFF)
 		return (*(sprite+1)) + 1;		
 	return (*sprite) + 1;
 }
 
-inline uint32 getSpriteHeightInternal(uint16* sprite)
+uint32 getSpriteHeightInternal(uint16* sprite)
 {
 	if(*sprite == 0xFFFF)
 		return (*(sprite+2)) + 1;		
 	return (*(sprite+1)) + 1;
 }
 
-// to stop inline warnings when linking against this lib (warnings are bad)
 uint32 getSpriteWidth(uint16 *sprite)
 {
 	return getSpriteWidthInternal(sprite);
@@ -471,7 +469,7 @@ uint32 getSpriteHeight(uint16 *sprite)
 	return getSpriteHeightInternal(sprite);
 }
 
-inline uint32 getCharHeight(u32 chr)
+uint32 getCharHeight(u32 chr)
 {
 	if(!isGlyphAvailable(chr))
 		return getSpriteHeightInternal(currentFont[SPACE]);
@@ -479,17 +477,17 @@ inline uint32 getCharHeight(u32 chr)
 	return getSpriteHeightInternal(currentFont[chr]);
 }
 
-inline uint32 getTabStop()
+uint32 getTabStop()
 {
 	return *(currentFont[TAB_STOP]);
 }
 
-inline uint32 getUnderline()
+uint32 getUnderline()
 {
 	return *(currentFont[UNDERLINE]);
 }
 
-inline uint16 getTransparentColorFont()
+uint16 getTransparentColorFont()
 {
 	return *(currentFont[TRANSPARENT_VALUE]);
 }

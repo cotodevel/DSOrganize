@@ -731,7 +731,7 @@ struct FME07Wave    mWave_FME07[3]; /* FME-07's 3 pulse channels */
    currently only multiply is supported */
 
 /****************** N106 (Disch loves this chip) ******************/
-inline void Wave_N106_DoTicks(const int32_t ticks)
+void Wave_N106_DoTicks(const int32_t ticks)
 {
     register int32_t i;
 
@@ -794,7 +794,7 @@ inline void Wave_N106_DoTicks(const int32_t ticks)
     }
 }
 /****************** VRC6 ******************/
-inline void Wave_VRC6_DoTicks(const int32_t ticks)
+void Wave_VRC6_DoTicks(const int32_t ticks)
 {
     register int32_t i;
 
@@ -850,7 +850,7 @@ inline void Wave_VRC6_DoTicks(const int32_t ticks)
 /****************** Square waves ******************/
 
 /* decay */
-inline void Wave_Squares_ClockMajor()
+void Wave_Squares_ClockMajor()
 {
     if(mWave_Squares.nDecayCount[0])
         mWave_Squares.nDecayCount[0]--;
@@ -888,7 +888,7 @@ inline void Wave_Squares_ClockMajor()
         
 }
 
-inline void Wave_Squares_CheckSweepForcedSilence(const int32_t i)
+void Wave_Squares_CheckSweepForcedSilence(const int32_t i)
 {
     if(mWave_Squares.nFreqTimer[i].W < 8) {
         mWave_Squares.bSweepForceSilence[i] = 1; return;
@@ -901,7 +901,7 @@ inline void Wave_Squares_CheckSweepForcedSilence(const int32_t i)
     mWave_Squares.bSweepForceSilence[i] = 0;
 }
 
-inline void Wave_Squares_ClockMinor()
+void Wave_Squares_ClockMinor()
 {
 /* unrolled a little loop
    static int i = 0;
@@ -954,7 +954,7 @@ other_square:
 /****************** Triangle/noise/DMC ******************/
 
 /* decay (noise), linear (tri) */
-inline void Wave_TND_ClockMajor()
+void Wave_TND_ClockMajor()
 {
     /* noise's decay */
     if(mWave_TND.nNoiseDecayCount)
@@ -985,7 +985,7 @@ inline void Wave_TND_ClockMajor()
 }
 
 /* length */
-inline void Wave_TND_ClockMinor()
+void Wave_TND_ClockMinor()
 {
     if(mWave_TND.bNoiseLengthEnabled && mWave_TND.nNoiseLengthCount)
         mWave_TND.nNoiseLengthCount--;
