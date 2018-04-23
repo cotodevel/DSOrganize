@@ -310,7 +310,7 @@ uint16 populateDirList(char *dir)
 	sprintf(tmpFile,"%s",PathFix.c_str());
 	
 	int fType;
-	appendSlash(dir);
+	//appendSlash(dir);
 	
 	uint16 pos = 0;
 	
@@ -337,7 +337,17 @@ uint16 populateDirList(char *dir)
 		}
 		else
 		{
-			strcpy(dirList[pos].longName, tmpFile);
+			//file?
+			if(fType == FT_FILE){
+				strcpy(dirList[pos].longName, tmpFile);
+			}
+			//otherwise directory?
+			else if(fType == FT_DIR){
+				FileClass FileClassInst = getEntryFromGlobalListByIndex(LastDirEntry); 
+				std::string FullPathStr = buildFullPathFromFileClass(&FileClassInst);
+				strcpy(dirList[pos].longName, FullPathStr.c_str());
+			}
+			
 			dirList[pos].played = false;			
 			dirList[pos].fileSize = 0;
 			
@@ -346,11 +356,9 @@ uint16 populateDirList(char *dir)
 				DRAGON_FILE *fFile = NULL;
 				if(debug_FileExists((const char*)tmpFile,43) == FT_FILE){
 					fFile = DRAGON_fopen(tmpFile, "r");	//debug_FileExists index: 43
+					dirList[pos].fileSize = DRAGON_flength(fFile);
+					DRAGON_fclose (fFile);	
 				}
-				
-				dirList[pos].fileSize = DRAGON_flength(fFile);
-				DRAGON_fclose (fFile);	
-				
 				dirList[pos].fileType = getFileType(tmpFile);			
 			}
 			if(fType == FT_DIR)
