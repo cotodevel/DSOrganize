@@ -301,9 +301,15 @@ char *getLastDir()
 
 uint16 populateDirList(char *dir)
 {
-	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
-	int fType;
+	//fix path for fsfat driver
+	std::string PathFix = string(dir);
 	
+	char tmpFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	
+	//need to copy relative path destroyable by FindFirstFile / FindNextFile as they use the path as a base directory search
+	sprintf(tmpFile,"%s",PathFix.c_str());
+	
+	int fType;
 	appendSlash(dir);
 	
 	uint16 pos = 0;
@@ -469,7 +475,7 @@ void getInfo(BROWSER_FILE *bf, char *path1, FILE_INFO *file)
 	if(path[x] == '/')
 		path[x] = 0;
 	
-	strcat(path, "/");
+	//strcat(path, "/");
 	strcat(path, bf->longName);
 	
 	memset(file->formattedName, 0, 256 * 3);

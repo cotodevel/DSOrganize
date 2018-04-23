@@ -31,6 +31,7 @@
 #include "shortcuts.h"
 #include "keyboard.h"
 #include "drawing/browser.h"
+#include "fsfatlayerTGDSNew.h"
 
 extern BROWSER_FILE *dirList;
 
@@ -182,11 +183,11 @@ void launchShortcut(SHORTCUT *sc)
 		x++;
 	}
 	
-	char sFindFile[256];
+	char sFindFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	
 	if(pos == 0)
 	{
-		browserChangeDir("/");
+		browserChangeDir("");	//re-load default startup browser directory
 		
 		if(sc->path[0] == '/')
 			strcpy(sFindFile, sc->path+1);
@@ -195,7 +196,7 @@ void launchShortcut(SHORTCUT *sc)
 	}
 	else
 	{
-		char tDir[256];
+		char tDir[MAX_TGDSFILENAME_LENGTH+1] = {0};
 		strcpy(tDir, sc->path);
 		
 		tDir[pos] = 0;

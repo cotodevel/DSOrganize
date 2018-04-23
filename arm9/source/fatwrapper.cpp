@@ -751,16 +751,18 @@ int debug_FileExists(const char* filename, int indexSource){
 			(indexSource != 80)	//Save Config (A button)
 			&&
 			(indexSource != 83)	//Save Config (A button)
+			&&
+			(indexSource != 43)	//browser tab (read filesystem)	/ browserChangeDir() -> populateDirList()	/ dldiFile: dldiName.dldi
+			&&
+			(indexSource != 44)	//browser tab (read filesystem)	/ current File properties
 			
 			/*
 			&&
 			(indexSource != 10)
-			
-			
 			&&
 			(indexSource != 56)
 			&&
-			(indexSource != 82)	//so far here segfaults
+			(indexSource != 82)
 			*/
 		){
 			printfDebugger("id:%d-missing:%s",indexSource,filename);
