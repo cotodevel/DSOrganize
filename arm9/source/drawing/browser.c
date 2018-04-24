@@ -269,7 +269,6 @@ void loadFile(int which)
 		if(str[x] == '/')
 			str[x] = 0;
 			
-		strcat(str, "/");
 		strcat(str, dirList[which].longName);
 		
 		freeDirList();
@@ -568,7 +567,6 @@ void alternateLoadFile(int which)
 		if(str[x] == '/')
 			str[x] = 0;
 			
-		strcat(str, "/");
 		strcat(str, dirList[which].longName);
 		
 		launchNDSAlt(str);

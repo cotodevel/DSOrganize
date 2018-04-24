@@ -75,6 +75,7 @@
 #include "videoTGDS.h"
 #include "InterruptsARMCores_h.h"
 #include "biosDSOrganize.h"
+#include "fsfatlayerTGDSLegacy.h"
 
 bool copying = false;
 bool loading = false;
@@ -485,8 +486,8 @@ void launchNDSMethod1(char *file)
 	
 	bool doGBABoot = isGBA(file);
 	
-	char shortFile[256];
-	char directory[256];
+	char shortFile[MAX_TGDSFILENAME_LENGTH+1] = {0};
+	char directory[MAX_TGDSFILENAME_LENGTH+1] = {0};
 	
 	strcpy(directory,file);
 	
@@ -500,11 +501,9 @@ void launchNDSMethod1(char *file)
 	DRAGON_FILE *fp = NULL;
 	if(debug_FileExists((const char*)file,48) == FT_FILE){
 		fp = DRAGON_fopen(file, "r");	//debug_FileExists index: 48
+		DRAGON_GetAlias(shortFile);
+		DRAGON_fclose(fp);	
 	}
-	
-	DRAGON_GetAlias(shortFile);
-	DRAGON_fclose(fp);
-	
 	strcat(directory, shortFile);
 	SendArm7Command(ARM7COMMAND_BOOT_MIGHTYMAX, 0);
 	exec(directory, doGBABoot, false);
@@ -515,10 +514,6 @@ void launchNDSMethod2(char *file)
 	//vramSetBankD(VRAM_D_LCD);
 	VRAMBLOCK_SETBANK_D(VRAM_D_LCDC_MODE);
 	
-	REG_IE = 0;
-	REG_IME = 0;
-	REG_IF = 0xFFFF;	// Acknowledge interrupt
-	
 	// get cluster
 	
 	u32 fCluster;
@@ -526,35 +521,39 @@ void launchNDSMethod2(char *file)
 	DRAGON_FILE *fFile = NULL;
 	if(debug_FileExists((const char*)file,49) == FT_FILE){
 		fFile = DRAGON_fopen(file, "r");	//debug_FileExists index: 49
+		fCluster = fFile->firstCluster;
+		DRAGON_fclose(fFile);
 	}
 	
-	fCluster = fFile->firstCluster;
-	DRAGON_fclose(fFile);
-	
+	DRAGON_chdir("/");
 	// get loader
-	std::string PathFix = getDefaultDSOrganizeResourcesPath("load.bin");
-	
+	std::string FileTest = string(getfatfsPath((char*)"DSOrganize/resources/load.bin"));
 	DRAGON_FILE *stub = NULL;
-	if(debug_FileExists((const char*)PathFix.c_str(),50) == FT_FILE){
-		stub = DRAGON_fopen(PathFix.c_str(),"r");	//debug_FileExists index: 50
+	
+	if(debug_FileExists((const char*)FileTest.c_str(),50) == FT_FILE){
+		stub = DRAGON_fopen(FileTest.c_str(),"r");	//debug_FileExists index: 50
+		u32 tLen = DRAGON_flength(stub);
+		char *buffer = (char *)safeMalloc(tLen);
+		DRAGON_fread(buffer,tLen,1,stub);
+		DRAGON_fclose(stub);
+		
+		fb_setClipping(5,5,250,187);
+		
+		setColor(genericTextColor);			
+		setFont((uint16 **)font_arial_11);
+		fb_dispString(0,0, l_launchingchishm);
+		fb_swapBuffers();
+		
+		REG_IE = 0;
+		REG_IME = 0;
+		REG_IF = 0xFFFF;	// Acknowledge interrupt
+		
+		runNds(buffer, tLen, fCluster, false);
 	}
-	
-	u32 tLen = DRAGON_flength(stub);
-	
-	char *buffer = (char *)safeMalloc(tLen);
-	
-	DRAGON_fread(buffer,tLen,1,stub);
-	DRAGON_fclose(stub);
-	
-	fb_setClipping(5,5,250,187);
-	
-	setColor(genericTextColor);			
-	setFont((uint16 **)font_arial_11);
-	fb_dispString(0,0, l_launchingchishm);
-	fb_swapBuffers();
-	
-	runNds(buffer, tLen, fCluster, false);
-
+	else{
+		//file not exists
+		printfDebugger("MissingFile:%s",FileTest.c_str());
+	}
 	while(1);
 }
 

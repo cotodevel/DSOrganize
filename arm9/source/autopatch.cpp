@@ -36,6 +36,7 @@
 #include "colors.h"
 #include "language.h"
 #include "font_arial_11.h"
+#include "resources.h"
 
 static const data_t dldiMagicString[] = "\xED\xA5\x8D\xBF Chishm";	// Normal DLDI file
 
@@ -103,7 +104,9 @@ void patchFile(char *fName)
 	
 	// The only built in driver
 	extern DLDI_INTERFACE _io_dldi_stub;
-
+	
+	printfDebugger("patchFile() requires a rewrite... ");	//while(1==1){} inside
+	
 	pDH = (data_t*)(((u32*)(&_io_dldi_stub)) -24);
 	
 	if (*((u32*)(pDH + DO_ioType)) == DEVICE_TYPE_DLDI) // no built in dldi, load from scratch
