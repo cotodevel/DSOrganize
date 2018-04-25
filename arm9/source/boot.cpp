@@ -28,6 +28,7 @@
 #include "general.h"
 #include "nds_loader_arm9.h"
 #include "videoTGDS.h"
+#include "loader.h"
 
 #define LF_LOADARM9				0x00000001
 #define LF_LOADARM7				0x00000002
@@ -39,20 +40,14 @@
 
 void exec(char *command, bool gbaBoot, bool memBoot)
 {
+	/*
 	strlwr(command);
 	
 	// "..." ignored atm
 	// Set up VRAM, to put the binary in. 
 	//  Bank A might be used for text out (will be used by the stub)
 	//  Bank B,D to carry over param&binary
-    /*
-	vramSetMainBanks(   VRAM_A_MAIN_BG_0x6000000,       
-                        VRAM_B_MAIN_BG_0x6020000,      
-                        VRAM_C_LCD,  
-                        VRAM_D_MAIN_BG_0x6040000   
-                        );    
-	*/
-	VRAMBLOCK_SETBANK_A(VRAM_A_0x06000000_ENGINE_A_BG);
+    VRAMBLOCK_SETBANK_A(VRAM_A_0x06000000_ENGINE_A_BG);
 	VRAMBLOCK_SETBANK_B(VRAM_B_0x06020000_ENGINE_A_BG);
 	VRAMBLOCK_SETBANK_C(VRAM_C_LCDC_MODE);
 	VRAMBLOCK_SETBANK_D(VRAM_D_0x06040000_ENGINE_A_BG);
@@ -77,7 +72,7 @@ void exec(char *command, bool gbaBoot, bool memBoot)
 		DRAGON_fread(buffer,tLen,1,stub) ;
 		DRAGON_fclose(stub) ;
 		
-		dldiPatchLoader((data_t *)buffer, tLen);
+		dldiPatchLoader(buffer, tLen);
 		
 		// we copy wordwise, as bytewise write access to VRAM is a bad idea
 		u32 i ;
@@ -117,4 +112,5 @@ void exec(char *command, bool gbaBoot, bool memBoot)
 		stub_type stb = (stub_type)0x06020000 ;
 		stb() ;
 	}
+	*/
 }

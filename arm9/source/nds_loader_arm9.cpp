@@ -16,7 +16,8 @@
  *  along with DSOrganize.  If not, see <http://www.gnu.org/licenses/>.    *
  *                                                                         *
  ***************************************************************************/
- 
+
+/* 
 #include <string.h>
 #include <stdlib.h>
 #include "typedefsTGDS.h"
@@ -199,6 +200,7 @@ bool dldiPatchLoader (data_t *binData, u32 binSize)
 	return true;
 }
 
+
 bool runNds (const void* loader, u32 loaderSize, u32 cluster, bool initDisc)
 {
 	// change loader options	
@@ -240,3 +242,4 @@ bool runNds (const void* loader, u32 loaderSize, u32 cluster, bool initDisc)
 	swiSoftReset(); 
 	return true;
 }
+*/

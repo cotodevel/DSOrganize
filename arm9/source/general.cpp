@@ -76,6 +76,7 @@
 #include "InterruptsARMCores_h.h"
 #include "biosDSOrganize.h"
 #include "fsfatlayerTGDSLegacy.h"
+#include "loader.h"
 
 bool copying = false;
 bool loading = false;
@@ -548,7 +549,7 @@ void launchNDSMethod2(char *file)
 		REG_IME = 0;
 		REG_IF = 0xFFFF;	// Acknowledge interrupt
 		
-		runNds(buffer, tLen, fCluster, false);
+		//runNds(buffer, tLen, fCluster, false);
 	}
 	else{
 		//file not exists
@@ -557,8 +558,13 @@ void launchNDSMethod2(char *file)
 	while(1);
 }
 
+
 void launchNDS(char *file)
 {
+	bootndschishms(file,true);	//homebrew boot
+	while(1==1){}	//boot or loop here forever
+	
+	
 	if(!disablePatching)
 		patchFile(file);
 	
@@ -574,10 +580,14 @@ void launchNDS(char *file)
 			launchNDSMethod2(file);
 			break;
 	}
+	
 }
 
 void launchNDSAlt(char *file)
 {
+	bootndschishms(file,1);	//homebrew boot
+	while(1==1){}	//boot or loop here forever
+	
 	if(!disablePatching)
 		patchFile(file);
 	

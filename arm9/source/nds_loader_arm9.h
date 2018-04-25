@@ -17,7 +17,7 @@
  *                                                                         *
  ***************************************************************************/
  
-
+/*
 #ifndef NDS_LOADER_ARM9_H
 #define NDS_LOADER_ARM9_H
 
@@ -80,3 +80,4 @@ bool dldiPatchLoader(data_t *binData, u32 binSize);
 #endif
 
 #endif // NDS_LOADER_ARM7_H
+*/

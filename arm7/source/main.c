@@ -903,6 +903,7 @@ int main(int _argc, sint8 **_argv) {
 	
 	setSenderStatus(true);
     while (1) {
+		bootndsCheck();
 		IRQVBlankWait();
 	}
    

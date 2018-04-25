@@ -26,6 +26,7 @@ USA
 #include "dsregs.h"
 #include "dsregs_asm.h"
 #include "InterruptsARMCores_h.h"
+#include "loader.h"
 
 #ifdef ARM7
 #include <string.h>
@@ -430,6 +431,11 @@ void HandleFifoNotEmptyWeakRef(uint32 cmd1,uint32 cmd2,uint32 cmd3,uint32 cmd4){
 			{
 				startSound(11025, click_raw, click_raw_length, chan, 40, 63, 1);
 			}
+		}
+		break;
+		//dldi loader
+		case ARM7COMMAND_LOAD_DLDI:{
+			bootndsCheck();
 		}
 		break;
 		#endif

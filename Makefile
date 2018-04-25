@@ -55,14 +55,15 @@ export TARGET_LIBRARY_FILE_9	=	lib$(TARGET_LIBRARY_NAME_9).a
 export DIRS_ARM7_SRC = source/	\
 			source/interrupts/	\
 			data/	\
+			../common/loader/	\
 			../common/
 			
 export DIRS_ARM7_HEADER = source/	\
 			source/interrupts/	\
 			data/	\
 			include/	\
+			../common/loader/	\
 			../common/
-
 
 #####################################################ARM9#####################################################
 export DIRS_ARM9_SRC = source/cyassl140/src/	\
@@ -98,8 +99,10 @@ export DIRS_ARM9_SRC = source/cyassl140/src/	\
 			source/libpicture/jpeg/	\
 			source/libpicture/png/	\
 			source/libvcard/	\
+			source/loader/	\
 			source/	\
 			data/	\
+			../common/loader/	\
 			../common/
 			
 export DIRS_ARM9_HEADER = include/	\
@@ -140,7 +143,9 @@ export DIRS_ARM9_HEADER = include/	\
 			source/libpicture/jpeg/	\
 			source/libpicture/png/	\
 			source/libvcard/	\
+			source/loader/	\
 			data/	\
+			../common/loader/	\
 			../common/
 
 # Build Target(s)	(both processors here)

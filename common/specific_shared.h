@@ -32,6 +32,10 @@ USA
 #include "memoryHandleTGDS.h"
 #include "memoryHandleTGDS.h"
 
+//dldi specific
+#define ARM7COMMAND_LOAD_DLDI (uint32)(0xFFFFFFAA)
+
+
 #define ARM9COMMAND_SUCCESS (uint32)(0xFFFFFF01)
 #define ARM9COMMAND_INIT (uint32)(0xFFFFFF02)
 #define ARM9COMMAND_UPDATE_BUFFER (uint32)(0xFFFFFF03)

@@ -263,7 +263,7 @@ u32 DRAGON_fread(void* buffer, u32 size, u32 count, DRAGON_FILE* df)
 	if(!df->fp)
 		return 0;
 	
-	if(df->cacheEnabled)
+	if(df->cacheEnabled == true)
 	{	
 		// figure out the size of the copy
 		u32 toCopy = size * count;
