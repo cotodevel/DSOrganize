@@ -1,1 +1,0 @@
-Este ajuste cambia la forma en que los nombres se muestran y se ordenan en la Libreta de Direcciones.

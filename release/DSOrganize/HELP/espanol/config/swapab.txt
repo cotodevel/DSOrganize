@@ -1,1 +1,0 @@
-Este ajuste está aquí para aquellos que prefieren tener el botón B como el botón de acción principal.  Cuando está activado, este ajuste intercambiará las funciones de A y B en DSOrganize.

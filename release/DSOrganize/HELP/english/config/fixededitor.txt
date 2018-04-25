@@ -1,1 +1,0 @@
-This setting tells DSOrganize whether to edit text files using the standard font or a fixed width font.

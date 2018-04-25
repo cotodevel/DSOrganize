@@ -1,1 +1,0 @@
-Este ajuste te permite configurar tu conexión wifi para conectarte al irc, la base de datos Homebrew, streams y el Navegador Web.

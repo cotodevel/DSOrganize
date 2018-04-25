@@ -1,1 +1,0 @@
-This setting affects how names are displayed and sorted in the Address Book.

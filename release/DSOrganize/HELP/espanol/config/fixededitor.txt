@@ -1,1 +1,0 @@
-Este ajuste ordena a DSOrganize a editar archivos de texto usando la fuente standard o la fuente de ancho ajustado.

@@ -1,1 +1,0 @@
-Ta opcja jest uwzgledniona dla tych, ktorzy wola aby przycisk B sluzyl do uruchamiania (zamiast A).  Kiedy wybrana, zmieniane jest przypisanie dla tych klawiszy w calym DSOrganize.
