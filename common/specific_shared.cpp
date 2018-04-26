@@ -435,7 +435,7 @@ void HandleFifoNotEmptyWeakRef(uint32 cmd1,uint32 cmd2,uint32 cmd3,uint32 cmd4){
 		break;
 		//dldi loader
 		case ARM7COMMAND_LOAD_DLDI:{
-			bootndsCheck();
+			NdsLoaderCheck();
 		}
 		break;
 		#endif

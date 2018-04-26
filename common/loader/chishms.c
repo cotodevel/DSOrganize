@@ -212,6 +212,7 @@ void bootndsCheck(void) {
 #include "videoTGDS.h"
 #include "dldi.h"
 #include "dswnifi_lib.h"
+#include "dldiloader.h"
 
 // --- Chishm's loader --- WORKING
 #define LCDC_BANK_C (u16*)0x06840000
@@ -332,10 +333,11 @@ bool dldiPatchLoader(data_t *binData, u32 binSize, bool clearBSS)
 		printfDebugger("%s no DLDI section.");
 		return false;
 	}
-
-	pDH = (data_t*)(((u32*)(&io_dldi_data)) -24);	//pDH = (data_t*)(((u32*)(&_io_dldi)) -24);
+	
+	DLDI_INTERFACE* dldiInterface = dldiGet();
+	pDH = (data_t*)dldiInterface;
 	pAH = &(binData[patchOffset]);
-
+	
 	if (*((u32*)(pDH + DO_ioType)) == DEVICE_TYPE_DLDI) {
 		// No DLDI patch
 		printfDebugger("%s DLDI section corrupted");
@@ -347,6 +349,8 @@ bool dldiPatchLoader(data_t *binData, u32 binSize, bool clearBSS)
 		printfDebugger("%s DLDI not enough space.");
 		return false;
 	}
+	
+	//printfDebugger("%s:%d",&pDH[DO_friendlyName],(1 << pDH[DO_driverSize]));
 	
 	dldiFileSize = 1 << pDH[DO_driverSize];
 
@@ -422,9 +426,6 @@ bool runNds(const void* loader, u32 loaderSize, u32 cluster, bool initDisc, bool
 {	
 	//single player:
 	switch_dswnifi_mode(dswifi_idlemode);
-	
-//   REG_IPC_FIFO_TX = 0x23232323;
-	DisableIrq(IRQ_ALL);
 		
 	// Direct CPU access to VRAM bank C
 	VRAM_C_CR = VRAM_ENABLE | VRAM_C_LCDC_MODE;
@@ -461,8 +462,11 @@ bool runNds(const void* loader, u32 loaderSize, u32 cluster, bool initDisc, bool
 	*((vu32*)0x027FFE04) = (u32)0xE59FF018;
 	*((vu32*)0x027FFE24) = (u32)0x027FFE04;
 
-	REG_IPC_FIFO_TX = 17;
-	//SendMultipleWordACK(ARM7COMMAND_LOAD_DLDI, 0, 0, NULL);
+	//REG_IPC_FIFO_TX = 17;
+	SendMultipleWordACK(ARM7COMMAND_LOAD_DLDI, 0, 0, NULL);
+	
+//   REG_IPC_FIFO_TX = 0x23232323;
+	DisableIrq(IRQ_ALL);
 	
 	swiSoftReset(); 
 	return true;
@@ -485,25 +489,8 @@ bool bootndschishms(char* filename, bool dldipatch)
 		//printfDebugger("filename:%s",filename);
 	}
 	
-	char * BootFname = getfatfsPath((char*)"DSOrganize/resources/load.bin");
-	DRAGON_FILE *bootStub = NULL;
-	uint32 bootStubLen = 0;
-	uint8* bootStubPtr = NULL;
-	if(debug_FileExists((const char*)BootFname,50) == FT_FILE){
-		bootStub = DRAGON_fopen(BootFname,"r");	//debug_FileExists index: 50
-		bootStubLen = (uint32)DRAGON_flength(bootStub);
-		bootStubPtr = (char *)malloc(bootStubLen);
-		DRAGON_fread(bootStubPtr,1,bootStubLen,bootStub);
-		DRAGON_fclose(bootStub);
-		//printfDebugger("ok:%s",BootFname);	//ok
-	}
-	else{
-		//file not exists
-		//printfDebugger("MissingFile:%s",BootFname);
-		while(1==1){}
-	}
-	
-	runNds(bootStubPtr, bootStubLen, fCluster, false, dldipatch);
+	//printfDebugger("dldildr:%x:len:%d",(&dldiloader),(int)dldiloader_length);
+	runNds((&dldiloader), (int)dldiloader_length, fCluster, false, dldipatch);
 	return true;
 }
 

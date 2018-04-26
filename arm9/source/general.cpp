@@ -561,7 +561,7 @@ void launchNDSMethod2(char *file)
 
 void launchNDS(char *file)
 {
-	bootndschishms(file,true);	//homebrew boot
+	bootndschishms(file,1);	//homebrew boot
 	while(1==1){}	//boot or loop here forever
 	
 	
