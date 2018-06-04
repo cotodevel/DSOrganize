@@ -1,3 +1,7 @@
+06/04/2018:
+Micro$oft has acquired github, you can find updates from this software at: https://coto88.bitbucket.io/
+Have a good day.
+
 DSorganize for ToolchainGenericDS. Based from version: 3.1129, since it seems to be the latest stable version.
 
 Currently it compiles. But it's in heavy development so expect bugs. The SSL driver apparently is cyassl 1.4.0 so I added it and made it compatible with TGDS environment.
